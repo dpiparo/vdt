@@ -1,0 +1,2 @@
+#To link the last tag to the stable dir
+stable https://svn.cern.ch/reps/vdt/tags/v0.010

@@ -33,3 +33,5 @@ make
 
 The executables will be put in the /bin directory.
 
+Copyright Danilo Piparo, Vincenzo Innocente, Thomas Hauth (CERN) 2012
+

@@ -60,10 +60,10 @@ endif (AVX)
 
 # To use svml at CERN ----------------------------------------------------------
 set (INTEL_SVML_FLAGS "")
-if (SVML)
+#if (SVML)
   message (STATUS "Linking SVML library")
   set (INTEL_SVML_FLAGS "-mveclibabi=svml -L/afs/cern.ch/sw/IntelSoftware/linux/x86_64/Compiler/11.1/072/lib/intel64/ -lsvml -lirc")  
-endif (SVML)
+#endif (SVML)
 
 # Vc setup ---------------------------------------------------------------------
 

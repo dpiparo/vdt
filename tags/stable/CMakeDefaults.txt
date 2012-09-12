@@ -48,7 +48,7 @@ endif()
 
 # SIMD instructions set---------------------------------------------------------
 # same for both compilers
-set(SSE_AVX "-msse")
+set(SSE_AVX "-msse4")
 
 if (AVX)
   message(STATUS "Using AVX extensions!")
@@ -129,7 +129,7 @@ endif()
 
 set (COMMON_FLAGS "${INTEL_SVML_FLAGS} ${SSE_AVX}  ${INLINE_OPT}")
 set (LIB_FLAGS "${VERBOSITY_OPT} ${VECT_OPT} ${VECTORIZER_VERBOSITY} ${COMMON_FLAGS}")
-set (DIAG_FLAGS "${CPP11_OPT} ${COMMON_FLAGS} ${LIBTIMINGAPPLE}")
+set (DIAG_FLAGS "${CPP11_OPT} ${COMMON_FLAGS} ${LIBTIMINGAPPLE} -O2")
 
 # Locations ====================================================================
 # Location of executables

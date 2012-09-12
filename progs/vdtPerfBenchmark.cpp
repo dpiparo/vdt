@@ -50,6 +50,11 @@ int main(int argc, char **argv){
 	opt.addOption("-n","--nick","Nickname to distinguish different runs/libraries used (required)");
 	opt.addOption("-s","--size","# of numbers to be tested (default 50000)");
 	opt.addOption("-r","--repetitions","# of repetitions from which statistics are calculated (default 150)");
+	opt.addOption("-M","--pool_max","Upper limit of the pool interval");
+	opt.addOption("-m","--pool_min","Lower limit of the pool interval");
+
+	double POOL_MAX=5000;
+	double POOL_MIN=-POOL_MAX;
 
 	uint32_t SIZE = 50000;
 	uint32_t REPETITIONS = 150;
@@ -75,13 +80,20 @@ int main(int argc, char **argv){
 
 	//getArgument() contains isSet check 
 	if(opt.getArgument("-s") != "")
-		SIZE = atoi(opt.getArgument("-s").c_str());
+		SIZE = std::stoi(opt.getArgument("-s").c_str());
 
 	if(opt.getArgument("-r") != "")
-		REPETITIONS = atoi(opt.getArgument("-r").c_str());
+		REPETITIONS = std::stoi(opt.getArgument("-r").c_str());
+
+	if(opt.getArgument("-m") != "")
+		POOL_MIN = std::stod(opt.getArgument("-m").c_str());
+
+	if(opt.getArgument("-M") != "")
+		POOL_MAX = std::stod(opt.getArgument("-M").c_str());
 
 	// Control print
-	std::cout << "Running with nick: " << nick << ", size: " << SIZE << " and repetitions: "<< REPETITIONS << "\n";
+	std::cout << "Running with nick: " << nick << ", size: " << SIZE << ", repetitions: "<< REPETITIONS
+			  << ", the pool max:" << POOL_MAX << "and the pool min:" << POOL_MIN << "\n";
   
 	// setup filename
 	std::string fname = nick + "__performance_benchmark.txt";
@@ -90,8 +102,8 @@ int main(int argc, char **argv){
 
     std::cout << "Double Precision\n";
 
-    randomPool<double> symmrpool (-5000,5000,SIZE);
-    randomPool<double> asymmrpool (.00001,5000,SIZE);
+    randomPool<double> symmrpool (POOL_MIN,POOL_MAX,SIZE);
+    randomPool<double> asymmrpool (.00001,POOL_MAX,SIZE);
     randomPool<double> mone2onerpool (-1,1,SIZE);
     randomPool<double> expPool (-705,705,SIZE);
 
@@ -114,10 +126,10 @@ int main(int argc, char **argv){
       
     std::cout << "Single Precision\n";
       
-    randomPool<float> symmrpoolf (-5000,5000,SIZE);
-    randomPool<float> asymmrpoolf (.00001,5000,SIZE);
+    randomPool<float> symmrpoolf (POOL_MIN,POOL_MAX,SIZE);
+    randomPool<float> asymmrpoolf (.00001,POOL_MAX,SIZE);
     randomPool<float> mone2onerpoolf (-1,1,SIZE);
-	randomPool<float> expPoolf (-3,3,SIZE);
+	randomPool<float> expPoolf (-80,80,SIZE);
     
 	std::vector<genfpfcn_tuple<float>> sp_fcns;
     getFunctionTuples(&sp_fcns,symmrpoolf,asymmrpoolf,mone2onerpoolf,expPoolf);

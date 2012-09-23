@@ -76,7 +76,7 @@ def get_header_file():
   code= "// Automatically generated\n"\
         '#ifndef __VDT_VECTOR__\n'\
         '#define __VDT_VECTOR__\n'\
-        '#include "vdtMath.h"\n'\
+        '#include "%"\n' %VDT_VECTOR_HEADER+\
         '#include "inttypes.h"\n'+\
         create_vector_signatures(is_impl=False)+\
         '\n'\

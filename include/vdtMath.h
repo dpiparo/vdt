@@ -1,10 +1,11 @@
 // Include all the VDT fucntions
 
 #include "sin.h"
-#include "cos.h"
-#include "tan.h"
-
 #include "asin.h"
+
+#include "cos.h"
+
+#include "tan.h"
 #include "atan.h"
 
 #include "exp.h"

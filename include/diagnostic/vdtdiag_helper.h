@@ -35,7 +35,6 @@
 #include "sys/time.h"
 
 #ifdef __APPLE__
-#include <assert.h>
 #include <CoreServices/CoreServices.h>
 #include <mach/mach.h>
 #include <mach/mach_time.h>
@@ -45,11 +44,11 @@
 
 namespace{
 
-  // Establish the size of the double and single precision and the bitsets
+// Establish the size of the double and single precision and the bitsets
 constexpr double _tmp=0;
 constexpr uint32_t dp_size_in_bits = sizeof(_tmp)*8;
 using dp_bitset = std::bitset<dp_size_in_bits>;
-  
+
 }
 
 namespace vdth{
@@ -70,14 +69,14 @@ template<class T> using genfpfunctionv = std::function<void(uint32_t, T*, T*)>;
 union standard{
 	double dp;
 	float sp[2];
-    uint64_t li;
-	};
+	uint64_t li;
+};
 
 //------------------------------------------------------------------------------
 
 template<class T>
 const uint32_t inline getSizeInbits(const T x){
-   return sizeof(x) * 8;
+	return sizeof(x) * 8;
 }
 
 //------------------------------------------------------------------------------
@@ -109,7 +108,7 @@ inline const dp_bitset fp2bs( const T x ){
 template<class T>
 const std::string getbsasstr(const T x){
 
-    const uint32_t size = getSizeInbits(x);
+	const uint32_t size = getSizeInbits(x);
 
 	uint32_t offset = 0;
 	uint32_t exp_size = 11;
@@ -125,7 +124,7 @@ const std::string getbsasstr(const T x){
 
 	std::ostringstream os;
 
-        // sign
+	// sign
 	os  << bitset_as_string[offset] << " ";
 	// exponent
 	for (int i=offset+1;i<offset+1+exp_size;i++)
@@ -147,7 +146,7 @@ const uint16_t diffbit(const T a,const T b ){
 	uint64_t ia = fp2uint64(a);
 	uint64_t ib = fp2uint64(b);
 	uint64_t c = ia>ib? ia-ib : ib -ia;
-        //uint64_t c = ia^ib;
+	//uint64_t c = ia^ib;
 	/// return the log2+1
 	return log2(c)+1;
 }
@@ -162,29 +161,29 @@ void print_instructions_info(){
 
 	os << " o SSE2 instructions set "
 #ifndef __SSE2__
-		<< "not "
+			<< "not "
 #endif
-	<< "enabled.\n"
+			<< "enabled.\n"
 
-	<< " o SSE3 instructions set "
+			<< " o SSE3 instructions set "
 #ifndef __SSE3__
-		<< "not "
+			<< "not "
 #endif
-	<< "enabled.\n"
+			<< "enabled.\n"
 
-		<< " o SSE4.1 instructions set "
+			<< " o SSE4.1 instructions set "
 #ifndef __SSE4_1__
-		<< "not "
+			<< "not "
 #endif
-	<< "enabled.\n"
+			<< "enabled.\n"
 
-	<< " o AVX instructions set "
+			<< " o AVX instructions set "
 #ifndef __AVX__
-	<< "not "
+			<< "not "
 #endif
-	<< "enabled.\n";
+			<< "enabled.\n";
 	std::cout << os.str();
-    }
+}
 
 //------------------------------------------------------------------------------
 
@@ -192,12 +191,12 @@ void print_instructions_info(){
 template<class T>
 void print_different_bit(const T a, const T b, const bool show_identical=true){
 
-    std::cout.precision(10);
+	std::cout.precision(10);
 	std::cout << "Different bit between " << a << " and " << b
-			  << " is " << diffbit(a,b) << std::endl;
+			<< " is " << diffbit(a,b) << std::endl;
 	if (show_identical)
-	std::cout << getbsasstr(a) << std::endl
-	          << getbsasstr(b) << std::endl<< std::endl;
+		std::cout << getbsasstr(a) << std::endl
+		<< getbsasstr(b) << std::endl<< std::endl;
 
 }
 
@@ -216,21 +215,21 @@ void printFuncDiff(const std::string& func_name, std::function<T(T)> f1,std::fun
 /// Invoke two functions and print on screen their argument and different bits
 template<class T>
 void printFuncDiff(const std::string& func_name,
-                  genfpfunctionv<T> f1,
-                  genfpfunctionv<T> f2,
-                  T* x_arr,
-                  const uint32_t size){
+		genfpfunctionv<T> f1,
+		genfpfunctionv<T> f2,
+		T* x_arr,
+		const uint32_t size){
 	std::cout << "Function " << func_name << std::endl;
 	T* res_1 = new T[size];
 	f1(size,x_arr,res_1);
 	T* res_2 = new T[size];
-        f2(size,x_arr,res_2);
+	f2(size,x_arr,res_2);
 	for (uint32_t i=0;i<size;i++){
 		std::cout << "Calculated in " << x_arr[i] << std::endl;
 		print_different_bit(res_1[i],res_2[i],true);
 	};
-        delete [] res_1;
-        delete [] res_2;
+	delete [] res_1;
+	delete [] res_2;
 }
 
 //------------------------------------------------------------------------------
@@ -240,14 +239,14 @@ template<class T>
 void printFuncDiff(const std::string& name,
 		std::function<T(T)> fpfunction,
 		std::function<T(T)> fpfunction_ref,
-                T* fpvals,
+		T* fpvals,
 		const uint32_t size){
 
-  for (uint32_t i=0;i<size;i++)
-      printFuncDiff ( name,
-                      (std::function<T(T)>) fpfunction,
-		      (std::function<T(T)>) fpfunction_ref,
-		      fpvals[i] );
+	for (uint32_t i=0;i<size;i++)
+		printFuncDiff ( name,
+				(std::function<T(T)>) fpfunction,
+				(std::function<T(T)>) fpfunction_ref,
+				fpvals[i] );
 
 }
 
@@ -256,57 +255,65 @@ void printFuncDiff(const std::string& name,
 /// Get the clock cycles
 class timer{
 public:
-  timer(){}
-  ~timer(){}
-  void print(){   
-    const uint64_t nsecs=get_elapsed_time();
-    std::cout << "Time elapsed: " << nsecs << " nanoseconds.\n";// ("
-          //<< m_get_elapsed_clocks(nsecs) << " clock)\n";
-    }
+	timer(){}
+	~timer(){}
+	void print(){
+		const uint64_t nsecs=get_elapsed_time();
+		std::cout << "Time elapsed: " << nsecs << " nanoseconds.\n";// ("
+		//<< m_get_elapsed_clocks(nsecs) << " clock)\n";
+	}
 #if defined (__APPLE__)
-void inline start(){m_time1=mach_absolute_time();}
-void inline stop(){m_time2=mach_absolute_time();}
-uint64_t get_elapsed_time(){
-  const uint64_t elapsed = m_time2 - m_time1;
-    // Convert to nanoseconds.
-    // Have to do some pointer fun because AbsoluteToNanoseconds 
-    // works in terms of UnsignedWide, which is a structure rather 
-    // than a proper 64-bit integer.
-    Nanoseconds elapsedNano = AbsoluteToNanoseconds( *(AbsoluteTime *) &elapsed );
+	void inline start(){m_time1=mach_absolute_time();}
+	void inline stop(){m_time2=mach_absolute_time();}
+	uint64_t get_elapsed_time(){
+		static mach_timebase_info_data_t    sTimebaseInfo;
+		const uint64_t elapsed = m_time2 - m_time1;
+		// Convert to nanoseconds.
+		// Have to do some pointer fun because AbsoluteToNanoseconds
+		// works in terms of UnsignedWide, which is a structure rather
+		// than a proper 64-bit integer.
 
-    return * (uint64_t *) &elapsedNano;
-}
+		if ( sTimebaseInfo.denom == 0 ) {
+			(void) mach_timebase_info(&sTimebaseInfo);
+		}
+
+		// Do the maths. We hope that the multiplication doesn't
+		// overflow; the price you pay for working in fixed point.
+
+		uint64_t elapsedNano = elapsed * sTimebaseInfo.numer / sTimebaseInfo.denom;
+
+		return elapsedNano;
+	}
 
 private:
-  uint64_t m_time1,m_time2;
+	uint64_t m_time1,m_time2;
 
 #else
-  void inline start(){
-    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &m_time1);
-  }
-  void inline stop(){
-    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &m_time2);
-  }
+	void inline start(){
+		clock_gettime(CLOCK_THREAD_CPUTIME_ID, &m_time1);
+	}
+	void inline stop(){
+		clock_gettime(CLOCK_THREAD_CPUTIME_ID, &m_time2);
+	}
 
-  /// Return time in nanoseconds
-  
-  uint64_t get_elapsed_time(){
-     timespec temp;
-     temp.tv_sec = m_time2.tv_sec-m_time1.tv_sec;
-     temp.tv_nsec = m_time2.tv_nsec-m_time1.tv_nsec;
-     uint64_t elapsed_time = temp.tv_nsec;
-     elapsed_time += 1e9*temp.tv_sec;
-     return elapsed_time;
-  }
+	/// Return time in nanoseconds
+
+	uint64_t get_elapsed_time(){
+		timespec temp;
+		temp.tv_sec = m_time2.tv_sec-m_time1.tv_sec;
+		temp.tv_nsec = m_time2.tv_nsec-m_time1.tv_nsec;
+		uint64_t elapsed_time = temp.tv_nsec;
+		elapsed_time += 1e9*temp.tv_sec;
+		return elapsed_time;
+	}
 
 private:
-  timespec m_time1,m_time2;
+	timespec m_time1,m_time2;
 #endif
 
 };
 
 //------------------------------------------------------------------------------
-// // Old and not precise
 // inline uint64_t getcpuclock() {
 //  return __rdtsc();
 // }

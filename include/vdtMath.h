@@ -10,6 +10,7 @@
 
 #include "tan.h"
 #include "atan.h"
+#include "atan2.h"
 
 #include "exp.h"
 #include "log.h"

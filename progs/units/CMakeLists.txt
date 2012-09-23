@@ -23,5 +23,6 @@ add_exe_and_link ( tan_test tan_test.cpp None )
 add_exe_and_link ( asin_test asin_test.cpp None )
 add_exe_and_link ( acos_test acos_test.cpp None )
 add_exe_and_link ( atan_test atan_test.cpp None )
+add_exe_and_link ( atan2_test atan2_test.cpp None )
 
 # add_executable ( deleteme deleteme.cpp )

@@ -3,7 +3,7 @@
 # Define this directory's flags:
 SET(CMAKE_CXX_FLAGS  ${LIB_FLAGS})
 
-include_directories ( ${CMAKE_SOURCE_DIR}/Include )
+include_directories ( ${INC_DIR} )
 
 if(BUILD_SHARED_LIBS)
   message(STATUS "Libraries are configured as: SHARED")

@@ -1,6 +1,9 @@
 # Enable this directory's flags:
 SET(CMAKE_CXX_FLAGS ${DIAG_FLAGS})
 
+include_directories ( ${INC_DIR} )
+include_directories ( ${INC_DIR}/diagnostic )
+
 # Utils
 add_executable ( fpDifferentBit fpDifferentBit.cpp )
 add_executable ( printInstSet printInstSet.cpp )

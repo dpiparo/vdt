@@ -44,6 +44,8 @@
 #include "vdtdiag_vcWrapper.h"
 #endif
 
+using namespace vdt;
+
 template<class T> using genfpfcn_tuple = std::tuple<const std::string, vdth::genfpfunction<T>,const std::vector<T>& >;
 template<class T> using genfpfcnv_tuple = std::tuple<const std::string, vdth::genfpfunctionv<T>,const std::vector<T>& >;
 

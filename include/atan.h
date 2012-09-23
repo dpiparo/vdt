@@ -28,76 +28,77 @@
 #define ATAN_H_
 
 #include "vdtcore_common.h"
-#include <cmath>
-#include <limits>
 
-namespace {
-  const double T3PO8 = 2.41421356237309504880;
-  const double MOREBITSO2 = vdt::MOREBITS * 0.5;
+namespace vdt{
+
+namespace details{
+const double T3PO8 = 2.41421356237309504880;
+const double MOREBITSO2 = MOREBITS * 0.5;
 
 inline const double get_atan_px(const double x2){
 
-  const double PX1atan = -8.750608600031904122785E-1;
-  const double PX2atan = -1.615753718733365076637E1;
-  const double PX3atan = -7.500855792314704667340E1;
-  const double PX4atan = -1.228866684490136173410E2;
-  const double PX5atan = -6.485021904942025371773E1;
+	const double PX1atan = -8.750608600031904122785E-1;
+	const double PX2atan = -1.615753718733365076637E1;
+	const double PX3atan = -7.500855792314704667340E1;
+	const double PX4atan = -1.228866684490136173410E2;
+	const double PX5atan = -6.485021904942025371773E1;
 
-  double px = PX1atan;
-  px *= x2;
-  px += PX2atan;
-  px *= x2;
-  px += PX3atan;
-  px *= x2;
-  px += PX4atan;
-  px *= x2;
-  px += PX5atan;
-  
-  return px;
-  }
+	double px = PX1atan;
+	px *= x2;
+	px += PX2atan;
+	px *= x2;
+	px += PX3atan;
+	px *= x2;
+	px += PX4atan;
+	px *= x2;
+	px += PX5atan;
+
+	return px;
+}
 
 
 inline const double get_atan_qx(const double x2){
-  const double QX1atan = 2.485846490142306297962E1;
-  const double QX2atan = 1.650270098316988542046E2;
-  const double QX3atan = 4.328810604912902668951E2;
-  const double QX4atan = 4.853903996359136964868E2;
-  const double QX5atan = 1.945506571482613964425E2;
+	const double QX1atan = 2.485846490142306297962E1;
+	const double QX2atan = 1.650270098316988542046E2;
+	const double QX3atan = 4.328810604912902668951E2;
+	const double QX4atan = 4.853903996359136964868E2;
+	const double QX5atan = 1.945506571482613964425E2;
 
-  double qx=x2;
-  qx += QX1atan;
-  qx *=x2;
-  qx += QX2atan;
-  qx *=x2;
-  qx += QX3atan;
-  qx *=x2;
-  qx += QX4atan;
-  qx *=x2;
-  qx += QX5atan;
+	double qx=x2;
+	qx += QX1atan;
+	qx *=x2;
+	qx += QX2atan;
+	qx *=x2;
+	qx += QX3atan;
+	qx *=x2;
+	qx += QX4atan;
+	qx *=x2;
+	qx += QX5atan;
 
-  return qx;
-  }
+	return qx;
 }
 
-namespace vdt{
-  
+}
+
+
+
 /// Fast Atan implementation double precision
 inline double fast_atan(double x){
 
     /* make argument positive and save the sign */
-    const uint64_t sign_mask = getSignMask(x);
+    const uint64_t sign_mask = details::getSignMask(x);
     x=std::fabs(x);
 
     /* range reduction */
     const double originalx=x;
 
-    double y = PIO4;
-    double factor = MOREBITSO2;
+    double y = details::PIO4;
+    double factor = details::MOREBITSO2;
     x = (x-1.0) / (x+1.0);
     
-    if( originalx > T3PO8 ) {
-        y = PIO2;
-        factor = MOREBITS;
+    if( originalx > details::T3PO8 ) {
+        y = details::PIO2;
+        factor = details::MOREBITS;
         x = -1.0 / originalx ;
         }
     if ( originalx <= 0.66 ) {
@@ -108,8 +109,8 @@ inline double fast_atan(double x){
 
     const double x2 = x * x;
 
-    const double px = get_atan_px(x2);
-    const double qx = get_atan_qx(x2);    
+    const double px = details::get_atan_px(x2);
+    const double qx = details::get_atan_qx(x2);
     
     //double res = y +x * x2 * px / qx + x +factor;
 
@@ -120,14 +121,14 @@ inline double fast_atan(double x){
     
     res+=factor;
     
-    return dpORuint64(res,sign_mask);
+    return details::dpORuint64(res,sign_mask);
     }  
 
 //------------------------------------------------------------------------------
 /// Fast Atan implementation single precision
 inline float fast_atanf( float xx ) {
 
-    const uint32_t sign_mask = getSignMask(xx);
+    const uint32_t sign_mask = details::getSignMask(xx);
        
     float x= std::fabs(xx);
     const float x0=x;
@@ -136,11 +137,11 @@ inline float fast_atanf( float xx ) {
     /* range reduction */
     if( x0 > 0.4142135623730950f ){ // * tan pi/8 
       x = (x0-1.0f)/(x0+1.0f);
-      y = PIO4F;      
+      y = details::PIO4F;
       }
     if( x0 > 2.414213562373095f ){  // tan 3pi/8
       x = -( 1.0f/x0 );
-      y = PIO2F;
+      y = details::PIO2F;
       }
     
 
@@ -152,7 +153,7 @@ inline float fast_atanf( float xx ) {
           - 3.33329491539E-1f) * x2 * x
           + x;
 
-    return spORuint32(y,sign_mask);
+    return details::spORuint32(y,sign_mask);
   }  
   
 //------------------------------------------------------------------------------
@@ -161,7 +162,7 @@ inline float fast_atanf( float xx ) {
 void atanv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
 void fast_atanv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
 void atanfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_atanfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);  
+void fast_atanfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
   
 }// end of vdt
 

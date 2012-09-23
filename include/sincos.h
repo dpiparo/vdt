@@ -33,7 +33,7 @@
 
 namespace vdt{
 
-namespace sincos{
+namespace details{
 
 // double precision constants
 
@@ -126,12 +126,14 @@ inline void fast_sincos_m45_45( const double z, double & s, double &c ) {
 
 //------------------------------------------------------------------------------
 
+} // End namespace details
+
 /// Double precision sincos
 inline void fast_sincos( const double xx, double & s, double &c ) {
     // I have to use doubles to make it vectorise...
 
     int j;
-    double x = reduce2quadrant(xx,j);
+    double x = details::reduce2quadrant(xx,j);
     const double y = j;
     const double signS = (j&4); 
 
@@ -141,7 +143,7 @@ inline void fast_sincos( const double xx, double & s, double &c ) {
     const double poly = j&2;
 
     double ls,lc;
-    fast_sincos_m45_45(x,s,c);
+    details::fast_sincos_m45_45(x,s,c);
     
     //swap
     if( poly==0 ) {
@@ -159,9 +161,10 @@ inline void fast_sincos( const double xx, double & s, double &c ) {
 
   }
 
+
 // Single precision functions
 
-
+namespace details {
 //------------------------------------------------------------------------------
 /// Reduce to 0 to 45
 inline float reduce2quadrant(float x, int & quad) {
@@ -179,6 +182,8 @@ inline float reduce2quadrant(float x, int & quad) {
   
   
 //------------------------------------------------------------------------------
+
+
 
 /// Sincos only for -45deg < x < 45deg
 inline void fast_sincosf_m45_45( const float x, float & s, float &c ) {
@@ -198,12 +203,14 @@ inline void fast_sincosf_m45_45( const float x, float & s, float &c ) {
 
 //------------------------------------------------------------------------------
 
+} // end details namespace
+
 /// Single precision sincos
 inline void fast_sincosf( const float xx, float & s, float &c ) {
 	
 
     int j;
-    const float x = reduce2quadrant(xx,j);
+    const float x = details::reduce2quadrant(xx,j);
     int signS = (j&4); 
 
     j-=2;
@@ -212,7 +219,7 @@ inline void fast_sincosf( const float xx, float & s, float &c ) {
     const int poly = j&2;
 
     float ls,lc;
-    fast_sincosf_m45_45(x,ls,lc);
+    details::fast_sincosf_m45_45(x,ls,lc);
 
     //swap
     if( poly==0 ) {
@@ -227,8 +234,6 @@ inline void fast_sincosf( const float xx, float & s, float &c ) {
     s=ls;
   }
 
-
-} // end sincos namespace
 
 } // end namespace vdt
 

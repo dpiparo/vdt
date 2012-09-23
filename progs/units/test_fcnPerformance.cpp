@@ -11,6 +11,8 @@
 
 #include <iostream>
   
+using namespace vdt;
+
 int main(){
 	
     constexpr uint32_t size = 10000;

@@ -30,12 +30,11 @@
 #define VDTCOMMON_H_
 
 #include "inttypes.h"
-#include <iostream>
 #include <cmath>
-// #include "vdtdiag_helper.h"
-
 
 namespace vdt{
+
+namespace details{
 
 // Constants
 const double TWOPI = 2.*M_PI;
@@ -226,7 +225,7 @@ inline double int2fp(uint64_t i) {
     return uint642dp(i);
   }
 //------------------------------------------------------------------------------
-
+}
 
 } // end of namespace vdt
 

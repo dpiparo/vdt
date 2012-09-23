@@ -28,11 +28,14 @@
 #define _VDT_EXP_
 
 #include "vdtcore_common.h"
-#include <cmath>
 #include <limits>
 
-namespace {
+namespace vdt{
+
+namespace details{
   
+  const double EXP_LIMIT = 708;
+
   const double PX1exp = 1.26177193074810590878E-4;
   const double PX2exp = 3.02994407707441961300E-2;
   const double PX3exp = 9.99999999999999999910E-1;
@@ -42,6 +45,9 @@ namespace {
   const double QX4exp = 2.00000000000000000009E0;
 
   const double LOG2E = 1.4426950408889634073599; // 1/log(2)
+
+  const float MAXLOGF = 88.72283905206835f;
+  const float MINLOGF = -88.f;
 
   const float C1F =   0.693359375f;
   const float C2F =  -2.12194440e-4f;
@@ -57,17 +63,14 @@ namespace {
 
 }
 
-namespace vdt{
-
 // Exp double precision --------------------------------------------------------
 
-const double EXP_LIMIT = 708;
 
 /// Exponential Function double precision
 inline double fast_exp(double initial_x){
 
     double x = initial_x;
-    double px=fpfloor(LOG2E * x +0.5);
+    double px=std::floor(details::LOG2E * x +0.5);
  
     const int32_t n = px;
 
@@ -77,32 +80,32 @@ inline double fast_exp(double initial_x){
     const double xx = x * x;
 
     // px = x * P(x**2).
-    px = PX1exp;
+    px = details::PX1exp;
     px *= xx;
-    px += PX2exp;
+    px += details::PX2exp;
     px *= xx;
-    px += PX3exp;
+    px += details::PX3exp;
     px *= x;
 
     // Evaluate Q(x**2).
-    double qx = QX1exp;
+    double qx = details::QX1exp;
     qx *= xx;
-    qx += QX2exp;
+    qx += details::QX2exp;
     qx *= xx;
-    qx += QX3exp;
+    qx += details::QX3exp;
     qx *= xx;
-    qx += QX4exp;
+    qx += details::QX4exp;
 
     // e**x = 1 + 2x P(x**2)/( Q(x**2) - P(x**2) )
     x = px / (qx - px);
     x = 1.0 + 2.0 * x;
 
     // Build 2^n in double.
-    x *= uint642dp(( ((uint64_t)n) +1023)<<52);
+    x *= details::uint642dp(( ((uint64_t)n) +1023)<<52);
 
-    if (initial_x > EXP_LIMIT)
+    if (initial_x > details::EXP_LIMIT)
             x = std::numeric_limits<double>::infinity();
-    if (initial_x < -EXP_LIMIT)
+    if (initial_x < -details::EXP_LIMIT)
             x = 0.;
 
     return x;
@@ -110,42 +113,40 @@ inline double fast_exp(double initial_x){
 }
 
 // Exp single precision --------------------------------------------------------
-const float MAXLOGF = 88.72283905206835f;
-const float MINLOGF = -88.f;
 
 /// Exponential Function single precision
 inline float fast_expf(float initial_x) {
 	
     float x = initial_x;
 
-    float z = fpfloor( LOG2EF * x +0.5f ); /* floor() truncates toward -infinity. */
+    float z = std::floor( details::LOG2EF * x +0.5f ); /* floor() truncates toward -infinity. */
 
-    x -= z * C1F;
-    x -= z * C2F;
+    x -= z * details::C1F;
+    x -= z * details::C2F;
     const int32_t n = z;
 
     const float x2 = x * x;
 
-    z = x*PX1expf;
-    z += PX2expf;
+    z = x*details::PX1expf;
+    z += details::PX2expf;
     z *= x;
-    z += PX2expf;
+    z += details::PX2expf;
     z *= x;
-    z += PX3expf;
+    z += details::PX3expf;
     z *= x;
-    z += PX4expf;
+    z += details::PX4expf;
     z *= x;
-    z += PX5expf;
+    z += details::PX5expf;
     z *= x;
-    z += PX6expf;
+    z += details::PX6expf;
     z *= x2;
     z += x + 1.0f;
 
     /* multiply by power of 2 */
-    z *=  uint322sp((n+0x7f)<<23);
+    z *=  details::uint322sp((n+0x7f)<<23);
 
-    if (initial_x > MAXLOGF) z=std::numeric_limits<float>::infinity();
-    if (initial_x < MINLOGF) z=0.f;
+    if (initial_x > details::MAXLOGF) z=std::numeric_limits<float>::infinity();
+    if (initial_x < details::MINLOGF) z=0.f;
 
     return z;
 

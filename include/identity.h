@@ -24,15 +24,7 @@
 #ifndef IDENTITY_H_
 #define IDENTITY_H_
 
-#include "vdtcore_common.h"
-#include "sincos_common.h"
-
-#include <cmath>
-#include <limits>
-
 namespace vdt{
-
-using namespace sincos;
 
 // Identity double precision ---------------------------------------------------
 /// Double implementation

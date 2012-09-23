@@ -28,10 +28,10 @@
 #define ASIN_H_
 
 #include "vdtcore_common.h"
-#include <cmath>
-#include <limits>
 
-namespace {
+namespace vdt{
+
+namespace details{
 
 const double RX1asin = 2.967721961301243206100E-3;
 const double RX2asin = -5.634242780008963776856E-1;
@@ -111,34 +111,35 @@ inline const double getQX(const double x){
 	}
 }
 
-namespace vdt{
+}
 
+namespace vdt{
 
 // asin double precision --------------------------------------------------------
 /// Double Precision asin
 inline double fast_asin(double x){	
 
-	const uint64_t sign_mask = getSignMask(x);
+	const uint64_t sign_mask = details::getSignMask(x);
 	x = std::fabs(x);
 	const double a = x;
 	
 	
 	double zz = 1.0 - a;
-	double px = getRX(zz);
-	double qx = getSX(zz);
+	double px = details::getRX(zz);
+	double qx = details::getSX(zz);
 
 	const double p = zz * px/qx;
 
 	zz = std::sqrt(zz+zz);
-	double z = PIO4 - zz;
-	zz = zz * p - MOREBITS;
+	double z = details::PIO4 - zz;
+	zz = zz * p - details::MOREBITS;
 	z -= zz;
-	z += PIO4;
+	z += details::PIO4;
 	
 	if( a < 0.625 ){
 		zz = a * a;
-		px = getPX(zz);
-		qx = getQX(zz);
+		px = details::getPX(zz);
+		qx = details::getQX(zz);
 		z = zz*px/qx;    
 		z = a * z + a;
 	}
@@ -147,7 +148,7 @@ inline double fast_asin(double x){
 	// Linear approx, not sooo needed but seable. Price is cheap though
 	double res = a < 1e-8? a : z ;
         // Restore Sign	
-	return dpORuint64(res,sign_mask);
+	return details::dpORuint64(res,sign_mask);
 
 }
 
@@ -158,7 +159,7 @@ inline float fast_asinf(float x){
 
     uint32_t flag=0;
 
-    const uint32_t sign_mask = getSignMask(x);
+    const uint32_t sign_mask = details::getSignMask(x);
     const float a = std::fabs(x);
 
     float z;
@@ -190,13 +191,13 @@ inline float fast_asinf(float x){
     // No branch with the two coefficients
             
     float tmp = z + z;
-    tmp = PIO2F - tmp;                        
+    tmp = details::PIO2F - tmp;
 
     // Linear approx, not sooo needed but seable. Price is cheap though
     float res = a < 1e-4f? a : tmp * flag + (1-flag) * z ;
     
     // Restore Sign 
-    return spORuint32(res,sign_mask);
+    return details::spORuint32(res,sign_mask);
 
     return( z );
 }
@@ -204,11 +205,11 @@ inline float fast_asinf(float x){
 //------------------------------------------------------------------------------
 // The cos is in this file as well
 
-inline double fast_acos( double x ){return PIO2  - fast_asin(x);}
+inline double fast_acos( double x ){return details::PIO2  - fast_asin(x);}
 
 //------------------------------------------------------------------------------
 
-inline float fast_acosf( float x ){return PIO2F  - fast_asinf(x);}
+inline float fast_acosf( float x ){return details::PIO2F  - fast_asinf(x);}
 
 //------------------------------------------------------------------------------
 

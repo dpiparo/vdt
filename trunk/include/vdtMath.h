@@ -1,3 +1,6 @@
+#ifndef _VDT_MATH_H_
+#define _VDT_MATH_H_
+
 // Include all the VDT fucntions
 
 #include "sin.h"
@@ -16,3 +19,5 @@
 #include "inv.h"
 
 #include "identity.h"
+
+#endif

@@ -27,23 +27,18 @@
 #ifndef SIN_H_
 #define SIN_H_
 
-#include "vdtcore_common.h"
-#include "sincos_common.h"
-#include <cmath>
-#include <limits>
+#include "sincos.h"
 
 namespace vdt{
-
-using namespace sincos;
 
 // Sin double precision --------------------------------------------------------
 
 /// Double precision sine: just call sincos.
-inline double fast_sin(double x){double s,c;sincos::fast_sincos(x,s,c);return s;}
+inline double fast_sin(double x){double s,c;fast_sincos(x,s,c);return s;}
 
 //------------------------------------------------------------------------------
 
-inline float fast_sinf(float x){float s,c;sincos::fast_sincosf(x,s,c);return s;}
+inline float fast_sinf(float x){float s,c;fast_sincosf(x,s,c);return s;}
 
 //------------------------------------------------------------------------------
 void sinv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);

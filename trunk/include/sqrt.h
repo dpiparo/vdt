@@ -27,8 +27,6 @@
 #define SQRT_H_
 
 #include "vdtcore_common.h"
-#include <cmath>
-#include <limits>
 
 namespace vdt{
 
@@ -41,10 +39,10 @@ inline double fast_isqrt_general(double x, const uint32_t ISQRT_ITERATIONS) {
   const double threehalfs = 1.5;
   const double x2 = x * 0.5;
   double y  = x;
-  uint64_t i  = dp2uint64(y);
+  uint64_t i  = details::dp2uint64(y);
   // Evil!
   i  = 0x5fe6eb50c7aa19f9  - ( i >> 1 );
-  y  = uint642dp(i);
+  y  = details::uint642dp(i);
   for (uint32_t j=0;j<ISQRT_ITERATIONS;++j)
       y *= threehalfs - ( x2 * y * y ) ;
 
@@ -72,9 +70,9 @@ inline float fast_isqrtf_general(float x, const uint32_t ISQRT_ITERATIONS) {
 	const float threehalfs = 1.5f;
 	const float x2 = x * 0.5f;
 	float y  = x;
-	uint32_t i  = sp2uint32(y);
+	uint32_t i  = details::sp2uint32(y);
 	i  = 0x5f3759df - ( i >> 1 );
-	y  = uint322sp(i);
+	y  = details::uint322sp(i);
 	for (uint32_t j=0;j<ISQRT_ITERATIONS;++j)
 		y  *= ( threehalfs - ( x2 * y * y ) );
 

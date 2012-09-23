@@ -46,7 +46,7 @@ public:
 
 	/// Overloaded insertion operator, prints "0xFFF..FFF " including last 'space'
 	friend std::ostream &operator<<(std::ostream &stream, const fpToHex &obj){
-		return stream << "0x"<< std::setbase(16) <<vdt::fp2uint(obj.fpvalue) << std::setbase(10) <<' ';
+		return stream << "0x"<< std::setbase(16) <<vdt::details::fp2uint(obj.fpvalue) << std::setbase(10) <<' ';
 	}
 };
 
@@ -68,9 +68,9 @@ public:
 	/// Performs conversion to fp
 	T getValue(){
 		if(sizeof(T) == 8) 
-			return vdt::uint642dp(value);
+			return vdt::details::uint642dp(value);
 		else
-			return vdt::uint322sp((uint32_t)value);
+			return vdt::details::uint322sp((uint32_t)value);
 	}
 };
 

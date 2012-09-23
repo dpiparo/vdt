@@ -135,8 +135,8 @@ public:
       std::cout.unsetf(std::ios_base::scientific);
       std::cout.setf(std::ios_base::showbase);
       std::cout << std::setbase(16)
-                << " "<< vdt::fp2uint(m_out1[i]) 
-                << " " << vdt::fp2uint(m_out2[i]) 
+                << " "<< vdt::details::fp2uint(m_out1[i])
+                << " " << vdt::details::fp2uint(m_out2[i])
                 << " "<< std::setbase(10) << m_diff_bitv[i] << std::endl;
       std::cout.unsetf(std::ios_base::showbase);
     }

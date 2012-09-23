@@ -36,10 +36,10 @@ namespace vdt{
 
 /// General implementation of the inversion
 inline double fast_inv_general(double x, const uint32_t isqrt_iterations) {  
-  const uint64_t sign_mask = dp2uint64(x) & 0x8000000000000000; 
-  const double sqrt_one_over_x = fast_isqrt_general(dpANDuint64(x,0x7FFFFFFFFFFFFFFF),
+  const uint64_t sign_mask = details::getSignMask(x);
+  const double sqrt_one_over_x = fast_isqrt_general(std::fabs(x),
                                                    isqrt_iterations);
-  return sqrt_one_over_x*(dpORuint64(sqrt_one_over_x , sign_mask ));
+  return sqrt_one_over_x*(details::dpORuint64(sqrt_one_over_x , sign_mask ));
 }
 
 //------------------------------------------------------------------------------
@@ -64,10 +64,10 @@ inline double inv (double x) {return 1./x;}
 
 /// General implementation of the inversion
 inline float fast_invf_general(float x, const uint32_t isqrt_iterations) { 
-  const uint32_t sign_mask = sp2uint32(x) & 0x80000000; 
-  const float sqrt_one_over_x = fast_isqrtf_general(spANDuint32(x,0x7FFFFFFF),
+  const uint32_t sign_mask = details::getSignMask(x);
+  const float sqrt_one_over_x = fast_isqrtf_general(std::fabs(x),
                                                    isqrt_iterations);
-  return sqrt_one_over_x*(spORuint32(sqrt_one_over_x , sign_mask ));
+  return sqrt_one_over_x*(details::spORuint32(sqrt_one_over_x , sign_mask ));
 }
 
 //------------------------------------------------------------------------------

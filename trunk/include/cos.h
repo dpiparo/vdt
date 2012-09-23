@@ -12,24 +12,18 @@
 #ifndef COS_H_
 #define COS_H_
 
-#include "vdtcore_common.h"
-#include "sincos_common.h"
-
-#include <cmath>
-#include <limits>
+#include "sincos.h"
 
 namespace vdt{
-
-using namespace sincos;
 
 // Cos double precision --------------------------------------------------------
 
 /// Double precision cosine: just call sincos.
-inline double fast_cos(double x){double s,c;sincos::fast_sincos(x,s,c);return c;}
+inline double fast_cos(double x){double s,c;fast_sincos(x,s,c);return c;}
 
 //------------------------------------------------------------------------------
 
-inline float fast_cosf(float x){float s,c;sincos::fast_sincosf(x,s,c);return c;}
+inline float fast_cosf(float x){float s,c;fast_sincosf(x,s,c);return c;}
 
 //------------------------------------------------------------------------------
 void cosv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);

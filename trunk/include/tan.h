@@ -28,12 +28,12 @@
 #define TAN_H_
 
 #include "vdtcore_common.h"
-#include "sincos_common.h"
+#include "sincos.h"
 
-#include <cmath>
-#include <limits>
+namespace vdt{
 
-namespace {
+
+namespace details{
 
 const double PX1tan=-1.30936939181383777646E4;
 const double PX2tan=1.15351664838587416140E6;
@@ -52,9 +52,6 @@ const float DP1Ftan = 0.78515625;
 const float DP2Ftan = 2.4187564849853515625e-4;
 const float DP3Ftan = 3.77489497744594108e-8;
 
-
-using namespace vdt::sincos;
-using namespace vdt;
 
 //------------------------------------------------------------------------------
 /// Reduce to -45 to 45
@@ -82,40 +79,34 @@ inline float reduce2quadranttan(float x, int32_t& quad) {
 
 }
 
-#include <iostream>
-
-namespace vdt{
-  
-using namespace sincos;
-
 //------------------------------------------------------------------------------
 /// Double precision tangent implementation
 inline double fast_tan(double x){
 
-    const uint64_t sign_mask = getSignMask(x);
+    const uint64_t sign_mask = details::getSignMask(x);
   
     int32_t quad =0;
-    const double z=reduce2quadranttan(x,quad);
+    const double z=details::reduce2quadranttan(x,quad);
          
     const double zz = z * z;
 
     double res=z;
 
     if( zz > 1.0e-14 ){
-        double px = PX1tan;
+        double px = details::PX1tan;
         px *= zz;
-        px += PX2tan;
+        px += details::PX2tan;
         px *= zz;
-        px += PX3tan;
+        px += details::PX3tan;
 
         double qx=zz;
-        qx += QX1tan;
+        qx += details::QX1tan;
         qx *=zz; 
-        qx += QX2tan;
+        qx += details::QX2tan;
         qx *=zz;
-        qx += QX3tan;
+        qx += details::QX3tan;
         qx *=zz;
-        qx += QX4tan;
+        qx += details::QX4tan;
 
         res = z + z * zz * px / qx;
     }
@@ -126,17 +117,17 @@ inline double fast_tan(double x){
     const int32_t alt = quad^1;
     res = quad * (-1./res) + alt * res; // one coeff is one and one is 0!
     
-    return dpXORuint64(res,sign_mask);
+    return details::dpXORuint64(res,sign_mask);
 
 }
 
 // Single precision ------------------------------------------------------------
 
 inline float fast_tanf(float x){
-    const uint32_t sign_mask = getSignMask(x);
+    const uint32_t sign_mask = details::getSignMask(x);
   
     int32_t quad =0;
-    const float z=reduce2quadranttan(x,quad);
+    const float z=details::reduce2quadranttan(x,quad);
          
     const float zz = z * z;
 
@@ -159,7 +150,7 @@ inline float fast_tanf(float x){
     const int32_t alt = quad^1;
     res = quad * (-1.f/res) + alt * res; // one coeff is one and one is 0!
     
-    return spXORuint32(res,sign_mask);
+    return details::spXORuint32(res,sign_mask);
 }
 
 //------------------------------------------------------------------------------

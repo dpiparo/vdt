@@ -93,7 +93,7 @@ int main(int argc, char **argv){
 
 	// Control print
 	std::cout << "Running with nick: " << nick << ", size: " << SIZE << ", repetitions: "<< REPETITIONS
-			  << ", the pool max:" << POOL_MAX << "and the pool min:" << POOL_MIN << "\n";
+			  << ", the pool max:" << POOL_MAX << " and the pool min:" << POOL_MIN << "\n";
   
 	// setup filename
 	std::string fname = nick + "__performance_benchmark.txt";

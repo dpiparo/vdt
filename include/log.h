@@ -40,7 +40,7 @@ const double LOG_LOWER_LIMIT = 0;
 
 const double SQRTH = 0.70710678118654752440;
 
-inline const double get_log_px(const double x){
+inline double get_log_px(const double x){
 	const double PX1log = 1.01875663804580931796E-4;
 	const double PX2log = 4.97494994976747001425E-1;
 	const double PX3log = 4.70579119878881725854E0;
@@ -63,7 +63,7 @@ inline const double get_log_px(const double x){
 
 }
 
-inline const double get_log_qx(const double x){
+inline double get_log_qx(const double x){
 	const double QX1log = 1.12873587189167450590E1;
 	const double QX2log = 4.52279145837532221105E1;
 	const double QX3log = 8.29875266912776603211E1;
@@ -144,7 +144,7 @@ const float PX7logf	= 2.0000714765E-1f;
 const float PX8logf	= -2.4999993993E-1f;
 const float PX9logf	= 3.3333331174E-1f;
 
-inline const float get_log_poly(const float x){
+inline float get_log_poly(const float x){
 	float y = x*PX1logf;
 	y += PX2logf;
 	y *= x;

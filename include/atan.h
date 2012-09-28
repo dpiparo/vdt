@@ -35,7 +35,7 @@ namespace details{
 const double T3PO8 = 2.41421356237309504880;
 const double MOREBITSO2 = MOREBITS * 0.5;
 
-inline const double get_atan_px(const double x2){
+inline double get_atan_px(const double x2){
 
 	const double PX1atan = -8.750608600031904122785E-1;
 	const double PX2atan = -1.615753718733365076637E1;
@@ -57,7 +57,7 @@ inline const double get_atan_px(const double x2){
 }
 
 
-inline const double get_atan_qx(const double x2){
+inline double get_atan_qx(const double x2){
 	const double QX1atan = 2.485846490142306297962E1;
 	const double QX2atan = 1.650270098316988542046E2;
 	const double QX3atan = 4.328810604912902668951E2;

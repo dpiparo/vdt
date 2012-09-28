@@ -57,7 +57,7 @@ const double QX3asin = -1.471791292232726029859E2;
 const double QX4asin = 1.395105614657485689735E2;
 const double QX5asin = -4.918853881490881290097E1;
 
-inline const double getRX(const double x){
+inline double getRX(const double x){
 	double rx = RX1asin;
 	rx*= x;
 	rx+= RX2asin;
@@ -69,7 +69,7 @@ inline const double getRX(const double x){
 	rx+= RX5asin;
 	return rx;
 }
-inline const double getSX(const double x){
+inline double getSX(const double x){
 	double sx = x;
 	sx+= SX1asin;
 	sx*= x;    
@@ -81,7 +81,7 @@ inline const double getSX(const double x){
 	return sx;
 }
 
-inline const double getPX(const double x){
+inline double getPX(const double x){
 	double px = PX1asin;
 	px*= x;
 	px+= PX2asin;
@@ -96,7 +96,7 @@ inline const double getPX(const double x){
 	return px;
 }
 
-inline const double getQX(const double x){
+inline double getQX(const double x){
 	double qx = x;
 	qx+= QX1asin;
 	qx*= x;    

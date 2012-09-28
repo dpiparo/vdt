@@ -69,7 +69,7 @@ const float T24M1 = 16777215.;
 
 //------------------------------------------------------------------------------
 
-inline const double get_sin_px(const double x){
+inline double get_sin_px(const double x){
 	double px=C1sin;
 	px *= x;
 	px += C2sin;
@@ -86,7 +86,7 @@ inline const double get_sin_px(const double x){
 
 //------------------------------------------------------------------------------
 
-inline const double get_cos_px(const double x){
+inline double get_cos_px(const double x){
 	double px=C1cos;
 	px *= x;
 	px += C2cos;

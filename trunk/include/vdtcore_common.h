@@ -60,9 +60,10 @@ const float MAXNUMF = 3.4028234663852885981170418348451692544e38f;
  * These functions do not distinguish between -0.0 and 0.0, so are not IEC6509 
  * compliant for argument -0.0
 **/ 
-inline const double fpfloor(const double x){
-
-  return (x>=0.)? int32_t(x) : int32_t(x-1.);
+inline double fpfloor(const double x){
+  const int32_t i = x;
+  const int32_t im1 = i-1;
+  return (x>=0.)? i : im1;
 
 }
 //------------------------------------------------------------------------------
@@ -71,15 +72,21 @@ inline const double fpfloor(const double x){
  * These functions do not distinguish between -0.0 and 0.0, so are not IEC6509 
  * compliant for argument -0.0
 **/ 
-inline const float fpfloor(const float x){
-
-  return (x>=0.f)? int32_t(x) : int32_t(x-1.f);
+inline float fpfloor(const float x){
+  const int32_t i = x;
+  const int32_t im1 = i-1;
+  return (x>=0.)? i : im1;
 
 }
 //------------------------------------------------------------------------------
 
 /// Used to switch between different type of interpretations of the data (64 bits)
 union ieee754{
+	ieee754 () {};
+	ieee754 (double thed) {d=thed;};
+	ieee754 (uint64_t thell) {ll=thell;};
+	ieee754 (float thef) {f[0]=thef;};
+	ieee754 (uint32_t thei) {i[0]=thei;};
   double d;
   float f[2];
   uint32_t i[2];
@@ -90,9 +97,9 @@ union ieee754{
 //------------------------------------------------------------------------------
 
 /// Converts an unsigned long long to a double
-inline double uint642dp(uint64_t x) {
+inline double uint642dp(uint64_t ll) {
   ieee754 tmp;
-  tmp.ll=x;
+  tmp.ll=ll;
   return tmp.d;
 }
 
@@ -107,22 +114,22 @@ inline uint64_t dp2uint64(double x) {
 
 //------------------------------------------------------------------------------
 /// Makes an AND of a double and a unsigned long long
-inline const double dpANDuint64(const double x, const uint64_t i ){
+inline double dpANDuint64(const double x, const uint64_t i ){
   return uint642dp(dp2uint64(x) & i); 
 }
 //------------------------------------------------------------------------------
 /// Makes an OR of a double and a unsigned long long
-inline const double dpORuint64(const double x, const uint64_t i ){
+inline double dpORuint64(const double x, const uint64_t i ){
   return uint642dp(dp2uint64(x) | i); 
 }
 
 /// Makes a XOR of a double and a unsigned long long
-inline const double dpXORuint64(const double x, const uint64_t i ){
+inline double dpXORuint64(const double x, const uint64_t i ){
   return uint642dp(dp2uint64(x) ^ i); 
 }
 
 //------------------------------------------------------------------------------
-inline const uint64_t getSignMask(const double x){
+inline uint64_t getSignMask(const double x){
   const uint64_t mask=0x8000000000000000;
   return dp2uint64(x) & mask;
 }
@@ -145,30 +152,30 @@ inline uint32_t sp2uint32(float x) {
 
 //------------------------------------------------------------------------------
 /// Makes an AND of a float and a unsigned long
-inline const float spANDuint32(const float x, const uint32_t i ){
+inline float spANDuint32(const float x, const uint32_t i ){
   return uint322sp(sp2uint32(x) & i); 
 }
 //------------------------------------------------------------------------------
 /// Makes an OR of a float and a unsigned long
-inline const float spORuint32(const float x, const uint32_t i ){
+inline float spORuint32(const float x, const uint32_t i ){
   return uint322sp(sp2uint32(x) | i); 
 }
 
 //------------------------------------------------------------------------------
 /// Makes an OR of a float and a unsigned long
-inline const float spXORuint32(const float x, const uint32_t i ){
+inline float spXORuint32(const float x, const uint32_t i ){
   return uint322sp(sp2uint32(x) ^ i); 
 }
 //------------------------------------------------------------------------------
 /// Get the sign mask
-inline const uint32_t getSignMask(const float x){
+inline uint32_t getSignMask(const float x){
   const uint32_t mask=0x80000000;
   return sp2uint32(x) & mask;
 }
 
 //------------------------------------------------------------------------------
 /// Like frexp but vectorising and the exponent is a double.
-inline const double getMantExponent(const double x, double & fe){
+inline double getMantExponent(const double x, double & fe){
 
   uint64_t n = dp2uint64(x);
 
@@ -192,7 +199,7 @@ inline const double getMantExponent(const double x, double & fe){
 
 //------------------------------------------------------------------------------
 /// Like frexp but vectorising and the exponent is a float.
-inline const float getMantExponentf(const float x, float & fe){
+inline float getMantExponentf(const float x, float & fe){
 
     uint32_t n = sp2uint32(x);
     int32_t e = (n >> 23)-127;

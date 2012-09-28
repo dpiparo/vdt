@@ -75,7 +75,7 @@ union standard{
 //------------------------------------------------------------------------------
 
 template<class T>
-const uint32_t inline getSizeInbits(const T x){
+uint32_t inline getSizeInbits(const T x){
 	return sizeof(x) * 8;
 }
 
@@ -83,7 +83,7 @@ const uint32_t inline getSizeInbits(const T x){
 
 /// Convert a fp into a uint64_t not optimised for speed
 template<class T>
-const inline uint64_t fp2uint64(const T x){
+inline uint64_t fp2uint64(const T x){
 	const uint32_t size = getSizeInbits(x);
 	standard conv;
 	conv.dp=0.;
@@ -141,7 +141,7 @@ const std::string getbsasstr(const T x){
 //------------------------------------------------------------------------------
 /// Returns most significative different bit dp
 template <class T>
-const uint16_t diffbit(const T a,const T b ){
+uint16_t diffbit(const T a,const T b ){
 	/// make a xor
 	uint64_t ia = fp2uint64(a);
 	uint64_t ib = fp2uint64(b);

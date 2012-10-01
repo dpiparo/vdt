@@ -237,18 +237,13 @@ void getFunctionBasicNames(std::vector<std::string>* names){
 	getFunctionTuples(&tmpTuples, dummy,dummy,dummy,dummy);
 
 	names->clear();
-// 	// push just the first half!
-// 	for(int i=0;i<tmpTuples.size()/2;i++)
-//           names->push_back(std::get<0>(tmpTuples[i]));
 
         // A better algo to do that
         std::string name;
-        for(int i=0;i<tmpTuples.size();i++){
+        for(unsigned int i=0;i<tmpTuples.size();i++){
           name=std::get<0>(tmpTuples[i]);
           if (name.find("Fast")==std::string::npos &&
-//               name.find("Apr")==std::string::npos &&
               name.find("Identity")==std::string::npos){
-//             std::cout << "Pushing " << name << std::endl;
             names->push_back(name);  
           }
         }

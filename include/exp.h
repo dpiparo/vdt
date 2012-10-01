@@ -70,7 +70,7 @@ namespace details{
 inline double fast_exp(double initial_x){
 
     double x = initial_x;
-    double px=std::floor(details::LOG2E * x +0.5);
+    double px=details::fpfloor(details::LOG2E * x +0.5);
  
     const int32_t n = px;
 
@@ -119,7 +119,7 @@ inline float fast_expf(float initial_x) {
 	
     float x = initial_x;
 
-    float z = std::floor( details::LOG2EF * x +0.5f ); /* floor() truncates toward -infinity. */
+    float z = details::fpfloor( details::LOG2EF * x +0.5f ); /* floor() truncates toward -infinity. */
 
     x -= z * details::C1F;
     x -= z * details::C2F;

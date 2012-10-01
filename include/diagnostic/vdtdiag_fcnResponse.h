@@ -52,8 +52,8 @@ public:
 	fcnResponse(const std::string& fcnName, const std::vector<T>& input, const std::function<T(T)>& fcn):
 		m_from_file(false),
 		m_fcn_name(fcnName),
-		m_input(input),
-		m_fcn(fcn){
+		m_fcn(fcn),
+		m_input(input){
 		
 		m_output.reserve(m_input.size());
 		for (auto& inp : m_input )
@@ -65,10 +65,10 @@ public:
 	/// Construct from name, input and vector function
 	fcnResponse(const std::string& fcnName, const std::vector<T>& input, const std::function<void (uint32_t, T*, T*)>& fcnv):
 		m_from_file(false),
-		m_ifile_name("From Scratch"),
 		m_fcn_name(fcnName),
-		m_input(input),
-		m_fcnv(fcnv){
+		m_ifile_name("From Scratch"),
+		m_fcnv(fcnv),
+		m_input(input){
 		const uint32_t size=m_input.size();
 		m_output.reserve(size);
                 T* input_arr = const_cast<T*> (&m_input[0]);
@@ -83,13 +83,13 @@ public:
 	/// Construct from ascii file
 	fcnResponse(const std::string& input_filename):
 		m_from_file(true),
-		m_ifile_name(input_filename),
-		m_fcn_name(std::string("From ")+input_filename){
+		m_fcn_name(std::string("From ")+input_filename),
+		m_ifile_name(input_filename){
 		
 			std::ifstream ifile ( input_filename );
 			std::string line;
 			//skip the 5 header lines
-			for (uint16_t i;i<5;++i)
+			for (uint16_t i=0;i<5;++i)
 				std::getline(ifile,line);
 			//read data from file	
 			fpFromHex<T> in_val, out_val;

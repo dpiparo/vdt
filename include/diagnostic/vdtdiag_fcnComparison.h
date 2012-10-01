@@ -54,12 +54,12 @@ public:
                 const vectT& input, 
                 const vectT& out1,
                 const vectT& out2):
-                m_name(name),
-                m_input(input),
+                m_from_file(false),
+    			m_ifile_name("From scratch"),
+    			m_name(name),
+               	m_input(input),
                 m_out1(out1),
-                m_out2(out2),
-				m_from_file(false),
-				m_ifile_name("From scratch"){
+                m_out2(out2){
 	
     // A basic consistency check
     assert(input.size()==out1.size());
@@ -81,7 +81,7 @@ public:
 			std::ifstream ifile ( input_filename );
 			std::string line;
 			//skip the 5 header lines but read the func name from resp		
-			for (uint16_t i;i<2;++i)
+			for (uint16_t i=0;i<2;++i)
 				std::getline(ifile,line);
 			//read data from file	
 			//read stats:

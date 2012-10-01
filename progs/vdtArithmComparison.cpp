@@ -33,7 +33,7 @@ void list2vector(std::string csList, std::vector<std::string>* vect, char separa
 		lastCommaPos = commaPos;
 	}
 	//process the last string after the last separator if there is any
-	if(csList.size() > lastCommaPos+1)
+	if(int(csList.size()) > lastCommaPos+1)
 		vect->push_back(csList.substr(lastCommaPos+1));
 }
 
@@ -104,7 +104,7 @@ int main(int argc, char **argv){
 			<< std::setw(6) << std::right << "mean"
 			<< std::setw(6) << std::right << "RMS\n";
 
-	for(int i=0; i<ref.size(); i++){
+	for(unsigned int i=0; i<ref.size(); i++){
 		//try to open files
 		std::ifstream ifile(ref[i]);
 		if(!ifile.is_open()){

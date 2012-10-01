@@ -134,7 +134,6 @@ inline void fast_sincos( const double xx, double & s, double &c ) {
 
     int j;
     double x = details::reduce2quadrant(xx,j);
-    const double y = j;
     const double signS = (j&4); 
 
     j-=2;
@@ -142,7 +141,6 @@ inline void fast_sincos( const double xx, double & s, double &c ) {
     const double signC = (j&4);
     const double poly = j&2;
 
-    double ls,lc;
     details::fast_sincos_m45_45(x,s,c);
     
     //swap

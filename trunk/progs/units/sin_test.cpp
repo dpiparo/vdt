@@ -18,8 +18,6 @@ int main(){
 	constexpr uint32_t size=10;
 
 	constexpr double PI = M_PI;
-	constexpr double PIO2 = M_PI_2;
-	constexpr double PIO4 = M_PI_4;
 	
 	// dp
 	double dpvals[size]={PI,PI/2.9,PI/4.1,PI/6.2,PI/7,PI/7,PI/85,PI/19,PI/10,PI/20.2};

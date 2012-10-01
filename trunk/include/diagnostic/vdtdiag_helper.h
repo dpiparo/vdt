@@ -127,11 +127,11 @@ const std::string getbsasstr(const T x){
 	// sign
 	os  << bitset_as_string[offset] << " ";
 	// exponent
-	for (int i=offset+1;i<offset+1+exp_size;i++)
+	for (unsigned int i=offset+1;i<offset+1+exp_size;i++)
 		os <<  bitset_as_string[i];
 	os << " ";
 	//mantissa
-	for (int i=offset+1+exp_size;i<offset+1+exp_size+mant_size;i++)
+	for (unsigned int i=offset+1+exp_size;i<offset+1+exp_size+mant_size;i++)
 		os <<  bitset_as_string[i];
 
 	return os.str();

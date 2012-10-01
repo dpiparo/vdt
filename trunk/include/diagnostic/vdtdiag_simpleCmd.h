@@ -67,8 +67,7 @@ public:
 
 			//find (and parse) option
 			bool found = false;
-			int j;
-			for(j=0;j<allowedOpts.size();j++){
+			for(unsigned int j=0;j<allowedOpts.size();j++){
 				std::string shortFlag = std::get<0>(allowedOpts[j]);
 
 				// was short or long name of option used?
@@ -121,7 +120,7 @@ public:
 		if(opt != ""){
 			//find option
 			bool found = false;
-			for(int j=0;j<allowedOpts.size();j++){
+			for(unsigned int j=0;j<allowedOpts.size();j++){
 					std::string shortFlag = std::get<0>(allowedOpts[j]);
 
 					// try both short and long option name
@@ -137,7 +136,7 @@ public:
 		// print whole help
 		}else{
 			std::cout << "Help:\n";
-			for(int j=0;j<allowedOpts.size();j++)
+			for(unsigned int j=0;j<allowedOpts.size();j++)
 				std::cout << std::get<0>(allowedOpts[j]) << "  " << std::get<1>(allowedOpts[j]) 
 					<< "\n   " << std::get<2>(allowedOpts[j]) << "\n";
 		}

@@ -81,59 +81,13 @@ public:
 
 	//-----------------------------------------------------------------------------
 
-	/// Initialise piecewise uniform distribution.
-		//mode = 0 .. symetric <-10^maxPwr, -T_min> U <T_min, 10^maxPwr>
-		//mode = 1 .. positive <T_min, 10^maxPwr>
-		//piecewise is just for distinguishing the two constructors
-	randomPool(const uint16_t mode, const int maxPwr, const uint32_t size_per_bin, bool piecewise, const uint32_t seed=1){
-
-		std::cout<<"Piecewise\n";
-		// handy values
-		int minPwr = std::numeric_limits<T>::min_exponent10;
-		int num_bins_positive = maxPwr - minPwr;
-
-		m_min = mode ? (T)pow((T)10,minPwr) : -(T)pow((T)10,maxPwr);
-		m_max = (T)pow((T)10,maxPwr);
-		m_size = num_bins_positive * size_per_bin * (mode?2:1); 
-
-		std::cout << minPwr << " " << maxPwr << " " << m_min << " " << m_max << " " << m_size;
-
-		// Allocate the engine with seed one. Always the same numbers.
-		std::mt19937_64 mtwister_engine(seed); 
-
-		// allocate the distribution
-		// use C++11 long double to be able to generate whole double range
-		// This generates pure uniform distribution, which may be not suitable for
-		// longer ranges
-		std::uniform_real_distribution<long double>* uniform_dist;
-		m_numbers.reserve(m_size);
-
-		//fill bins
-		for(int i=minPwr; i<maxPwr; i++){
-			T cur_min = (T)pow((T)10,i);
-			uniform_dist = new std::uniform_real_distribution<long double>(cur_min,cur_min*10);
-			auto uniform_gen = std::bind(*uniform_dist, mtwister_engine);
-			//fill numbers
-			for (uint32_t j = 0; j < size_per_bin; j++){
-				// positive branch
-				m_numbers.push_back((T)uniform_gen());
-				if(!mode)
-					// negative branch
-					m_numbers.push_back(-(T)uniform_gen());
-			}
-			delete uniform_dist;
-		}
-	}
-
-	//-----------------------------------------------------------------------------
-
 	/// Initialise with an ascii file. The numbers are in hex format.
 	randomPool(const std::string input_filename){
 		m_ifile_name=input_filename;
 		std::ifstream ifile ( input_filename );
 		std::string line;
 		// skip the 5 header lines
-		for (uint16_t i;i<5;++i)
+		for (uint16_t i=0;i<5;++i)
 			std::getline(ifile,line);
 		// read from file
 		fpFromHex<T> input_val;

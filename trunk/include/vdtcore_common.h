@@ -215,9 +215,9 @@ inline double int2fp(uint64_t i) {
  * compliant for argument -0.0
 **/ 
 inline double fpfloor(const double x){
-  return std::floor(x);
+  // no problem since exp is defined between -708 and 708. Int is enough for it!
   int32_t ret = x;
-  ret-=(dp2uint64(x)>>63);  
+  ret-=(sp2uint32(x)>>31);  
   return ret;
 
 }

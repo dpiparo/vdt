@@ -55,30 +55,6 @@ const double MOREBITS = 6.123233995736765886130E-17;
 const float MAXNUMF = 3.4028234663852885981170418348451692544e38f;
 
 //------------------------------------------------------------------------------
-/**
- * A vectorisable floor implementation, not only triggered by fast-math.
- * These functions do not distinguish between -0.0 and 0.0, so are not IEC6509 
- * compliant for argument -0.0
-**/ 
-inline double fpfloor(const double x){
-  const int32_t i = x;
-  const int32_t im1 = i-1;
-  return (x>=0.)? i : im1;
-
-}
-//------------------------------------------------------------------------------
-/**
- * A vectorisable floor implementation, not only triggered by fast-math.
- * These functions do not distinguish between -0.0 and 0.0, so are not IEC6509 
- * compliant for argument -0.0
-**/ 
-inline float fpfloor(const float x){
-  const int32_t i = x;
-  const int32_t im1 = i-1;
-  return (x>=0.)? i : im1;
-
-}
-//------------------------------------------------------------------------------
 
 /// Used to switch between different type of interpretations of the data (64 bits)
 union ieee754{
@@ -231,7 +207,38 @@ inline float int2fp(uint32_t i) {
 inline double int2fp(uint64_t i) {
     return uint642dp(i);
   }
+
 //------------------------------------------------------------------------------
+/**
+ * A vectorisable floor implementation, not only triggered by fast-math.
+ * These functions do not distinguish between -0.0 and 0.0, so are not IEC6509 
+ * compliant for argument -0.0
+**/ 
+inline double fpfloor(const double x){
+  return std::floor(x);
+  int32_t ret = x;
+  ret-=(dp2uint64(x)>>63);  
+  return ret;
+
+}
+//------------------------------------------------------------------------------
+/**
+ * A vectorisable floor implementation, not only triggered by fast-math.
+ * These functions do not distinguish between -0.0 and 0.0, so are not IEC6509 
+ * compliant for argument -0.0
+**/ 
+inline float fpfloor(const float x){
+  int32_t ret = x;
+  ret-=(sp2uint32(x)>>31);  
+  return ret;
+
+}
+
+//------------------------------------------------------------------------------
+
+
+
+
 }
 
 } // end of namespace vdt

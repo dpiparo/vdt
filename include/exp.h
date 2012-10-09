@@ -72,7 +72,7 @@ inline double fast_exp(double initial_x){
     double x = initial_x;
     double px=details::fpfloor(details::LOG2E * x +0.5);
  
-    const int32_t n = px;
+    const int32_t n = int32_t(px);
 
     x -= px * 6.93145751953125E-1;
     x -= px * 1.42860682030941723212E-6;
@@ -123,7 +123,7 @@ inline float fast_expf(float initial_x) {
 
     x -= z * details::C1F;
     x -= z * details::C2F;
-    const int32_t n = z;
+    const int32_t n = int32_t ( z );
 
     const float x2 = x * x;
 

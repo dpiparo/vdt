@@ -107,9 +107,9 @@ inline double get_cos_px(const double x){
 inline double reduce2quadrant(double x, int32_t& quad) {
 
     x = fabs(x);
-    quad = ONEOPIO4 * x; // always positive, so (int) == std::floor
+    quad = int (ONEOPIO4 * x); // always positive, so (int) == std::floor
     quad = (quad+1) & (~1);    
-    const double y = quad;
+    const double y = double (quad);
     // Extended precision modular arithmetic
     return ((x - y * DP1) - y * DP2) - y * DP3;
   }
@@ -169,10 +169,10 @@ inline float reduce2quadrant(float x, int & quad) {
     /* make argument positive */
     x = fabs(x);
 
-    quad = ONEOPIO4F * x; /* integer part of x/PIO4 */
+    quad = int (ONEOPIO4F * x); /* integer part of x/PIO4 */
 
     quad = (quad+1) & (~1);
-    const float y = quad;
+    const float y = float(quad);
     // quad &=4;
     // Extended precision modular arithmetic
     return ((x - y * DP1F) - y * DP2F) - y * DP3F;

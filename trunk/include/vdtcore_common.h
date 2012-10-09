@@ -216,7 +216,7 @@ inline double int2fp(uint64_t i) {
 **/ 
 inline double fpfloor(const double x){
   // no problem since exp is defined between -708 and 708. Int is enough for it!
-  int32_t ret = x;
+  int32_t ret = int32_t (x);
   ret-=(sp2uint32(x)>>31);  
   return ret;
 
@@ -228,7 +228,7 @@ inline double fpfloor(const double x){
  * compliant for argument -0.0
 **/ 
 inline float fpfloor(const float x){
-  int32_t ret = x;
+  int32_t ret = int32_t (x);
   ret-=(sp2uint32(x)>>31);  
   return ret;
 

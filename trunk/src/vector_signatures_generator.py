@@ -88,7 +88,8 @@ def get_header_file():
 def get_impl_file():
   code= "// Automatically generated\n"+\
         '#include "%s"\n' %VDT_VECTOR_HEADER+\
-        create_vector_signatures(is_impl=True)       
+        create_vector_signatures(is_impl=True)+\
+        "\n"# the final newline
         
   return code
 		  

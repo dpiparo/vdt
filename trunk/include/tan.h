@@ -58,7 +58,7 @@ const float DP3Ftan = 3.77489497744594108e-8;
 inline double reduce2quadranttan(double x, int32_t& quad) {
 
     x = fabs(x);
-    quad = ONEOPIO4 * x; // always positive, so (int) == std::floor
+    quad = int( ONEOPIO4 * x ); // always positive, so (int) == std::floor
     quad = (quad+1) & (~1);    
     const double y = quad;
     // Extended precision modular arithmetic
@@ -70,7 +70,7 @@ inline double reduce2quadranttan(double x, int32_t& quad) {
 inline float reduce2quadranttan(float x, int32_t& quad) {
 
     x = fabs(x);
-    quad = ONEOPIO4F * x; // always positive, so (int) == std::floor
+    quad = int( ONEOPIO4F * x ); // always positive, so (int) == std::floor
     quad = (quad+1) & (~1);    
     const float y = quad;
     // Extended precision modular arithmetic

@@ -35,7 +35,7 @@ endmacro(add_exe_and_link)
 
 option( DIAG "Build in diagnostic mode - all diagnostic exes (default cache entry: OFF)" OFF)
 option( AVX "Use AVX instruction set (default cache entry: OFF)" OFF)
-option( BUILD_SHARED_LIBS "Build libraries as SHARED instead of STATIC (default cache entry: OFF)" OFF)
+option( BUILD_SHARED_LIBS "Build libraries as SHARED instead of STATIC (default cache entry: ON)" ON)
 option( USE_VC "Use Vc library - requires symlink to Vc from ${CMAKE_SOURCE_DIR} (default cache entry: OFF)" OFF)
 
 
@@ -174,3 +174,33 @@ set( LIB_DIR ${CMAKE_SOURCE_DIR}/lib )
 
 # Common Includes
 set (INC_DIR ${CMAKE_SOURCE_DIR}/include )
+
+
+# Install location
+INSTALL(FILES
+        include/asin.h
+        include/atan.h
+        include/cos.h
+        include/exp.h
+        include/identity.h
+        include/inv.h
+        include/log.h
+        include/sincos.h
+        include/sin.h
+        include/sqrt.h
+        include/tan.h
+        include/vdtcore_common.h
+        include/vdtMath.h        
+        DESTINATION include/vdt)
+
+if (BUILD_SHARED_LIBS)
+  set (LIBNAME libvdt.so)
+else (BUILD_SHARED_LIBS)
+  set (LIBNAME libvdt.a)
+endif(BUILD_SHARED_LIBS)
+
+INSTALL(FILES
+        lib/${LIBNAME}  
+        DESTINATION lib)        
+        
+

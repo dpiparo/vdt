@@ -47,9 +47,10 @@ def create_vector_signature(fcn_name,is_double=False,is_impl=False):
     float_suffix=""
   prefix=""
   vfcn_name="%s%s" %(fcn_name,suffix)
-  data_type="%s* %s" %(type, RESTRICT)
+  in_data_type="%s const * %s" %(type, RESTRICT)
+  out_data_type="%s* %s" %(type, RESTRICT)
   new_fcn_name="%s%s" %(prefix,fcn_name)
-  code =  "void %s%s(const uint32_t size, %s iarray, %s oarray)" %(new_fcn_name,suffix,data_type,data_type)
+  code =  "void %s%s(const uint32_t size, %s iarray, %s oarray)" %(new_fcn_name,suffix,in_data_type,out_data_type)
   if is_impl:
     code += "{\n"+\
           "  for (uint32_t i=0;i<size;++i)\n"+\

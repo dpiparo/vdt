@@ -154,10 +154,10 @@ inline float fast_expf(float initial_x) {
 
 //------------------------------------------------------------------------------
 
-void expv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_expv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void expfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_expfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
+void expv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_expv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void expfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_expfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
 
 } // end namespace vdt
 

@@ -215,15 +215,15 @@ inline float fast_acosf( float x ){return details::PIO2F  - fast_asinf(x);}
 
 // Vector signatures
 
-void asinv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_asinv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void asinfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_asinfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
+void asinv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_asinv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void asinfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_asinfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
 
-void acosv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_acosv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void acosfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_acosfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
+void acosv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_acosv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void acosfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_acosfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
 
 } //vdt namespace
 

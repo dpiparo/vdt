@@ -159,10 +159,10 @@ inline float fast_atanf( float xx ) {
 //------------------------------------------------------------------------------
 // Vector signatures
 
-void atanv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_atanv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void atanfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_atanfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
+void atanv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_atanv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void atanfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_atanfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
   
 }// end of vdt
 

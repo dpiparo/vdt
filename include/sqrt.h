@@ -94,12 +94,12 @@ inline float isqrtf (float x) {return 1.f/std::sqrt(x);}
 
 //------------------------------------------------------------------------------
 
-void isqrtv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_isqrtv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_approx_isqrtv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void isqrtfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_isqrtfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_approx_isqrtfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
+void isqrtv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_isqrtv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_approx_isqrtv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void isqrtfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_isqrtfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_approx_isqrtfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
 
 } // end namespace vdt
 

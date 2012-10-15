@@ -26,10 +26,10 @@ inline double fast_cos(double x){double s,c;fast_sincos(x,s,c);return c;}
 inline float fast_cosf(float x){float s,c;fast_sincosf(x,s,c);return c;}
 
 //------------------------------------------------------------------------------
-void cosv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_cosv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void cosfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_cosfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
+void cosv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_cosv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void cosfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_cosfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
 
 } //vdt namespace
 

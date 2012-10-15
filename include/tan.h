@@ -155,10 +155,10 @@ inline float fast_tanf(float x){
 
 //------------------------------------------------------------------------------
 
-void tanv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_tanv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void tanfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_tanfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
+void tanv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_tanv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void tanfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_tanfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
 
 //------------------------------------------------------------------------------
 

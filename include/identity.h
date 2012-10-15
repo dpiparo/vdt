@@ -36,8 +36,8 @@ inline float identityf(float x){return x;}
 
 //------------------------------------------------------------------------------
 
-void identityv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void identityfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
+void identityv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void identityfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
 
 
 } //vdt namespace

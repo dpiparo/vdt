@@ -87,12 +87,12 @@ inline float invf (float x) {return 1.f/x;}
 
 //------------------------------------------------------------------------------
 
-void invv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_invv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void fast_approx_invv(const uint32_t size, double* __restrict__ iarray, double* __restrict__ oarray);
-void invfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_invfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
-void fast_approx_invfv(const uint32_t size, float* __restrict__ iarray, float* __restrict__ oarray);
+void invv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_invv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void fast_approx_invv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
+void invfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_invfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
+void fast_approx_invfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
 
 } // end namespace vdt
 

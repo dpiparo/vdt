@@ -1,7 +1,7 @@
 /*
  * vdtcore_common.h
  * Common functions for the vdt routines.
- * The basic idea is to exploit pade polinomials.
+ * The basic idea is to exploit Pade polynomials.
  * A lot of ideas were inspired by the cephes math library (by Stephen L. Moshier
  * moshier@na-net.ornl.gov) as well as actual code for the exp, log, sin, cos, 
  * tan, asin, acos and atan functions. The Cephes library can be found here:

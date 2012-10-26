@@ -1,0 +1,12 @@
+trunk
+
+o Removed typos in the documentation (thanks to A. Neumann for spotting this!)
+o Fixed CMake to make the install working also on OSx
+
+v0.2.1
+
+o Shared library built by default instead of static one.
+o make install now supported. To specify the install dir use the variable 
+-DCMAKE_INSTALL_PREFIX= whith cmake.
+o Vector signatures are now void (const unsigned int, T const *, T*)
+o Petulant compilation flags (picky with warnings)

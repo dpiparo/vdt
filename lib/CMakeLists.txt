@@ -14,6 +14,11 @@ endif(BUILD_SHARED_LIBS)
 # The library
 ADD_LIBRARY(vdt ${SRC_DIR}/vdtMath_vector.cc ${INC_DIR}/vdtMath.h )
 
+# Installation of the lib
+INSTALL(TARGETS vdt  
+        DESTINATION lib)
+        
+
 # Build Vc wrapper (without c++11)
 if(USE_VC)
     SET(CMAKE_CXX_FLAGS  "${LIB_FLAGS} -fabi-version=6")

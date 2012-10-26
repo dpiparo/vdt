@@ -1,3 +1,7 @@
+trunk
+
+o Removed typos in the documentation (thanks to A. Neumann for spotting this!)
+
 v0.2.1
 
 o Shared library built by default instead of static one.

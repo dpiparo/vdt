@@ -172,6 +172,7 @@ endif(DIAG)
 INSTALL(FILES
         include/asin.h
         include/atan.h
+        include/atan2.h
         include/cos.h
         include/exp.h
         include/identity.h

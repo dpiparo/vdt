@@ -30,7 +30,6 @@
 #include<fstream>
 #include<iostream>
 #include<iomanip>
-#include<inttypes.h>
 #include"vdtcore_common.h"
 
 /// Useful manipulators

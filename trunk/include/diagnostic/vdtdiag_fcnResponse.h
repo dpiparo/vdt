@@ -9,13 +9,8 @@
 
 #include <string>
 #include <functional>
-#include <fstream>
-#include <iostream>
-#include <iomanip>
 #include <limits>
 #include <vector>
-#include "inttypes.h"
-#include "vdtcore_common.h"
 #include "vdtdiag_filePersistence.h"
 
 

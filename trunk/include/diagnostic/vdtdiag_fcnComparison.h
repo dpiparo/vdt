@@ -23,17 +23,10 @@
 #ifndef _VDT_COMPARISON_
 #define _VDT_COMPARISON_
 
-#include <string>
-#include <functional>
-#include <fstream>
-#include <iostream>
-#include <iomanip>
+
 #include <limits>
-#include <inttypes.h>
-#include "vdtcore_common.h"
 #include "vdtdiag_helper.h"
 #include "vdtdiag_filePersistence.h"
-
 #include "assert.h"
 
 /**

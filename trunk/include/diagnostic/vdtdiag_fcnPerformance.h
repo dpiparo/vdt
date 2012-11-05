@@ -1,9 +1,7 @@
 #ifndef VDTDIAG_FCNPERFORMANCE_H_
 #define VDTDIAG_FCNPERFORMANCE_H_
 
-#include <functional>
 #include <iomanip>
-#include "inttypes.h"
 #include "vdtdiag_helper.h"
 
 /**

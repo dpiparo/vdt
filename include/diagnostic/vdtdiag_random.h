@@ -75,7 +75,7 @@ public:
 	//-----------------------------------------------------------------------------
 
 	/// Write numbers on disk in the form of an ascii file. The numbers are in HEX format.
-	void writeFile(const std::string output_filename) const{
+	void writeFile(const std::string& output_filename) {
 		const std::string preamble("VDT Random numbers file (the first 5 lines are the header)\n");
 		std::ofstream ofile ( output_filename );
 		// Copy the input file if the object was created from file
@@ -111,7 +111,7 @@ public:
 	//-----------------------------------------------------------------------------
 
 	// Prints the random numbers on screen
-	void print() const{
+	void print() {
 		std::cout << "Random Pool 1D:\n";
 		const uint64_t numbers_size = m_numbers.size();
 		std::cout << std::setprecision(std::numeric_limits<T>::digits10);
@@ -120,7 +120,6 @@ public:
 	}
 
 	//-----------------------------------------------------------------------------
-
 
 private:
 	T m_min;
@@ -175,7 +174,7 @@ public:
 	//-----------------------------------------------------------------------------
 
 	/// Write numbers on disk in the form of an ascii file. The numbers are in HEX format.
-	void writeFile(const std::string output_filename) const{
+	void writeFile(const std::string& output_filename) {
 		const std::string preamble("VDT Random numbers file 2D (the first 5 lines are the header)\n");
 		std::ofstream ofile ( output_filename );
 		// Copy the input file if the object was created from file
@@ -217,7 +216,7 @@ public:
 	//-----------------------------------------------------------------------------
 
 	// Prints the random numbers on screen
-	void print() const{
+	void print() {
 		std::cout << "Random Pool 2D:\n";
 		const uint64_t numbers_size = m_numbersX.size();
 		std::cout << std::setprecision(std::numeric_limits<T>::digits10);

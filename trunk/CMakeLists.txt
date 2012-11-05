@@ -14,7 +14,7 @@ option( DIAG "Build in diagnostic mode - all diagnostic exes (default cache entr
 option( AVX "Use AVX instruction set (default cache entry: OFF)" OFF)
 option( BUILD_SHARED_LIBS "Build libraries as SHARED instead of STATIC (default cache entry: ON)" ON)
 option( USE_VC "Use Vc library - requires symlink to Vc from ${CMAKE_SOURCE_DIR} (default cache entry: OFF)" OFF)
-
+option( DEBUG "Compile library with debug symbols (default is OFF)" OFF)
 
 # determine compiler type and version ==========================================
 set(COMPILER_IS_47_GCC false)
@@ -135,7 +135,14 @@ endif()
 
 set (WARNING_FLAGS "-W -Wall -Werror")
 
-set (COMMON_FLAGS "${INTEL_SVML_FLAGS} ${SSE_AVX}  ${INLINE_OPT} ${WARNING_FLAGS}")
+set (DEBUG_FLAGS " ")
+if (DEBUG)
+  set (DEBUG_FLAGS " -g")
+  message(STATUS "Adding debugging symbols")
+endif ()
+
+
+set (COMMON_FLAGS "${INTEL_SVML_FLAGS} ${SSE_AVX}  ${INLINE_OPT} ${WARNING_FLAGS} ${DEBUG_FLAGS}")
 set (LIB_FLAGS "${VERBOSITY_OPT} ${VECT_OPT} ${VECTORIZER_VERBOSITY} ${COMMON_FLAGS}")
 set (DIAG_FLAGS "${CPP11_OPT} ${COMMON_FLAGS} ${LIBTIMINGAPPLE} ${VECT_OPT}")
 

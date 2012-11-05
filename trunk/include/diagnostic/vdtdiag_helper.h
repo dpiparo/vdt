@@ -60,9 +60,16 @@ using dpdpfunction = std::function<double(double)>;
 using dpdpfunctionv = std::function<void (uint32_t, double*, double*)>;
 using spspfunction = std::function<float(float)>;
 using spspfunctionv = std::function<void(uint32_t, float*, float*)>;
+
+using dpdp2function = std::function<double(double,double)>;
+using dpdp2functionv = std::function<void (uint32_t, double*, double*, double*)>;
+using spsp2function = std::function<float(float,float)>;
+using spsp2functionv = std::function<void(uint32_t, float*, float*, float*)>;
 //maybe for convenience
 template<class T> using genfpfunction = std::function<T(T)>;
-template<class T> using genfpfunctionv = std::function<void(uint32_t, T*, T*)>;
+template<class T> using genfpfunctionv = std::function<void(uint32_t, T*, T*, T*)>;
+template<class T> using genfp2function = std::function<T(T)>;
+template<class T> using genfp2functionv = std::function<void(uint32_t, T*, T*, T*)>;
 //------------------------------------------------------------------------------
 /// Useful union
 
@@ -197,7 +204,6 @@ void print_different_bit(const T a, const T b, const bool show_identical=true){
 	if (show_identical)
 		std::cout << getbsasstr(a) << std::endl
 		<< getbsasstr(b) << std::endl<< std::endl;
-
 }
 
 
@@ -208,6 +214,13 @@ template<class T>
 void printFuncDiff(const std::string& func_name, std::function<T(T)> f1,std::function<T(T)> f2, const T x){
 	std::cout << "Function " << func_name << "(" << x << ")" <<  std::endl;
 	print_different_bit(f1(x),f2(x),true);
+}
+
+/// Invoke two functions and print on screen their argument and different bits
+template<class T>
+void printFuncDiff(const std::string& func_name, std::function<T(T,T)> f1,std::function<T(T,T)> f2, const T x, const T y){
+	std::cout << "Function " << func_name << "(" << x << ", "<< y <<")" <<  std::endl;
+	print_different_bit(f1(x,y),f2(x,y),true);
 }
 
 //------------------------------------------------------------------------------
@@ -232,6 +245,27 @@ void printFuncDiff(const std::string& func_name,
 	delete [] res_2;
 }
 
+/// Invoke two functions and print on screen their argument and different bits
+template<class T>
+void printFuncDiff(const std::string& func_name,
+		genfp2functionv<T> f1,
+		genfp2functionv<T> f2,
+		T* x_arr,
+		T* y_arr,
+		const uint32_t size){
+	std::cout << "Function " << func_name << std::endl;
+	T* res_1 = new T[size];
+	f1(size,x_arr,y_arr,res_1);
+	T* res_2 = new T[size];
+	f2(size,x_arr,y_arr,res_2);
+	for (uint32_t i=0;i<size;i++){
+		std::cout << "Calculated in (" << x_arr[i] << ", " << y_arr[i] << ")" << std::endl;
+		print_different_bit(res_1[i],res_2[i],true);
+	};
+	delete [] res_1;
+	delete [] res_2;
+}
+
 //------------------------------------------------------------------------------
 // Function tests
 /// Test a fp function with a double (double) signatures
@@ -250,6 +284,26 @@ void printFuncDiff(const std::string& name,
 
 }
 
+
+//------------------------------------------------------------------------------
+// Function tests
+/// Test a fp function with a double (double) signatures
+template<class T>
+void printFuncDiff(const std::string& name,
+		std::function<T(T,T)> fpfunction,
+		std::function<T(T,T)> fpfunction_ref,
+		T* fpvals1,
+		T* fpvals2,
+		const uint32_t size){
+
+	for (uint32_t i=0;i<size;i++)
+		printFuncDiff ( name,
+				(std::function<T(T,T)>) fpfunction,
+				(std::function<T(T,T)>) fpfunction_ref,
+				fpvals1[i],
+				fpvals2[i]);
+
+}
 
 //------------------------------------------------------------------------------
 /// Get the clock cycles

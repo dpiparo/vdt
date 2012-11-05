@@ -21,24 +21,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* FIXME:
- * Some work still to be done on the building side with cmake.
- * I don't want to keep everything in a file, but I want a lib.
- */
-
 #ifndef _VDT_RANDOM_
 #define _VDT_RANDOM_
 
-#include <string>
 #include <vector>
 #include <random>
 #include <fstream>
-#include <iostream>
-#include <iomanip>
 #include <limits>
 #include <functional>
-#include <inttypes.h>
-#include <cmath>
 #include "vdtcore_common.h"
 #include "vdtdiag_filePersistence.h"
 
@@ -57,7 +47,7 @@ class randomPool{
 
 public:
 	/// Initialise with min and max numbers as well as desired size of the pool.
-	randomPool(const T min, const T max, const uint32_t size, const uint32_t seed=1): 
+	randomPool(const T min, const T max, const uint64_t size, const uint32_t seed=1):
 		m_min(min), 
 		m_max(max), 
 		m_size(size){
@@ -154,9 +144,9 @@ public:
 	//-----------------------------------------------------------------------------
 
 private:
-	long double m_min;
-	long double m_max;
-	int64_t m_size;
+	T m_min;
+	T m_max;
+	uint64_t m_size;
 	std::string m_ifile_name;
 	std::vector<T> m_numbers;
 };

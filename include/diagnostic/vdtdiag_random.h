@@ -59,13 +59,13 @@ public:
 		// use C++11 long double to be able to generate whole double range
 		// This generates pure uniform distribution, which may be not suitable for
 		// longer ranges
-		std::uniform_real_distribution<long double> uniform_dist(m_min, m_max);
+		std::uniform_real_distribution<T> uniform_dist(m_min, m_max);
 
 		auto uniform_gen = std::bind(uniform_dist, mtwister_engine);
 		
 		// Fill the numbers
 		m_numbers.reserve(size);
-		for (uint32_t i = 0; i < m_size; ++i)
+		for (uint64_t i = 0; i < m_size; ++i)
 			m_numbers.push_back((T)uniform_gen());
 	}
 
@@ -118,7 +118,7 @@ public:
 			<< "Maximum Number = " << m_max << std::endl
 			<< "Total numbers = " << m_size << std::endl;
 			// Do not write dec, but HEX!
-			for (uint32_t i=0;i<m_numbers.size();++i)
+			for (uint64_t i=0;i<m_numbers.size();++i)
 					ofile << fpToHex<T>(m_numbers[i]);
 			ofile << std::setbase(10);
 		}
@@ -133,11 +133,11 @@ public:
 	
 	// Prints the random numbers on screen
 	void print() const{
-		uint32_t counter=1;
+		uint64_t counter=1;
 		std::cout << "Random Pool:\n";
-		const uint32_t numbers_size = m_numbers.size();
+		const uint64_t numbers_size = m_numbers.size();
 		std::cout << std::setprecision(std::numeric_limits<T>::digits10);
-		for(uint32_t i=0;i<numbers_size;++i)
+		for(uint64_t i=0;i<numbers_size;++i)
 			std::cout << counter++ << "/" << numbers_size << " - " << m_numbers[i] << std::endl;
 	}
 

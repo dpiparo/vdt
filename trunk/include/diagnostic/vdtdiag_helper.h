@@ -67,8 +67,8 @@ using spsp2function = std::function<float(float,float)>;
 using spsp2functionv = std::function<void(uint32_t, float*, float*, float*)>;
 //maybe for convenience
 template<class T> using genfpfunction = std::function<T(T)>;
-template<class T> using genfpfunctionv = std::function<void(uint32_t, T*, T*, T*)>;
-template<class T> using genfp2function = std::function<T(T)>;
+template<class T> using genfpfunctionv = std::function<void(uint32_t, T*, T*)>;
+template<class T> using genfp2function = std::function<T(T,T)>;
 template<class T> using genfp2functionv = std::function<void(uint32_t, T*, T*, T*)>;
 //------------------------------------------------------------------------------
 /// Useful union

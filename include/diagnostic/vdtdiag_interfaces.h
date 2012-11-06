@@ -110,11 +110,14 @@ protected:
 		// This generates pure uniform distribution, which may be not suitable for
 		// longer ranges
 		std::uniform_real_distribution<long double> uniform_dist(min, max);
-		auto uniform_gen = std::bind(uniform_dist, m_mtwister_engine);
 		// Fill the numbers
 		randomv.reserve(m_size);
-		for (uint64_t i = 0; i < m_size; ++i)
-			randomv.push_back((T)uniform_gen());
+		for (uint64_t i = 0; i < m_size; ++i){
+			T temp = (T)uniform_dist(m_mtwister_engine);
+			//std::cout << "Generated num = " << temp << "\n";
+			randomv.push_back(temp);
+			}
+		std::cout << "\n";
 		}
 private:
 	const uint64_t m_size;

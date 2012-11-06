@@ -151,8 +151,10 @@ public:
 				const std::function<T(T,T)>& fcn):
 		IfcnResponse<T>(fcnName,input1,input2),
 		m_fcn(fcn){
-		for (uint64_t i=0;i<input1.size();++i)
+		for (uint64_t i=0;i<input1.size();++i){
+		    //std::cout << "fcn("<<input1[i]<<", "<< input2[i] <<")="<< fcn(input1[i], input2[i])<<"\n";
 			pushOutputVal( fcn(input1[i], input2[i]) );
+		}
 	}
 	//-----------------------------------------------------------------------------
 
@@ -201,9 +203,9 @@ public:
     void pushInput1Val(T val) {IfcnResponse<T>::pushInput1Val(val);};
     inline const T input1Val(uint64_t index) {return IfcnResponse<T>::input1Val (index);};
 
-    inline std::vector<T>& getInput2() {return IfcnResponse<T>::getInput1();};
-    void pushInput2Val(T val) {IfcnResponse<T>::pushInput1Val(val);};
-    inline const T input2Val(uint64_t index) {return IfcnResponse<T>::input1Val (index);};
+    inline std::vector<T>& getInput2() {return IfcnResponse<T>::getInput2();};
+    void pushInput2Val(T val) {IfcnResponse<T>::pushInput2Val(val);};
+    inline const T input2Val(uint64_t index) {return IfcnResponse<T>::input2Val (index);};
     //-----------------------------------------------------------------------------
 
 	/// Return the input

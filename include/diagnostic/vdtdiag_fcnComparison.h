@@ -27,7 +27,8 @@
 #include <limits>
 #include "vdtdiag_helper.h"
 #include "vdtdiag_filePersistence.h"
-#include "assert.h"
+#include "vdtdiag_interfaces.h"
+
 
 /**
  * Class that represents the comparison of the response of two mathematical 
@@ -37,13 +38,245 @@
  * functions outputs are provided.
  **/
 
+template<typename T>
+class fcnComparison1D:public IfcnComparison<T>{
+	using vectT=std::vector<T>;
+public:
+//------------------------------------------------------------------------------
+	fcnComparison1D(const std::string& name,
+			const vectT& input,
+            const vectT& out1,
+            const vectT& out2):
+         IfcnComparison<T>(name,out1,out2),
+         m_input(input){};
+//------------------------------------------------------------------------------
+	fcnComparison1D(const std::string& input_filename):
+		IfcnComparison<T>(input_filename){
+		std::ifstream ifile ( input_filename );
+			std::string line;
+			//skip the 2 header lines but read the func name from resp
+			for (uint16_t i=0;i<5;++i)
+				std::getline(ifile,line);
+			//read data from file
+			//read stats:
+			fpFromHex<double> mean, rms;
+			ifile >> IfcnComparison<T>::m_max >> IfcnComparison<T>::m_min >> mean >> rms;
+			IfcnComparison<T>::m_mean = mean.getValue();
+			IfcnComparison<T>::m_RMS = rms.getValue();
+			//read rest of file
+			fpFromHex<T> in_val, out1_val, out2_val;
+			uint16_t tmp_diff;
+			T dummy;	//input value for Python, now useless
+			while(ifile >> in_val >> out1_val >> out2_val >> tmp_diff >> dummy) {
+				m_input.push_back(in_val.getValue());
+				IfcnComparison<T>::m_out1.push_back(out1_val.getValue());
+				IfcnComparison<T>::m_out2.push_back(out2_val.getValue());
+				IfcnComparison<T>::m_diff_bitv.push_back(tmp_diff);
+			}
+	};
+//------------------------------------------------------------------------------
+	~fcnComparison1D(){};
+//------------------------------------------------------------------------------
+
+  /// Print to screen the information
+  void print(){
+
+	// Loop over all numbers
+	uint32_t counter=0;
+	const uint32_t size=m_input.size();
+	std::cout << "Function Performance Comparison:\n";
+	for (uint32_t i=0;i<size;++i){
+	  //DECIMAL
+	  const uint32_t width=std::numeric_limits<T>::digits10 +2;
+	  // Patchwork, but it's ok to read!
+	  const uint32_t dec_repr_w=width+7;
+	  std::cout << std::setprecision(width);
+	  std::cout <<  counter++ << "/" << size << " " << IfcnComparison<T>::m_name;
+	  std::cout.setf(std::ios_base::scientific);
+	  std::cout << "( " << std::setw(dec_repr_w) << m_input[i] << " ) = "
+				<< std::setw(dec_repr_w) << IfcnComparison<T>::m_out1[i] << " "
+				<< std::setw(dec_repr_w) << IfcnComparison<T>::m_out2[i]; //<< "\t"
+	  std::cout.unsetf(std::ios_base::scientific);
+	  std::cout.setf(std::ios_base::showbase);
+	  std::cout << std::setbase(16)
+				<< " "<< vdt::details::fp2uint(IfcnComparison<T>::m_out1[i])
+				<< " " << vdt::details::fp2uint(IfcnComparison<T>::m_out2[i])
+				<< " "<< std::setbase(10) << IfcnComparison<T>::m_diff_bitv[i] << std::endl;
+	  std::cout.unsetf(std::ios_base::showbase);
+	}
+	// now the stats
+	IfcnComparison<T>::printStats();
+  }
+  //------------------------------------------------------------------------------
+  /// Dump on ascii file
+	void writeFile(const std::string& output_filename){
+		const std::string preamble("VDT function arithmetics performance comparison file (the first 5 lines are the header)\n");
+		std::ofstream ofile ( output_filename );
+		// Copy the input file if the object was created from file
+		if (IfcnComparison<T>::m_from_file){
+			std::string line;
+			std::ifstream ifile ( IfcnComparison<T>::m_ifile_name );
+			getline(ifile,line);
+			ofile << "Dumped by an object initialised by " << IfcnComparison<T>::m_ifile_name << " - "
+					<< preamble;
+			ofile << ifile.rdbuf() ;
+		}
+		else{ // Write an header and the numbers in the other case
+			ofile << preamble;
+			if (sizeof(T)==8) // some kind of RTTC
+				ofile << "Double Precision\n";
+			else
+				ofile << "Single Precision\n";
+			ofile << "Comparison specs/function name = " << IfcnComparison<T>::m_name << std::endl
+				<< "Format: input out1 out2 diffbit (decimal)input\nFirst line are stats: Max Min 0xMean 0xRMS\n";
+			// Do not write dec, but HEX!
+			// First line are stats
+			ofile << IfcnComparison<T>::m_max << " " << IfcnComparison<T>::m_min << " "
+					<< fpToHex<double>(IfcnComparison<T>::m_mean)
+					<< fpToHex<double>(IfcnComparison<T>::m_RMS) << std::endl;
+			// Now the rest of file
+			ofile.precision(std::numeric_limits<T>::digits10);
+			for (uint32_t i=0;i<m_input.size();++i)
+				ofile << fpToHex<T>(m_input[i]) << fpToHex<T>(IfcnComparison<T>::m_out1[i])
+				<< fpToHex<T>(IfcnComparison<T>::m_out2[i]) << IfcnComparison<T>::m_diff_bitv[i] << " "
+				<< std::fixed << m_input[i] <<std::endl;	//m_input[i] for python to easily read it
+		}
+	}
+
+//------------------------------------------------------------------------------
+
+private:
+	vectT m_input;
+
+};
+
+
+
+template<typename T>
+class fcnComparison2D:public IfcnComparison<T>{
+	using vectT=std::vector<T>;
+public:
+//------------------------------------------------------------------------------
+	fcnComparison2D(const std::string& name,
+			const vectT& input1,
+			const vectT& input2,
+            const vectT& out1,
+            const vectT& out2):
+         IfcnComparison<T>(name,out1,out2),
+         m_input1(input1),
+         m_input2(input2){};
+//------------------------------------------------------------------------------
+	fcnComparison2D(const std::string& input_filename):
+		IfcnComparison<T>(input_filename){
+		std::ifstream ifile ( input_filename );
+			std::string line;
+			//skip the 2 header lines but read the func name from resp
+			for (uint16_t i=0;i<5;++i)
+				std::getline(ifile,line);
+			//read data from file
+			//read stats:
+			fpFromHex<double> mean, rms;
+			ifile >> IfcnComparison<T>::m_max >> IfcnComparison<T>::m_min >> mean >> rms;
+			IfcnComparison<T>::m_mean = mean.getValue();
+			IfcnComparison<T>::m_RMS = rms.getValue();
+			//read rest of file
+			fpFromHex<T> in_val1, in_val2, out1_val, out2_val;
+			uint16_t tmp_diff;
+			T dummy1, dummy2;	//input value for Python, now useless
+			while(ifile >> in_val1 >> in_val2 >> out1_val >> out2_val >> tmp_diff >> dummy1 >> dummy2) {
+				m_input1.push_back(in_val1.getValue());
+				m_input2.push_back(in_val2.getValue());
+				IfcnComparison<T>::m_out1.push_back(out1_val.getValue());
+				IfcnComparison<T>::m_out2.push_back(out2_val.getValue());
+				IfcnComparison<T>::m_diff_bitv.push_back(tmp_diff);
+			}
+	};
+//------------------------------------------------------------------------------
+	~fcnComparison2D(){};
+//------------------------------------------------------------------------------
+
+  /// Print to screen the information
+  void print(){
+
+	// Loop over all numbers
+	uint32_t counter=0;
+	const uint32_t size=m_input1.size();
+	std::cout << "Function Performance Comparison:\n";
+	for (uint32_t i=0;i<size;++i){
+	  //DECIMAL
+	  const uint32_t width=std::numeric_limits<T>::digits10 +2;
+	  // Patchwork, but it's ok to read!
+	  const uint32_t dec_repr_w=width+7;
+	  std::cout << std::setprecision(width);
+	  std::cout <<  counter++ << "/" << size << " " << IfcnComparison<T>::m_name;
+	  std::cout.setf(std::ios_base::scientific);
+	  std::cout << "( " << std::setw(dec_repr_w) << m_input1[i] << ", "<< m_input2[i]<< " ) = "
+				<< std::setw(dec_repr_w) << IfcnComparison<T>::m_out1[i] << " "
+				<< std::setw(dec_repr_w) << IfcnComparison<T>::m_out2[i]; //<< "\t"
+	  std::cout.unsetf(std::ios_base::scientific);
+	  std::cout.setf(std::ios_base::showbase);
+	  std::cout << std::setbase(16)
+				<< " "<< vdt::details::fp2uint(IfcnComparison<T>::m_out1[i])
+				<< " " << vdt::details::fp2uint(IfcnComparison<T>::m_out2[i])
+				<< " "<< std::setbase(10) << IfcnComparison<T>::m_diff_bitv[i] << std::endl;
+	  std::cout.unsetf(std::ios_base::showbase);
+	}
+	// now the stats
+	IfcnComparison<T>::printStats();
+  }
+  //------------------------------------------------------------------------------
+  /// Dump on ascii file
+	void writeFile(const std::string& output_filename){
+		const std::string preamble("VDT function arithmetics performance comparison file (the first 5 lines are the header)\n");
+		std::ofstream ofile ( output_filename );
+		// Copy the input file if the object was created from file
+		if (IfcnComparison<T>::m_from_file){
+			std::string line;
+			std::ifstream ifile ( IfcnComparison<T>::m_ifile_name );
+			getline(ifile,line);
+			ofile << "Dumped by an object initialised by " << IfcnComparison<T>::m_ifile_name << " - "
+					<< preamble;
+			ofile << ifile.rdbuf() ;
+		}
+		else{ // Write an header and the numbers in the other case
+			ofile << preamble;
+			if (sizeof(T)==8) // some kind of RTTC
+				ofile << "Double Precision\n";
+			else
+				ofile << "Single Precision\n";
+			ofile << "Comparison specs/function name = " << IfcnComparison<T>::m_name << std::endl
+				<< "Format: input out1 out2 diffbit (decimal)input\nFirst line are stats: Max Min 0xMean 0xRMS\n";
+			// Do not write dec, but HEX!
+			// First line are stats
+			ofile << IfcnComparison<T>::m_max << " " << IfcnComparison<T>::m_min << " "
+					<< fpToHex<double>(IfcnComparison<T>::m_mean)
+					<< fpToHex<double>(IfcnComparison<T>::m_RMS) << std::endl;
+			// Now the rest of file
+			ofile.precision(std::numeric_limits<T>::digits10);
+			for (uint32_t i=0;i<m_input1.size();++i)
+				ofile << fpToHex<T>(m_input1[i]) << fpToHex<T>(m_input2[i])
+				<< fpToHex<T>(IfcnComparison<T>::m_out1[i]) << fpToHex<T>(IfcnComparison<T>::m_out2[i])
+				<< IfcnComparison<T>::m_diff_bitv[i] << " "
+				<< std::fixed << m_input1[i] << " " << m_input2[i] <<std::endl;	//inputs for python to easily read it
+		}
+	}
+
+//------------------------------------------------------------------------------
+
+private:
+	vectT m_input1;
+	vectT m_input2;
+};
+
+
+
 template<class T>
-class fcnComparison{
+class fcnComparison_old{
   using vectT=std::vector<T>;
 public:
 
   /// Ctor from input, output1 and output2.
-  fcnComparison(const std::string& name, 
+  fcnComparison_old(const std::string& name,
                 const vectT& input, 
                 const vectT& out1,
                 const vectT& out2):
@@ -66,7 +299,7 @@ public:
 	}
 
 	/// Construct from a file
-  fcnComparison(const std::string& input_filename):
+  fcnComparison_old(const std::string& input_filename):
 		m_from_file(true),
 		m_ifile_name(input_filename),
 		m_name(std::string("From ")+input_filename){
@@ -103,7 +336,7 @@ public:
 //------------------------------------------------------------------------------
 
   /// Nothing to do here
-  ~fcnComparison(){};
+  ~fcnComparison_old(){};
 
 //------------------------------------------------------------------------------    
     
@@ -123,7 +356,7 @@ public:
       std::cout <<  counter++ << "/" << size << " " << m_name;
       std::cout.setf(std::ios_base::scientific);
       std::cout << "( " << std::setw(dec_repr_w) << m_input[i] << " ) = "                         
-                << std::setw(dec_repr_w)<< m_out1[i] << " "
+                << std::setw(dec_repr_w) << m_out1[i] << " "
                 << std::setw(dec_repr_w) << m_out2[i]; //<< "\t"
       std::cout.unsetf(std::ios_base::scientific);
       std::cout.setf(std::ios_base::showbase);
@@ -240,5 +473,11 @@ private:
   }
   
 };
+
+
+// For compatibility
+template <typename T>
+using fcnComparison = fcnComparison1D<T>;
+
 
 #endif

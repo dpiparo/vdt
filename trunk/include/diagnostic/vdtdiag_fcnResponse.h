@@ -6,7 +6,7 @@
  * 
  **/
 
-
+#include "assert.h"
 #include <algorithm>
 #include <limits>
 #include <vector>

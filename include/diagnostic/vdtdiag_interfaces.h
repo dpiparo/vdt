@@ -25,6 +25,7 @@
 #include <vector>
 #include <functional>
 #include <iomanip>
+#include "assert.h"
 #include "vdtdiag_helper.h"
 
 #ifndef _VDT_INTERFACES_

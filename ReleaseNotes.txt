@@ -7,13 +7,15 @@ o randomPool:
  * Added 2D random generator and test 
 o Removed redundancy of includes in diagnostic files
 o Removed fake program deleteme.cpp
-o fcnResponse:
+o fcnResponse,fcnComparison:
  * Added interface
  * Added 2D version
+ * Added test
 o printFuncDiff: added T(T,T) and void(uint32_t,T*,T*,T*) versions
 o Atan2:
- * Added test for single precision atan2 to cmake
-
+ * Added tests for response.
+ 
+ 
 V0.2.3
 o Fixed the installation of atan2.h
 

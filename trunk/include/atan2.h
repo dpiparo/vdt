@@ -31,7 +31,9 @@
 
 namespace vdt{
 
+
 inline float fast_atan2f( float y, float x ) {
+
     // move in first octant
     float xx = std::fabs(x);
     float yy = std::fabs(y);
@@ -65,6 +67,19 @@ inline float fast_atan2f( float y, float x ) {
     return ret;
 
   }
+
+inline double fast_atan2( double y, double x ) {
+	// Temporary waiting for the full implementation!!!
+	return fast_atan2f(y,x);
+}
+
+//------------------------------------------------------------------------------
+// Vector signatures
+
+void atan2v(const uint32_t size, double const * __restrict__ iarray, double const * __restrict__ iarray2, double* __restrict__ oarray);
+void fast_atan2v(const uint32_t size, double const * __restrict__ iarray, double const * __restrict__ iarray2, double* __restrict__ oarray);
+void atan2fv(const uint32_t size, float const * __restrict__ iarray, float const * __restrict__ iarray2, float* __restrict__ oarray);
+void fast_atan2fv(const uint32_t size, float const * __restrict__ iarray, float const * __restrict__ iarray2, float* __restrict__ oarray);
 
 } // end namespace vdt
 

@@ -9,6 +9,7 @@ RESTRICT="__restrict__"
 
 FUNCTIONS_LIST=["asin",
                 "atan",
+                "atan2",
                 "acos",
                 "cos",
                 "exp",
@@ -21,6 +22,7 @@ FUNCTIONS_LIST=["asin",
                 "fast_asin",
                 "fast_acos",
                 "fast_atan",
+                "fast_atan2",
                 "fast_cos",
                 "fast_exp",
                 "fast_inv",
@@ -53,11 +55,21 @@ def create_vector_signature(fcn_name,is_double=False,is_impl=False):
   code =  "void %s%s(const uint32_t size, %s iarray, %s oarray)" %(new_fcn_name,suffix,in_data_type,out_data_type)
 #          "  %s *al_iarray = (%s*) __builtin_assume_aligned(iarray, 16);\n"%(type,type) +\
 #          "  %s *al_oarray = (%s*) __builtin_assume_aligned(oarray, 16);\n"%(type,type) +\
+  # Special case
+  if "atan2" in fcn_name:
+      code =  "void %s%s(const uint32_t size, %s iarray1, %s iarray2, %s oarray)" %(new_fcn_name,suffix,in_data_type,in_data_type,out_data_type)
+
   if is_impl:
-    code += "{\n"+\
+    impl_code = "{\n"+\
           "  for (uint32_t i=0;i<size;++i)\n"+\
 		  "    oarray[i]=%s%s(iarray[i]);\n" %(new_fcn_name,float_suffix)+\
           "}\n\n"
+    if "atan2" in fcn_name:
+      impl_code = "{\n"+\
+          "  for (uint32_t i=0;i<size;++i)\n"+\
+          "    oarray[i]=%s%s(iarray1[i],iarray2[i]);\n" %(new_fcn_name,float_suffix)+\
+          "}\n\n"   
+    code+=impl_code
   else:
 	code += ";\n"	  
   return code

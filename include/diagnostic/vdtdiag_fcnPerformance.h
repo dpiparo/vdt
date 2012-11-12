@@ -11,7 +11,6 @@
  * for the vector signature.
  * TODO:
  *  o Write the timings on disk on an ascii file
- *  o Find a valid OSx alternative to clock_gettime
  *
  * Author Danilo Piparo 
  * 

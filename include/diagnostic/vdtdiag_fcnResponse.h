@@ -166,7 +166,7 @@ public:
 		IfcnResponse<T>(fcnName,input1,input2),
 		m_fcnv(fcnv){
 		//m_output.reserve(size);
-		const uint64_t size = this->getInput().size();
+		const uint64_t size = this->getInput1().size();
 		T* input1_arr = const_cast<T*> (&this->getInput1()[0]);
 		T* input2_arr = const_cast<T*> (&this->getInput2()[0]);
         T* output_arr = new T[size];

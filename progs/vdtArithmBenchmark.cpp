@@ -27,7 +27,7 @@ const float spool_minf = -spool_maxf;
 const float ppool_minf = .0001f;//8192;
 
 
-template<class T, template<class> class Tuple>
+template<typename T, template<class> class Tuple>
 void saveResponses(const Tuple<T>& fcn_tuple, const std::string nickname){
 	fcnResponse<T> response(std::get<0>(fcn_tuple),std::get<2>(fcn_tuple),std::get<1>(fcn_tuple));
 	// create filename: <nickname>_<fcnname>_response.txt
@@ -35,6 +35,23 @@ void saveResponses(const Tuple<T>& fcn_tuple, const std::string nickname){
 	// two dashes to prevent i.e Fast_something mess
 	fname += "__";
 	fname += std::get<0>(fcn_tuple);
+	fname += "__response.txt";
+	// dump to file
+	response.writeFile(fname);
+}
+
+template<typename T,class FUNC>
+void saveResponses2D(const std::string& fcn_name,
+        			 FUNC fcn,
+		             const std::vector<T>& randomX,
+		             const std::vector<T>& randomY,
+		             const std::string& nickname){
+	fcnResponse2D<T> response(fcn_name, randomX,randomY,fcn);
+	// create filename: <nickname>_<fcnname>_response.txt
+	std::string fname = nickname;
+	// two dashes to prevent i.e Fast_something mess
+	fname += "__";
+	fname += fcn_name;
 	fname += "__response.txt";
 	// dump to file
 	response.writeFile(fname);
@@ -77,8 +94,10 @@ int main(int argc, char **argv){
 	std::cout << "Nick = " << nick << ", size = " << SIZE << "\n";
 	std::cout<<"Starting...\n";
 
-	randomPool<double>* spool,*ppool,*onepool,*exppool;
+	randomPool<double> *spool,*ppool,*onepool,*exppool;
+	randomPool2D<double> *spool2D;
 	spool = new randomPool<double>(spool_min,spool_max,SIZE);
+	spool2D = new randomPool2D<double>(-1.,-1.,1.,1.,SIZE);
 	ppool = new randomPool<double>(ppool_min,spool_max,SIZE);
 	onepool = new randomPool<double>(-1.0,1.0,SIZE);
 	exppool = new randomPool<double>(-705.,705.,SIZE);
@@ -109,17 +128,40 @@ int main(int argc, char **argv){
 		saveResponses<double,genfpfcnv_tuple>(i_tuple,nick);
         }
 
-	//delete to spare memeory.. maybe useful
+	// Add atan2
+	std::cout << " - Processing atan2 (all flavours)\n";
+	saveResponses2D<double,vdth::dpdp2function> ("Atan2",
+    		atan2,
+    		spool2D->getNumbersX(),spool2D->getNumbersY(),
+    		nick);
+    saveResponses2D<double,vdth::dpdp2function> ("fast_Atan2",
+    		vdt::fast_atan2,
+    		spool2D->getNumbersX(),spool2D->getNumbersY(),
+    		nick);
+
+    saveResponses2D<double,vdth::dpdp2functionv> ("Atan2v",
+    		vdt::atan2v,
+    		spool2D->getNumbersX(),spool2D->getNumbersY(),
+    		nick);
+    saveResponses2D<double,vdth::dpdp2functionv> ("fast_Atan2v",
+    		vdt::fast_atan2v,
+    		spool2D->getNumbersX(),spool2D->getNumbersY(),
+    		nick);
+
+	//delete to spare memeory..
 	delete spool;
 	delete ppool;
 	delete onepool;
 	delete exppool;
+	delete spool2D;
 
 	randomPool<float>* fspool,*fppool,*fonepool,*fexppool;
+	randomPool2D<float>* fspool2D;
 	fspool = new randomPool<float>(spool_minf,spool_maxf,SIZE);
 	fppool = new randomPool<float>(ppool_minf,spool_maxf,SIZE);
 	fonepool = new randomPool<float>(-1.0,1.0,SIZE);
 	fexppool = new randomPool<float>(-85,85,SIZE);
+	fspool2D = new randomPool2D<float>(-1.f,-1.f,1.f,1.f,SIZE);
 
 	//======================SP=========================
 	std::vector<genfpfcn_tuple<float>> spTuples;
@@ -147,6 +189,32 @@ int main(int argc, char **argv){
 		saveResponses<float,genfpfcnv_tuple>(i_tuple,nick);
         }
 
+	// Add atan2
+	std::cout << " - Processing atan2 (all flavours)\n";
+    saveResponses2D<float,vdth::spsp2function> ("Atan2f",
+    		atan2f,
+    		fspool2D->getNumbersX(),fspool2D->getNumbersY(),
+    		nick);
+    saveResponses2D<float,vdth::spsp2function> ("fast_Atan2f",
+    		vdt::fast_atan2f,
+    		fspool2D->getNumbersX(),fspool2D->getNumbersY(),
+    		nick);
+    saveResponses2D<float,vdth::spsp2functionv> ("Atan2fv",
+    		vdt::atan2fv,
+    		fspool2D->getNumbersX(),fspool2D->getNumbersY(),
+    		nick);
+    saveResponses2D<float,vdth::spsp2functionv> ("fast_Atan2fv",
+    		vdt::fast_atan2fv,
+    		fspool2D->getNumbersX(),fspool2D->getNumbersY(),
+    		nick);
+
+
+	//delete to spare memeory
+	delete fspool;
+	delete fppool;
+	delete fonepool;
+	delete fexppool;
+	delete fspool2D;
 
 	return 0;
 }

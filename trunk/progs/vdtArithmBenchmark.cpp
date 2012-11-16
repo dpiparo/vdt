@@ -134,7 +134,7 @@ int main(int argc, char **argv){
     		atan2,
     		spool2D->getNumbersX(),spool2D->getNumbersY(),
     		nick);
-    saveResponses2D<double,vdth::dpdp2function> ("fast_Atan2",
+    saveResponses2D<double,vdth::dpdp2function> ("Fast_Atan2",
     		vdt::fast_atan2,
     		spool2D->getNumbersX(),spool2D->getNumbersY(),
     		nick);
@@ -143,7 +143,7 @@ int main(int argc, char **argv){
     		vdt::atan2v,
     		spool2D->getNumbersX(),spool2D->getNumbersY(),
     		nick);
-    saveResponses2D<double,vdth::dpdp2functionv> ("fast_Atan2v",
+    saveResponses2D<double,vdth::dpdp2functionv> ("Fast_Atan2v",
     		vdt::fast_atan2v,
     		spool2D->getNumbersX(),spool2D->getNumbersY(),
     		nick);
@@ -195,7 +195,7 @@ int main(int argc, char **argv){
     		atan2f,
     		fspool2D->getNumbersX(),fspool2D->getNumbersY(),
     		nick);
-    saveResponses2D<float,vdth::spsp2function> ("fast_Atan2f",
+    saveResponses2D<float,vdth::spsp2function> ("Fast_Atan2f",
     		vdt::fast_atan2f,
     		fspool2D->getNumbersX(),fspool2D->getNumbersY(),
     		nick);
@@ -203,7 +203,7 @@ int main(int argc, char **argv){
     		vdt::atan2fv,
     		fspool2D->getNumbersX(),fspool2D->getNumbersY(),
     		nick);
-    saveResponses2D<float,vdth::spsp2functionv> ("fast_Atan2fv",
+    saveResponses2D<float,vdth::spsp2functionv> ("Fast_Atan2fv",
     		vdt::fast_atan2fv,
     		fspool2D->getNumbersX(),fspool2D->getNumbersY(),
     		nick);

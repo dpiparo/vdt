@@ -133,7 +133,7 @@ elseif(COMPILER_IS_OLD_GCC)
   set (CPP11_OPT "")
 endif()
 
-set (WARNING_FLAGS "-W -Wall -Werror")
+set (WARNING_FLAGS "-W -Wall -Werror -Wno-error=unused-parameter")
 
 set (DEBUG_FLAGS " ")
 if (DEBUG)

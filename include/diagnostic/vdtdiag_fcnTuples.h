@@ -48,7 +48,49 @@ using namespace vdt;
 
 template<class T> using genfpfcn_tuple = std::tuple<const std::string, vdth::genfpfunction<T>,const std::vector<T>& >;
 template<class T> using genfpfcnv_tuple = std::tuple<const std::string, vdth::genfpfunctionv<T>,const std::vector<T>& >;
+template<class T> using genfpfcn2D_tuple = std::tuple<const std::string,
+																											vdth::genfp2function<T>,
+																											const std::vector<T>&,
+																											const std::vector<T>&>;
+template<class T> using genfpfcn2Dv_tuple = std::tuple<const std::string,
+																											 vdth::genfp2functionv<T>,
+																											 const std::vector<T>&,
+																											 const std::vector<T>&>;
 
+/// Fills vector passed in first parameter with fcn tuples based on random pools passed in following parameters
+void getFunctionTuples(	std::vector<genfpfcn2D_tuple<double>>* fcn_tuples,
+			            			randomPool2D<double>& moneone2Pool){
+    fcn_tuples->clear();
+
+    fcn_tuples->push_back(genfpfcn2D_tuple<double>( "Atan2", atan2, moneone2Pool.getNumbersX(), moneone2Pool.getNumbersY() ));
+    fcn_tuples->push_back(genfpfcn2D_tuple<double>( "Fast_Atan2", fast_atan2, moneone2Pool.getNumbersX(), moneone2Pool.getNumbersY() ));
+}
+
+void getFunctionTuples(	std::vector<genfpfcn2D_tuple<float>>* fcn_tuples,
+					            	randomPool2D<float>& moneone2Pool){
+    fcn_tuples->clear();
+
+    fcn_tuples->push_back(genfpfcn2D_tuple<float>( "Atan2f", atan2f, moneone2Pool.getNumbersX(), moneone2Pool.getNumbersY() ));
+    fcn_tuples->push_back(genfpfcn2D_tuple<float>( "Fast_Atan2f", fast_atan2f, moneone2Pool.getNumbersX(), moneone2Pool.getNumbersY() ));
+}
+
+/// Fills vector passed in first parameter with fcn tuples based on random pools passed in following parameters
+void getFunctionTuplesvect(	std::vector<genfpfcn2Dv_tuple<double>>* fcn_tuples,
+					             	randomPool2D<double>& moneone2Pool){
+    fcn_tuples->clear();
+
+    fcn_tuples->push_back(genfpfcn2Dv_tuple<double>( "Atan2v", atan2v, moneone2Pool.getNumbersX(), moneone2Pool.getNumbersY() ));
+    fcn_tuples->push_back(genfpfcn2Dv_tuple<double>( "Fast_Atan2v", fast_atan2v, moneone2Pool.getNumbersX(), moneone2Pool.getNumbersY() ));
+}
+
+/// Fills vector passed in first parameter with fcn tuples based on random pools passed in following parameters
+void getFunctionTuplesvect(	std::vector<genfpfcn2Dv_tuple<float>>* fcn_tuples,
+					             	randomPool2D<float>& moneone2Pool){
+    fcn_tuples->clear();
+
+    fcn_tuples->push_back(genfpfcn2Dv_tuple<float>( "Atan2fv", atan2fv, moneone2Pool.getNumbersX(), moneone2Pool.getNumbersY() ));
+    fcn_tuples->push_back(genfpfcn2Dv_tuple<float>( "Fast_Atan2fv", fast_atan2fv, moneone2Pool.getNumbersX(), moneone2Pool.getNumbersY() ));
+}
 
 /// Fills vector passed in first parameter with fcn tuples based on random pools passed in following parameters
 void getFunctionTuples(	std::vector<genfpfcn_tuple<double>>* fcn_tuples,

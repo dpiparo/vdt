@@ -38,9 +38,11 @@ class Iprintable{
 public:
     Iprintable(){};
     virtual ~Iprintable(){};
-	virtual void writeFile(const std::string& output_filename) =0;
-	virtual void print() =0;
+	  virtual void writeFile(const std::string& output_filename) =0;
+	  virtual void print() =0;
 };
+
+//------------------------------------------------------------------------------
 
 template<typename T>
 class IfcnComparison:Iprintable{

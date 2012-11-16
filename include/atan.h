@@ -85,77 +85,77 @@ inline double get_atan_qx(const double x2){
 /// Fast Atan implementation double precision
 inline double fast_atan(double x){
 
-    /* make argument positive and save the sign */
-    const uint64_t sign_mask = details::getSignMask(x);
-    x=std::fabs(x);
+	/* make argument positive and save the sign */
+	const uint64_t sign_mask = details::getSignMask(x);
+	x=std::fabs(x);
 
-    /* range reduction */
-    const double originalx=x;
+	/* range reduction */
+	const double originalx=x;
 
-    double y = details::PIO4;
-    double factor = details::MOREBITSO2;
-    x = (x-1.0) / (x+1.0);
-    
-    if( originalx > details::T3PO8 ) {
-        y = details::PIO2;
-        factor = details::MOREBITS;
-        x = -1.0 / originalx ;
-        }
-    if ( originalx <= 0.66 ) {
-        y = 0.;
-	factor = 0.;
-        x = originalx;
-        }
+	double y = details::PIO4;
+	double factor = details::MOREBITSO2;
+	x = (x-1.0) / (x+1.0);
 
-    const double x2 = x * x;
+	if( originalx > details::T3PO8 ) {
+		y = details::PIO2;
+		factor = details::MOREBITS;
+		x = -1.0 / originalx ;
+	}
+	if ( originalx <= 0.66 ) {
+		y = 0.;
+		factor = 0.;
+		x = originalx;
+	}
 
-    const double px = details::get_atan_px(x2);
-    const double qx = details::get_atan_qx(x2);
-    
-    //double res = y +x * x2 * px / qx + x +factor;
+	const double x2 = x * x;
 
-    const double poq=px / qx;
-    
-    double res = x * x2 * poq + x;
-    res+=y;
-    
-    res+=factor;
-    
-    return details::dpORuint64(res,sign_mask);
-    }  
+	const double px = details::get_atan_px(x2);
+	const double qx = details::get_atan_qx(x2);
+
+	//double res = y +x * x2 * px / qx + x +factor;
+
+	const double poq=px / qx;
+
+	double res = x * x2 * poq + x;
+	res+=y;
+
+	res+=factor;
+
+	return details::dpORuint64(res,sign_mask);
+}
 
 //------------------------------------------------------------------------------
 /// Fast Atan implementation single precision
 inline float fast_atanf( float xx ) {
 
-    const uint32_t sign_mask = details::getSignMask(xx);
-       
-    float x= std::fabs(xx);
-    const float x0=x;
-    float y=0.0f;
-    
-    /* range reduction */
-    if( x0 > 0.4142135623730950f ){ // * tan pi/8 
-      x = (x0-1.0f)/(x0+1.0f);
-      y = details::PIO4F;
-      }
-    if( x0 > 2.414213562373095f ){  // tan 3pi/8
-      x = -( 1.0f/x0 );
-      y = details::PIO2F;
-      }
-    
+	const uint32_t sign_mask = details::getSignMask(xx);
 
-    const float x2 = x * x;
-    y +=
-      ((( 8.05374449538e-2f * x2
-          - 1.38776856032E-1f) * x2
-          + 1.99777106478E-1f) * x2
-          - 3.33329491539E-1f) * x2 * x
-          + x;
+	float x= std::fabs(xx);
+	const float x0=x;
+	float y=0.0f;
 
-    return details::spORuint32(y,sign_mask);
-  }  
-  
+	/* range reduction */
+	if( x0 > 0.4142135623730950f ){ // * tan pi/8
+		x = (x0-1.0f)/(x0+1.0f);
+		y = details::PIO4F;
+	}
+	if( x0 > 2.414213562373095f ){  // tan 3pi/8
+		x = -( 1.0f/x0 );
+		y = details::PIO2F;
+	}
+
+
+	const float x2 = x * x;
+	y +=
+			((( 8.05374449538e-2f * x2
+					- 1.38776856032E-1f) * x2
+					+ 1.99777106478E-1f) * x2
+					- 3.33329491539E-1f) * x2 * x
+					+ x;
+
+	return details::spORuint32(y,sign_mask);
+}
+
 //------------------------------------------------------------------------------
 // Vector signatures
 
@@ -163,7 +163,7 @@ void atanv(const uint32_t size, double const * __restrict__ iarray, double* __re
 void fast_atanv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
 void atanfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
 void fast_atanfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
-  
+
 }// end of vdt
 
 #endif // end of atan

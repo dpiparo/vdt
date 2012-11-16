@@ -28,49 +28,98 @@
 #define ATAN2_H_
 
 #include "vdtcore_common.h"
+#include "atan.h"
 
 namespace vdt{
 
 
 inline float fast_atan2f( float y, float x ) {
 
-    // move in first octant
-    float xx = std::fabs(x);
-    float yy = std::fabs(y);
-    float tmp =0.0f;
-    if (yy>xx) {
-      tmp = yy;
-      yy=xx; xx=tmp;
-    }
+	// move in first octant
+	float xx = std::fabs(x);
+	float yy = std::fabs(y);
+	float tmp =0.0f;
+	if (yy>xx) {
+		tmp = yy;
+		yy=xx; xx=tmp;
+		tmp =1.f;
+	}
 
-    float t=yy/xx;
-    float z=t;
-    if( t > 0.4142135623730950f ) // * tan pi/8
-        z = (t-1.0f)/(t+1.0f);
+	float t=yy/xx;
+	float z=t;
+	if( t > 0.4142135623730950f ) // * tan pi/8
+			z = (t-1.0f)/(t+1.0f);
 
-    //printf("%e %e %e %e\n",yy,xx,t,z);
-    float z2 = z * z;
-    float ret =
-      ((( 8.05374449538e-2f * z2
-      - 1.38776856032E-1f) * z2
-    + 1.99777106478E-1f) * z2
-       - 3.33329491539E-1f) * z2 * z
-      + z;
+	//printf("%e %e %e %e\n",yy,xx,t,z);
+	float z2 = z * z;
+	float ret =
+			((( 8.05374449538e-2f * z2
+					- 1.38776856032E-1f) * z2
+					+ 1.99777106478E-1f) * z2
+					- 3.33329491539E-1f) * z2 * z
+					+ z;
 
-    // move back in place
-    if (y==0) ret=0.0f;
-    if( t > 0.4142135623730950f ) ret += details::PIO4F;
-    if (tmp!=0) ret = details::PIO2F - ret;
-    if (x<0) ret = details::PIF - ret;
-    if (y<0) ret = -ret;
+	// move back in place
+	if (y==0) ret=0.0f;
+	if( t > 0.4142135623730950f ) ret += details::PIO4F;
+	if (tmp!=0) ret = details::PIO2F - ret;
+	if (x<0) ret = details::PIF - ret;
+	if (y<0) ret = -ret;
 
-    return ret;
+	return ret;
 
-  }
+}
 
 inline double fast_atan2( double y, double x ) {
-	// Temporary waiting for the full implementation!!!
-	return fast_atan2f(y,x);
+	// move in first octant
+	double xx = std::fabs(x);
+	double yy = std::fabs(y);
+	double tmp =0.0;
+	if (yy>xx) {
+		tmp = yy;
+		yy=xx; xx=tmp;
+	}
+
+	double t=yy/xx;
+	double z=t;
+
+	double s = details::PIO4;
+	double factor = details::MOREBITSO2;
+	t = (t-1.0) / (t+1.0);
+
+	if( z > details::T3PO8 ) {
+		s = details::PIO2;
+		factor = details::MOREBITS;
+		t = -1.0 / z ;
+	}
+	if ( z <= 0.66 ) {
+		s = 0.;
+		factor = 0.;
+		t = z;
+	}
+
+	const double t2 = t * t;
+
+	const double px = details::get_atan_px(t2);
+	const double qx = details::get_atan_qx(t2);
+
+	//double res = y +x * x2 * px / qx + x +factor;
+
+	const double poq=px / qx;
+
+	double ret = t * t2 * poq + t;
+	ret+=s;
+
+	ret+=factor;
+
+	// move back in place
+	if (y==0) ret=0.0;
+	if (tmp!=0) ret = details::PIO2 - ret;
+	if (x<0) ret = details::PI - ret;
+	if (y<0) ret = -ret;
+
+
+	return ret;
 }
 
 //------------------------------------------------------------------------------

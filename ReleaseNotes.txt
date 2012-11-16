@@ -14,6 +14,8 @@ o fcnResponse,fcnComparison:
 o printFuncDiff: added T(T,T) and void(uint32_t,T*,T*,T*) versions
 o Atan2:
  * Added tests for response.
+ * Integrated in the accuracy tests
+ * Double and Single precision
  
  
 V0.2.3

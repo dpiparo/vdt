@@ -27,18 +27,19 @@
 namespace vdt{
 
 // Identity double precision ---------------------------------------------------
-/// Double implementation
 inline double identity(double x){return x;}
+inline double identity2D (double x, double y){return x;}
+
 
 // Identity float precision ---------------------------------------------------
-/// Double implementation
 inline float identityf(float x){return x;}
-
+inline float identity2Df (float x, float y){float x;}
 //------------------------------------------------------------------------------
 
 void identityv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);
 void identityfv(const uint32_t size, float const * __restrict__ iarray, float* __restrict__ oarray);
-
+void identity2Dv(const uint32_t size, double const * __restrict__ iarray, double const * __restrict__ iarray2, double* __restrict__ oarray);
+void identity2Dfv(const uint32_t size, float const * __restrict__ iarray, float const * __restrict__ iarray2, float* __restrict__ oarray);
 
 } //vdt namespace
 

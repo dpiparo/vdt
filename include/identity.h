@@ -33,7 +33,7 @@ inline double identity2D (double x, double y){return x-y;}
 
 // Identity float precision ---------------------------------------------------
 inline float identityf(float x){return x;}
-inline float identity2Df (float x, float y){float x-y;}
+inline float identity2Df (float x, float y){return x-y;}
 //------------------------------------------------------------------------------
 
 void identityv(const uint32_t size, double const * __restrict__ iarray, double* __restrict__ oarray);

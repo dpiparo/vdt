@@ -106,7 +106,7 @@ inline double dpXORuint64(const double x, const uint64_t i ){
 
 //------------------------------------------------------------------------------
 inline uint64_t getSignMask(const double x){
-  const uint64_t mask=0x8000000000000000;
+  const uint64_t mask=0x8000000000000000ULL;
   return dp2uint64(x) & mask;
 }
 
@@ -164,10 +164,10 @@ inline double getMantExponent(const double x, double & fe){
   fe = e-1023 ;
 
   // This puts to 11 zeroes the exponent
-  n &=0x800FFFFFFFFFFFFF;
+  n &=0x800FFFFFFFFFFFFFULL;
   // build a mask which is 0.5, i.e. an exponent equal to 1022
   // which means *2, see the above +1.
-  const uint64_t p05 = 0x3FE0000000000000; //dp2uint64(0.5);
+  const uint64_t p05 = 0x3FE0000000000000ULL; //dp2uint64(0.5);
   n |= p05;
 
   return uint642dp(n);

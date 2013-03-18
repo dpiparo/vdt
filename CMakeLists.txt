@@ -12,6 +12,7 @@ include ( CMakeDefaults.txt )
 
 option( DIAG "Build in diagnostic mode - all diagnostic exes (default cache entry: OFF)" OFF)
 option( AVX "Use AVX instruction set (default cache entry: OFF)" OFF)
+option( SSE "Use SSE instruction set (default cache entry: ON)" ON)
 option( BUILD_SHARED_LIBS "Build libraries as SHARED instead of STATIC (default cache entry: ON)" ON)
 option( USE_VC "Use Vc library - requires symlink to Vc from ${CMAKE_SOURCE_DIR} (default cache entry: OFF)" OFF)
 option( DEBUG "Compile library with debug symbols (default is OFF)" OFF)
@@ -36,16 +37,15 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
    endif()
   message(STATUS "Found gcc version ${_gcc_version}")
   
-  string(COMPARE LESS "${_gcc_version}" "4.7.0" _old_gcc)
-  if(_old_gcc)
+  if("${_gcc_version}" VERSION_LESS "4.7.0")
     set(COMPILER_IS_OLD_GCC true)
     message(STATUS "You are running gcc older than 4.7, turning off Vc, AVX and DIAG options")
     change_option(USE_VC 0)
     change_option(AVX 0)
     change_option(DIAG 0)
-  else(_old_gcc)
+  else()
     set(COMPILER_IS_47_GCC true)
-  endif(_old_gcc)
+  endif()
 else()
   message("Unsupported compiler !!!")
 endif()
@@ -54,7 +54,10 @@ endif()
 
 # SIMD instructions set---------------------------------------------------------
 # same for both compilers
-set(SSE_AVX "-msse")
+if (SSE)
+  message(STATUS "Using SSE extensions!")
+  set(SSE_AVX "-msse")
+endif (SSE)
 
 if (AVX)
   message(STATUS "Using AVX extensions!")
@@ -63,6 +66,8 @@ if (AVX)
     set(SSE_AVX "-xavx")
   endif(COMPILER_IS_ICC)
 endif (AVX)
+
+
 
 # To use svml at CERN ----------------------------------------------------------
 set (INTEL_SVML_FLAGS "")
@@ -116,7 +121,11 @@ endif(DIAG)
 
 set (VECT_OPT "-O3 -ffast-math -ftree-vectorize")
 set (VECTORIZER_VERBOSITY "-ftree-vectorizer-verbose=0")
-set (CPP11_OPT "-std=gnu++0x")
+if ("4.7.0" VERSION_LESS "${_gcc_version}")
+ set (CPP11_OPT "-std=gnu++0x")
+else()
+ set (CPP11_OPT "-std=c++11")
+endif()
 set (INLINE_OPT " --param vect-max-version-for-alias-checks=50 --param inline-unit-growth=150")
 set (VERBOSITY_OPT "-Winline -pedantic")
 

@@ -12,6 +12,7 @@ include ( CMakeDefaults.txt )
 
 option( DIAG "Build in diagnostic mode - all diagnostic exes (default cache entry: OFF)" OFF)
 option( AVX "Use AVX instruction set (default cache entry: OFF)" OFF)
+option( AVX2 "Use AVX2 instruction set (default cache entry: OFF)" OFF)
 option( SSE "Use SSE instruction set (default cache entry: ON)" ON)
 option( BUILD_SHARED_LIBS "Build libraries as SHARED instead of STATIC (default cache entry: ON)" ON)
 option( USE_VC "Use Vc library - requires symlink to Vc from ${CMAKE_SOURCE_DIR} (default cache entry: OFF)" OFF)
@@ -42,6 +43,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "You are running gcc older than 4.7, turning off Vc, AVX and DIAG options")
     change_option(USE_VC 0)
     change_option(AVX 0)
+    change_option(AVX2 0)
     change_option(DIAG 0)
   else()
     set(COMPILER_IS_47_GCC true)
@@ -54,19 +56,26 @@ endif()
 
 # SIMD instructions set---------------------------------------------------------
 # same for both compilers
-if (SSE)
+if (SSE AND (NOT (AVX OR AVX2) ))
   message(STATUS "Using SSE extensions!")
   set(SSE_AVX "-msse")
-endif (SSE)
+endif ()
 
-if (AVX)
+if (AVX AND (NOT AVX2))
   message(STATUS "Using AVX extensions!")
   set (SSE_AVX "-mavx")
   if(COMPILER_IS_ICC)
     set(SSE_AVX "-xavx")
   endif(COMPILER_IS_ICC)
-endif (AVX)
+endif ()
 
+if (AVX2)
+  message(STATUS "Using AVX2 extensions!")
+  set (SSE_AVX "-mavx2")
+  if(COMPILER_IS_ICC)
+    set(SSE_AVX "-xavx2")
+  endif(COMPILER_IS_ICC)
+endif ()
 
 
 # To use svml at CERN ----------------------------------------------------------
@@ -127,7 +136,7 @@ else()
  set (CPP11_OPT "-std=c++11")
 endif()
 set (INLINE_OPT " --param vect-max-version-for-alias-checks=50 --param inline-unit-growth=150")
-set (VERBOSITY_OPT "-Winline -pedantic")
+set (VERBOSITY_OPT "-Winline ")
 
 # compiler dependent changes ---------------------------------------------------
 if(COMPILER_IS_ICC)

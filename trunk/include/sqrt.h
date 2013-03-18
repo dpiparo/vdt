@@ -41,7 +41,7 @@ inline double fast_isqrt_general(double x, const uint32_t ISQRT_ITERATIONS) {
   double y  = x;
   uint64_t i  = details::dp2uint64(y);
   // Evil!
-  i  = 0x5fe6eb50c7aa19f9  - ( i >> 1 );
+  i  = 0x5fe6eb50c7aa19f9ULL  - ( i >> 1 );
   y  = details::uint642dp(i);
   for (uint32_t j=0;j<ISQRT_ITERATIONS;++j)
       y *= threehalfs - ( x2 * y * y ) ;

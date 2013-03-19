@@ -1,4 +1,10 @@
-trunk
+V0.3.0
+o Constants
+ * Add ULL to unsigned long long constants
+o CMake
+ * Removed -pedantic
+ * Add possibility to disable SSE for ARM or other archs
+ * More readable constructs
 o Can now add debugging symbols to build with -D DEBUG=1 .
 o randomPool:
  * Removed long doubles
@@ -26,7 +32,6 @@ o Removed typos in the documentation (thanks to A. Neumann for spotting this!)
 o Fixed CMake to make the install working also on OSx
 
 v0.2.1
-
 o Shared library built by default instead of static one.
 o make install now supported. To specify the install dir use the variable -DCMAKE_INSTALL_PREFIX= whith cmake.
 o Vector signatures are now void (const unsigned int, T const *, T*)

@@ -1,7 +1,12 @@
-# Auto generate the code for the vector signatures
+# Auto generate the code for the vector signatures and if needed preload
 
 # Generate the code for the lib
-EXEC_PROGRAM ("cd src;python vector_signatures_generator.py;cd -")
+if (PRELOAD)
+set (SIGGENOPTS  " -p")
+else()
+set (SIGGENOPTS  " ")
+endif()
+EXEC_PROGRAM ("cd src;python signatures_generator.py ${SIGGENOPTS};cd -")
 
 #generare Vc wrapper and config file
 if(USE_VC)

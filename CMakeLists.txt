@@ -16,6 +16,7 @@ option( AVX2 "Use AVX2 instruction set (default cache entry: OFF)" OFF)
 option( SSE "Use SSE instruction set (default cache entry: ON)" ON)
 option( NEON "Use NEON instruction set (default cache entry: OFF)" OFF)
 option( BUILD_SHARED_LIBS "Build libraries as SHARED instead of STATIC (default cache entry: ON)" ON)
+option( PRELOAD "Create in the library the symbols to preload the library (default cache entry: OFF)" OFF)
 option( USE_VC "Use Vc library - requires symlink to Vc from ${CMAKE_SOURCE_DIR} (default cache entry: OFF)" OFF)
 option( DEBUG "Compile library with debug symbols (default is OFF)" OFF)
 
@@ -213,6 +214,6 @@ INSTALL(FILES
         include/sqrt.h
         include/tan.h
         include/vdtcore_common.h
-        include/vdtMath.h        
+        include/vdtMath.h
         DESTINATION include/vdt)
 

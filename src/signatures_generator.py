@@ -44,10 +44,12 @@ VDT_VECTOR_IMPL='vdtMath_signatures.cc'
 
 def create_preload_signatures():
   code="// Automatically generated signatures for preload\n\n"
-  for fpSuffix,fpType in (("","double"),("f","float")):
+  for fpSuffix,fpType in (("","double"),("f","float"),("","float")):
     for function in LIBM_FUNCTIONS_LIST:
       libmFunction="%s%s" %(function,fpSuffix)
       vdtFunction = "vdt::fast_%s" %(libmFunction)
+      if fpSuffix=="" and fpType=="float":
+        vdtFunction+="f"
       if function=="atan2":
         code += "%s %s(%s x, %s y){return %s(x,y);};\n"%(fpType,libmFunction,fpType,fpType,vdtFunction)
       else:

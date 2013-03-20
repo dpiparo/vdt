@@ -1,23 +1,26 @@
-#! /usr/bin/python
+#! /usr/bin/env python
 
 """
 Generate the .cc file with the signatures
-of the vector functions.
+of the vector functions and if requested 
+the ones for the preload
 """
 
 RESTRICT="__restrict__"
 
-FUNCTIONS_LIST=["asin",
+LIBM_FUNCTIONS_LIST=["asin",
                 "atan",
                 "atan2",
                 "acos",
                 "cos",
                 "exp",
-                "inv",
                 "log",
                 "sin",
-                "isqrt",
-                "tan",
+                "tan"]
+
+FUNCTIONS_LIST=LIBM_FUNCTIONS_LIST+\
+               ["isqrt",
+                "inv",
                 "identity",
                 "identity2D",
                 "fast_asin",
@@ -35,10 +38,24 @@ FUNCTIONS_LIST=["asin",
                 "fast_tan"]
 
 VDT_VECTOR_HEADER='vdtMath.h'
-VDT_VECTOR_IMPL='vdtMath_vector.cc'
-                
+VDT_VECTOR_IMPL='vdtMath_signatures.cc'
+
 #------------------------------------------------------------------
-                
+
+def create_preload_signatures():
+  code="// Automatically generated signatures for preload\n\n"
+  for fpSuffix,fpType in (("","double"),("f","float")):
+    for function in LIBM_FUNCTIONS_LIST:
+      libmFunction="%s%s" %(function,fpSuffix)
+      vdtFunction = "vdt::fast_%s" %(libmFunction)
+      if function=="atan2":
+        code += "%s %s(%s x, %s y){return %s(x,y);};\n"%(fpType,libmFunction,fpType,fpType,vdtFunction)
+      else:
+        code += "%s %s(%s x){return %s(x);};\n"%(fpType,libmFunction,fpType,vdtFunction)
+  return  code
+
+#------------------------------------------------------------------
+
 def create_vector_signature(fcn_name,is_double=False,is_impl=False):
   # For single precision
   suffix="fv"
@@ -54,8 +71,7 @@ def create_vector_signature(fcn_name,is_double=False,is_impl=False):
   out_data_type="%s* %s" %(type, RESTRICT)
   new_fcn_name="%s%s" %(prefix,fcn_name)
   code =  "void %s%s(const uint32_t size, %s iarray, %s oarray)" %(new_fcn_name,suffix,in_data_type,out_data_type)
-#          "  %s *al_iarray = (%s*) __builtin_assume_aligned(iarray, 16);\n"%(type,type) +\
-#          "  %s *al_oarray = (%s*) __builtin_assume_aligned(oarray, 16);\n"%(type,type) +\
+
   # Special case
   if "atan2" in fcn_name or "identity2D" in fcn_name:
       code =  "void %s%s(const uint32_t size, %s iarray1, %s iarray2, %s oarray)" %(new_fcn_name,suffix,in_data_type,in_data_type,out_data_type)
@@ -85,20 +101,6 @@ def create_vector_signatures(is_impl=False):
   code += "} // end of vdt namespace"
   return code
 
-
-#------------------------------------------------------------------   
-   
-def get_header_file():
-  code= "// Automatically generated\n"\
-        '#ifndef __VDT_VECTOR__\n'\
-        '#define __VDT_VECTOR__\n'\
-        '#include "%"\n' %VDT_VECTOR_HEADER+\
-        '#include "inttypes.h"\n'+\
-        create_vector_signatures(is_impl=False)+\
-        '\n'\
-        '#endif'
-  return code
-
 #------------------------------------------------------------------   
 		   
 def get_impl_file():
@@ -106,25 +108,29 @@ def get_impl_file():
         '#include "%s"\n' %VDT_VECTOR_HEADER+\
         create_vector_signatures(is_impl=True)+\
         "\n"# the final newline
-        
+
   return code
-		  
+
 #------------------------------------------------------------------
 
-def create_header():
-  ofile=file(VDT_VECTOR_HEADER,'w')
-  ofile.write(get_header_file())
-  ofile.close()
-  
-#------------------------------------------------------------------
-
-def create_impl():
+def create_impl(preloadSignatures):
   ofile=file(VDT_VECTOR_IMPL,'w')
   ofile.write(get_impl_file())
+  if preloadSignatures:
+    ofile.write(create_preload_signatures())
   ofile.close()
 
 #------------------------------------------------------------------
-  
+
+from optparse import OptionParser
+
 if __name__ == "__main__":
-  #create_header()
-  create_impl()
+  parser = OptionParser(usage="usage: %prog [options]")
+  parser.add_option("-p",
+                    action="store_true",
+                    dest="preload_flag",
+                    default=False,
+                    help="Create symbols for the preload")
+  (options, args) = parser.parse_args()
+  create_impl(preloadSignatures=options.preload_flag)
+

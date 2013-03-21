@@ -116,8 +116,8 @@ inline double fast_tan(double x){
     quad >>=1;
     const int32_t alt = quad^1;
     res = quad * (-1./res) + alt * res; // one coeff is one and one is 0!
-    
-    return details::dpXORuint64(res,sign_mask);
+
+    return x==0 ? 0 : details::dpXORuint64(res,sign_mask);
 
 }
 
@@ -150,7 +150,7 @@ inline float fast_tanf(float x){
     const int32_t alt = quad^1;
     res = quad * (-1.f/res) + alt * res; // one coeff is one and one is 0!
     
-    return details::spXORuint32(res,sign_mask);
+    return x==0 ? 0 : details::spXORuint32(res,sign_mask);
 }
 
 //------------------------------------------------------------------------------

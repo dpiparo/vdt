@@ -1,3 +1,9 @@
+V0.3.2
+o Added the possibility to prepare the lib for preload. The CMake command
+is -DPRELOAD=1. If set, symbols identical to the Libm ones but containing 
+a vdt call will be generated in the lib. If preloaded, vdt calls will be 
+performed instead of libm ones.
+
 V0.3.1
 o Use NEON instructions on ARM (-DNEON=1 cmake option)
 

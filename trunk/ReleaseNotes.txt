@@ -1,3 +1,11 @@
+V0.3.4
+o Added regex support to perfbenchmark to profile only groups of functions 
+o Removed fpe rising in atan2, both single and double precision, when x 
+argument was 0.
+
+V0.3.3
+o Minor Bugfixes
+
 V0.3.2
 o Added the possibility to prepare the lib for preload. The CMake command
 is -DPRELOAD=1. If set, symbols identical to the Libm ones but containing 

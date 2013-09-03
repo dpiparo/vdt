@@ -1,0 +1,48 @@
+# Useful Macros to be used later
+
+function(getCompilerVersion _compiler_version)
+   exec_program(${CMAKE_C_COMPILER} ARGS -dumpversion OUTPUT_VARIABLE _compiler_version)
+   # some distributions patch their GCC to return nothing or only major and minor version on -dumpversion.
+   # In that case we must extract the version number from --version.
+   if(NOT _compiler_version OR _compiler_version MATCHES "^[0-9]\\.[0-9]+$")
+      exec_program(${CMAKE_C_COMPILER} ARGS --version OUTPUT_VARIABLE _compiler_version)
+      string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" _compiler_version "${_compiler_version}")
+   # let's try clang
+   else()
+      exec_program(${CMAKE_C_COMPILER} ARGS -v 2>&1 |head -1 OUTPUT_VARIABLE _compiler_version2)
+      string(REGEX REPLACE ".*clang version ([0-9].[0-9]+).*" "\\1" _compiler_version2 "${_compiler_version2}")
+      set(_compiler_version "${_compiler_version2}")
+   endif()
+  message(STATUS "Found ${CMAKE_C_COMPILER} version ${_compiler_version}")
+endfunction(getCompilerVersion)
+
+macro(change_option NAME NEWVAL)
+  unset(${NAME} CACHE)
+  set(${NAME} ${NEWVAL} CACHE BOOL "Value changed by cmake - probably due to compiler incompatibilities")
+endmacro(change_option)
+
+
+macro(add_exe_and_link  EXENAME FILENAME ADDITIONAL_LIB)
+    # no name is lib not present
+    set (ADDITIONAL_LIB_NAME "")
+    if (NOT APPLE) # in this case u have the framework carbon
+      if (${ADDITIONAL_LIB} MATCHES "None")
+      else (${ADDITIONAL_LIB} MATCHES "None")
+          set (ADDITIONAL_LIB_NAME ${ADDITIONAL_LIB})
+      endif (${ADDITIONAL_LIB} MATCHES "None")
+    endif (NOT APPLE)
+
+    #link Vc if present
+    if(USE_VC)
+      add_executable( ${EXENAME} ${FILENAME})
+      target_link_libraries(${EXENAME} vdt VcWrapper ${ADDITIONAL_LIB_NAME})
+    else(USE_VC)
+      add_executable( ${EXENAME} ${FILENAME})
+      target_link_libraries(${EXENAME} vdt ${ADDITIONAL_LIB_NAME})
+    endif(USE_VC)
+endmacro(add_exe_and_link)
+
+# End macro definitions
+
+        
+

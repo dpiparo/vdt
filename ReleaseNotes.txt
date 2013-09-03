@@ -1,3 +1,6 @@
+V0.3.5
+o Added support for Clang in CMake
+
 V0.3.4
 o Added regex support to perfbenchmark to profile only groups of functions 
 o Removed fpe rising in atan2, both single and double precision, when x 

@@ -156,7 +156,7 @@ endif(DIAG)
 # Compiler optimisations
 
 set (VECT_OPT "-O3 -ffast-math -ftree-vectorize")
-if (CMAKE_COMPILER_IS_GNUCXX)
+if (CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_COMPILER_IS_CLANG) # for old cmake versions
    set (VECTORIZER_VERBOSITY "-ftree-vectorizer-verbose=0")
    set (INLINE_OPT " --param vect-max-version-for-alias-checks=50 --param inline-unit-growth=150")   
 endif()   

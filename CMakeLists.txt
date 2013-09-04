@@ -163,7 +163,7 @@ if (CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_COMPILER_IS_CLANG) # for old cmake ve
    set (VECTORIZER_VERBOSITY "-ftree-vectorizer-verbose=0")
    set (INLINE_OPT " --param vect-max-version-for-alias-checks=50 --param inline-unit-growth=150")   
 endif()   
-if (${CMAKE_COMPILER_IS_OLD_GCC} OR ${CMAKE_COMPILER_IS_OLD_CLANG})
+if (CMAKE_COMPILER_IS_OLD_GCC OR CMAKE_COMPILER_IS_OLD_CLANG)
  set (CPP11_OPT "-std=gnu++0x")
 else()
  set (CPP11_OPT "-std=c++11")

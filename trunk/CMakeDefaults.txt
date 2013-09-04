@@ -1,26 +1,25 @@
 # Useful Macros to be used later
 
 function(getCompilerVersion)
-   exec_program(${CMAKE_C_COMPILER} ARGS -dumpversion OUTPUT_VARIABLE COMPILER_VERSION)
-   # some distributions patch their GCC to return nothing or only major and minor version on -dumpversion.
-   # In that case we must extract the version number from --version.
-   if(NOT COMPILER_VERSION OR COMPILER_VERSION MATCHES "^[0-9]\\.[0-9]+$")
-      exec_program(${CMAKE_C_COMPILER} ARGS --version OUTPUT_VARIABLE COMPILER_VERSION2)
-      string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" COMPILER_VERSION2 "${COMPILER_VERSION2}")
-      set(COMPILER_VERSION ${COMPILER_VERSION2} PARENT_SCOPE)
-      message(STATUS "Found ${CMAKE_C_COMPILER} version ${COMPILER_VERSION2}")
-   # let's try clang
-   else()
-      exec_program(${CMAKE_C_COMPILER} ARGS -v 2>&1 |head -1 OUTPUT_VARIABLE COMPILER_VERSION2)
-      if (COMPILER_VERSION2 MATCHES "^Apple+")
-         string(REGEX REPLACE ".*based on LLVM ([0-9].[0-9]+).*" "\\1" COMPILER_VERSION2 "${COMPILER_VERSION2}")
-         set(COMPILER_VERSION "${COMPILER_VERSION2}.0" PARENT_SCOPE)
-      else()
-         string(REGEX REPLACE ".*clang version ([0-9].[0-9]+).*" "\\1" COMPILER_VERSION2 "${COMPILER_VERSION2}")
-         set(COMPILER_VERSION ${COMPILER_VERSION2} PARENT_SCOPE)
-      endif()
+   # like gcc: gcc version X.Y.Z (......)
+   # or X.Y when using -dumpversion
+   exec_program(${CMAKE_C_COMPILER} ARGS -dumpversion OUTPUT_VARIABLE LOCAL_COMPILER_VERSION)
+   string(REGEX REPLACE "^([0-9].[0-9]+).*" "\\1" LOCAL_COMPILER_VERSION "${LOCAL_COMPILER_VERSION}")
+   if (LOCAL_COMPILER_VERSION AND CMAKE_COMPILER_IS_GNUCXX)
+      message (STATUS "Found GCC compiler version ${LOCAL_COMPILER_VERSION}")
+      set (COMPILER_VERSION ${LOCAL_COMPILER_VERSION} PARENT_SCOPE)
+      RETURN()
    endif()
-   message (STATUS "Found ${CmAKE_C_COMPILER} compiler version ${COMPILER_VERSION}")
+
+   exec_program(${CMAKE_C_COMPILER} ARGS -v OUTPUT_VARIABLE LOCAL_COMPILER_VERSION)
+   # like clang on mac: Apple clang version X.Y (...) (based on LLVM Z.Wsvn)
+   # like clang on linux: Ubuntu clang version A.X.Y~... (...) (based on LLVM Z.W)
+   string(REGEX REPLACE ".*based on LLVM ([0-9].[0-9]+).*" "\\1" LOCAL_COMPILER_VERSION "${LOCAL_COMPILER_VERSION}")
+   if (LOCAL_COMPILER_VERSION)
+      message (STATUS "Found CLANG compiler version ${LOCAL_COMPILER_VERSION}")
+      set (COMPILER_VERSION ${LOCAL_COMPILER_VERSION} PARENT_SCOPE)
+      RETURN()
+   endif()   
 
 endfunction(getCompilerVersion)
 

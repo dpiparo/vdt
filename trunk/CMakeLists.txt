@@ -23,6 +23,7 @@ option( DEBUG "Compile library with debug symbols (default is OFF)" OFF)
 # determine compiler type and version ==========================================
 set(GCC_THRESHOLD_VERSION "4.7.0")
 set(CLANG_THRESHOLD_VERSION "3.3")
+set(ICC_THRESHOLD_VERSION "13.0")
 
 set(CMAKE_COMPILER_IS_NEW_GCC "FALSE")
 set(CMAKE_COMPILER_IS_OLD_GCC "FALSE")
@@ -39,7 +40,7 @@ set(COMPILER_VERSION "0.0")
 
 getCompilerVersion()
   
-elseif(CMAKE_CXX_COMPILER MATCHES "clang")
+if(CMAKE_CXX_COMPILER MATCHES "clang")
   set(CMAKE_COMPILER_IS_CLANG "TRUE")
   if("${COMPILER_VERSION}" VERSION_LESS ${CLANG_THRESHOLD_VERSION})
     set(CMAKE_COMPILER_IS_OLD_CLANG "TRUE")
@@ -169,12 +170,18 @@ endif(DIAG)
 # Compiler optimisations
 
 set (VECT_OPT "-O3 -ffast-math ")
+if (CMAKE_COMPILER_IS_ICC)
+  set (VECT_OPT "")
+endif()
+
 if (CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_COMPILER_IS_CLANG) # for old cmake versions
    set (VECTORIZER_VERBOSITY "-ftree-vectorizer-verbose=0")
    set (INLINE_OPT " --param vect-max-version-for-alias-checks=50 --param inline-unit-growth=150")   
 endif()   
 if (CMAKE_COMPILER_IS_OLD_GCC OR CMAKE_COMPILER_IS_OLD_CLANG)
  set (CPP11_OPT "-std=gnu++0x")
+elseif(CMAKE_COMPILER_IS_ICC)
+ set (CPP11_OPT "-std=c++0x")
 else()
  set (CPP11_OPT "-std=c++11")
 endif()
@@ -189,7 +196,6 @@ endif()
 
 # compiler dependent changes ---------------------------------------------------
 if(CMAKE_COMPILER_IS_ICC)
-  set (VECT_OPT "-O2")
   set (VECTORIZER_VERBOSITY "")
   set (INLINE_OPT "")
 elseif(CMAKE_COMPILER_IS_OLD_GCC)

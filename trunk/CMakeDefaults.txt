@@ -1,20 +1,30 @@
 # Useful Macros to be used later
 
-function(getCompilerVersion _compiler_version)
-   exec_program(${CMAKE_C_COMPILER} ARGS -dumpversion OUTPUT_VARIABLE _compiler_version)
+function(getCompilerVersion)
+   exec_program(${CMAKE_C_COMPILER} ARGS -dumpversion OUTPUT_VARIABLE COMPILER_VERSION)
    # some distributions patch their GCC to return nothing or only major and minor version on -dumpversion.
    # In that case we must extract the version number from --version.
-   if(NOT _compiler_version OR _compiler_version MATCHES "^[0-9]\\.[0-9]+$")
-      exec_program(${CMAKE_C_COMPILER} ARGS --version OUTPUT_VARIABLE _compiler_version)
-      string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" _compiler_version "${_compiler_version}")
+   if(NOT COMPILER_VERSION OR COMPILER_VERSION MATCHES "^[0-9]\\.[0-9]+$")
+      exec_program(${CMAKE_C_COMPILER} ARGS --version OUTPUT_VARIABLE COMPILER_VERSION2)
+      string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" COMPILER_VERSION2 "${COMPILER_VERSION2}")
+      set(COMPILER_VERSION ${COMPILER_VERSION2} PARENT_SCOPE)
+      message(STATUS "Found ${CMAKE_C_COMPILER} version ${COMPILER_VERSION2}")
    # let's try clang
    else()
-      exec_program(${CMAKE_C_COMPILER} ARGS -v 2>&1 |head -1 OUTPUT_VARIABLE _compiler_version2)
-      string(REGEX REPLACE ".*clang version ([0-9].[0-9]+).*" "\\1" _compiler_version2 "${_compiler_version2}")
-      set(_compiler_version "${_compiler_version2}")
+      exec_program(${CMAKE_C_COMPILER} ARGS -v 2>&1 |head -1 OUTPUT_VARIABLE COMPILER_VERSION2)
+      if (COMPILER_VERSION2 MATCHES "^Apple+")
+         string(REGEX REPLACE ".*based on LLVM ([0-9].[0-9]+).*" "\\1" COMPILER_VERSION2 "${COMPILER_VERSION2}")
+         set(COMPILER_VERSION "${COMPILER_VERSION2}.0" PARENT_SCOPE)
+      else()
+         string(REGEX REPLACE ".*clang version ([0-9].[0-9]+).*" "\\1" COMPILER_VERSION2 "${COMPILER_VERSION2}")
+         set(COMPILER_VERSION ${COMPILER_VERSION2} PARENT_SCOPE)
+      endif()
    endif()
-  message(STATUS "Found ${CMAKE_C_COMPILER} version ${_compiler_version}")
+
+
 endfunction(getCompilerVersion)
+
+#-------------------------------------------------------------------------------
 
 macro(change_option NAME NEWVAL)
   unset(${NAME} CACHE)

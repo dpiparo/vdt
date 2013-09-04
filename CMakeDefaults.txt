@@ -20,7 +20,7 @@ function(getCompilerVersion)
          set(COMPILER_VERSION ${COMPILER_VERSION2} PARENT_SCOPE)
       endif()
    endif()
-
+   message (STATUS "Found ${CmAKE_C_COMPILER} compiler version ${COMPILER_VERSION}")
 
 endfunction(getCompilerVersion)
 

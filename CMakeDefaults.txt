@@ -19,7 +19,15 @@ function(getCompilerVersion)
       message (STATUS "Found CLANG compiler version ${LOCAL_COMPILER_VERSION}")
       set (COMPILER_VERSION ${LOCAL_COMPILER_VERSION} PARENT_SCOPE)
       RETURN()
-   endif()   
+   endif()
+
+   # like icc: icc version 13.1.1 (gcc version 4.4.7 compatibility)
+   string(REGEX REPLACE "^icc version ([0-9].[0-9]+).*" "\\1" LOCAL_COMPILER_VERSION "${LOCAL_COMPILER_VERSION}")
+   if (LOCAL_COMPILER_VERSION)
+      message (STATUS "Found ICC compiler version ${LOCAL_COMPILER_VERSION}")
+      set (COMPILER_VERSION ${LOCAL_COMPILER_VERSION} PARENT_SCOPE)
+      RETURN()
+   endif()      
 
 endfunction(getCompilerVersion)
 

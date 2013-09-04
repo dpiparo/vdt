@@ -1,3 +1,7 @@
+V0.3.6
+o Fixed suppport for Clang on Mac
+o Simpler compiler detection system
+
 V0.3.5
 o Added support for Clang in CMake
 

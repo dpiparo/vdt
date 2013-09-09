@@ -1,4 +1,4 @@
-# VDT Math LIbrary
+# VDT Math Library
 cmake_minimum_required (VERSION 2.6)
 project (Vdt)
 
@@ -13,12 +13,15 @@ include ( CMakeDefaults.txt )
 option( DIAG "Build in diagnostic mode - all diagnostic exes (default cache entry: OFF)" OFF)
 option( AVX "Use AVX instruction set (default cache entry: OFF)" OFF)
 option( AVX2 "Use AVX2 instruction set (default cache entry: OFF)" OFF)
+option( FMA "Use FMA instruction set (default cache entry: OFF)" OFF)
+option( USERFLAGS "Pass arbitrary flags to the compiler")
 option( SSE "Use SSE instruction set (default cache entry: ON)" ON)
 option( NEON "Use NEON instruction set (default cache entry: OFF)" OFF)
 option( BUILD_SHARED_LIBS "Build libraries as SHARED instead of STATIC (default cache entry: ON)" ON)
 option( PRELOAD "Create in the library the symbols to preload the library (default cache entry: OFF)" OFF)
 option( USE_VC "Use Vc library - requires symlink to Vc from ${CMAKE_SOURCE_DIR} (default cache entry: OFF)" OFF)
 option( DEBUG "Compile library with debug symbols (default is OFF)" OFF)
+
 
 # determine compiler type and version ==========================================
 set(GCC_THRESHOLD_VERSION "4.7.0")
@@ -81,43 +84,52 @@ if (CMAKE_COMPILER_IS_OLD_GCC OR
     CMAKE_COMPILER_IS_OLD_CLANG OR
     CMAKE_COMPILER_IS_OLD_ICC OR
     CMAKE_COMPILER_IS_UNSUPPORTED )
-  message(STATUS "You are running an old or unsupported compiler: turning off Vc, AVX and DIAG options")
+  message(STATUS "You are running an old or unsupported compiler: turning off Vc, AVX*, FMA and DIAG options")
   change_option(USE_VC 0)
   change_option(AVX 0)
   change_option(AVX2 0)
   change_option(DIAG 0)
+  change_option(FMA 0)
 endif()
 
 
 # process options that can be processed here ===================================
 
-# SIMD instructions set---------------------------------------------------------
-
+# SIMD and FMA instructions set-------------------------------------------------
+set (FMA_INSTR "")
 if (NEON)
   message(STATUS "Using NEON instructions!")
-  set(SSE_AVX "-mfpu=neon ")
+  set(PACKED_INSTR "-mfpu=neon ")
 else()
   if (SSE AND (NOT (AVX OR AVX2) ))
     message(STATUS "Using SSE instructions!")
-    set(SSE_AVX "-msse")
+    set(PACKED_INSTR "-msse")
   endif ()
 
   if (AVX AND (NOT AVX2))
     message(STATUS "Using AVX instructions!")
-    set (SSE_AVX "-mavx")
+    set (PACKED_INSTR "-mavx")
     if(CMAKE_COMPILER_IS_ICC)
-      set(SSE_AVX "-xavx")
+      set(PACKED_INSTR "-xavx")
     endif()
   endif ()
 
   if (AVX2)
     message(STATUS "Using AVX2 instructions!")
-    set (SSE_AVX "-mavx2")
+    set (PACKED_INSTR "-mavx2")
     if(CMAKE_COMPILER_IS_ICC)
-      set(SSE_AVX "-xavx2")
+      set(PACKED_INSTR "-xavx2")
     endif()
   endif ()
+
+  if (FMA)
+    message(STATUS "Using FMA instructions!")
+    set (FMA_INSTR "-mfma")
+  endif ()
+
 endif()
+
+
 
 # To use svml at CERN ----------------------------------------------------------
 set (INTEL_SVML_FLAGS "")
@@ -215,9 +227,12 @@ if (DEBUG)
 endif ()
 
 
-set (COMMON_FLAGS "${INTEL_SVML_FLAGS} ${SSE_AVX}  ${INLINE_OPT} ${WARNING_FLAGS} ${DEBUG_FLAGS} ${CLANG_INLINE_DEFINE}")
+set (COMMON_FLAGS "${INTEL_SVML_FLAGS} ${PACKED_INSTR} ${FMA_INSTR} ${INLINE_OPT} ${WARNING_FLAGS} ${DEBUG_FLAGS} ${CLANG_INLINE_DEFINE}")
+if (USERFLAGS)
+  set (COMMON_FLAGS "${COMMON_FLAGS} ${USERFLAGS}")
+endif()
 set (LIB_FLAGS "${VERBOSITY_OPT} ${VECT_OPT} ${VECTORIZER_VERBOSITY} ${COMMON_FLAGS}")
-set (DIAG_FLAGS "${CPP11_OPT} ${COMMON_FLAGS} ${LIBTIMINGAPPLE} ${VECT_OPT}")
+set (DIAG_FLAGS "${CPP11_OPT} ${LIBTIMINGAPPLE} ${VECT_OPT} ${COMMON_FLAGS}")
 
 # Locations ====================================================================
 # Location of executables

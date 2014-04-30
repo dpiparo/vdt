@@ -81,7 +81,7 @@ def create_vector_signature(fcn_name,is_double=False,is_impl=False):
   if is_impl:
     impl_code = "{\n"+\
           "  for (uint32_t i=0;i<size;++i)\n"+\
-		  "    oarray[i]=%s%s(iarray[i]);\n" %(new_fcn_name,float_suffix)+\
+          "    oarray[i]=%s%s(iarray[i]);\n" %(new_fcn_name,float_suffix)+\
           "}\n\n"
     if "atan2" in fcn_name or "identity2D" in fcn_name:
       impl_code = "{\n"+\
@@ -90,11 +90,11 @@ def create_vector_signature(fcn_name,is_double=False,is_impl=False):
           "}\n\n"   
     code+=impl_code
   else:
-	code += ";\n"	  
+    code += ";\n"
   return code
-		 
+
 #------------------------------------------------------------------
-		 
+
 def create_vector_signatures(is_impl=False):
   code="namespace vdt{\n"
   for is_double in (True,False):
@@ -104,7 +104,7 @@ def create_vector_signatures(is_impl=False):
   return code
 
 #------------------------------------------------------------------   
-		   
+
 def get_impl_file():
   code= "// Automatically generated\n"+\
         '#include "%s"\n' %VDT_VECTOR_HEADER+\
@@ -116,7 +116,7 @@ def get_impl_file():
 #------------------------------------------------------------------
 
 def create_impl(preloadSignatures):
-  ofile=file(VDT_VECTOR_IMPL,'w')
+  ofile=open(VDT_VECTOR_IMPL,'w')
   ofile.write(get_impl_file())
   if preloadSignatures:
     ofile.write(create_preload_signatures())

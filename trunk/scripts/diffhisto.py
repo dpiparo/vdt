@@ -20,7 +20,7 @@ def getTypeLength(cmpfile):
   return typelength,typelength_s
 
 #-------------------------------------------------------------------------------  
-  
+
 def getYaxisRange(name):
   lr = -5000
   hr = 5000
@@ -38,10 +38,11 @@ def getYaxisRange(name):
   return (lr,hr)
 
 #-------------------------------------------------------------------------------      
+
 def getFilenamesFromDir(nick,dirname):
   import os
-  return filter (lambda filename: re.match("comparison__%s__(.*).txt"%nick,filename), os.listdir(dirname))
-  
+  return filter (lambda filename: re.match("comparison__" + nick + "__(.*).txt",filename), os.listdir(dirname))
+
 #-------------------------------------------------------------------------------    
 
 def fill_histos(cmpfile,histo1D,histo2D):
@@ -70,17 +71,18 @@ def compare(nick,dirname):
   ofile = ROOT.TFile("%s_histos.root" %nick,"RECREATE")
   ofile.cd()
   
-  filenames = getFilenamesFromDir(nick,dirname)
-  print "%s files found." %len(filenames)
+  #python3 returns an iterator instead of a a list
+  # convert to list to be able to run on p2 & p3
+  filenames = list( getFilenamesFromDir(nick,dirname) )
+  print ( str( len(filenames) ) + " files found." )
   for filename in filenames:      
-    print "Studying " + filename
+    print ( "Studying " + filename )
     cmpfile = open(filename)
     typelength,typelength_s =  getTypeLength(cmpfile)
     
-    m=re.match("comparison__%s__(.*).txt"%nick,filename)
+    m=re.match("comparison__" + nick + "__(.*).txt" ,filename)
     fcn_name=m.group(1)
     
-
     # read rest of header   
     for i in range(1,5):
         cmpfile.readline()
@@ -109,19 +111,19 @@ def compare(nick,dirname):
     fill_histos(cmpfile,dbhisto,dbVSinhisto)
     
     # draw and save 1D histogram
-    dbcanvas = ROOT.TCanvas("dbcanv_%s"%fcn_name, "%s diffbit for %s canvas" %(fcn_name,nick),600,600)
+    dbcanvas = ROOT.TCanvas("dbcanv_" + fcn_name, fcn_name + " diffbit for " + nick + " canvas" ,600,600)
     dbcanvas.cd()
     dbcanvas.SetLogy()
     dbhisto.Draw()
-    dbcanvas.Print("%s_%s_%s_dbhisto.png"%(nick,typelength_s,fcn_name))
+    dbcanvas.Print(nick + "_" + str(typelength_s) + "_" + fcn_name + "_dbhisto.png" )
     dbhisto.Write()
 
 
     # draw and save 2D histogram
-    dbVSincanvas = ROOT.TCanvas("dbVSincanv_%s"%fcn_name, "%s diffbit for %s canvas" %(fcn_name,nick),600,600)
+    dbVSincanvas = ROOT.TCanvas("dbVSincanv_"+ fcn_name, fcn_name + " diffbit for " + nick + " canvas",600,600)
     dbVSincanvas.cd()
     dbVSinhisto.Draw("COLZ")
-    dbVSincanvas.Print("%s_%s_%s_dbVSinhisto.png"%(nick,typelength_s,fcn_name))
+    dbVSincanvas.Print(nick + "_" + str(typelength_s) + "_" + fcn_name + "_dbVSinhisto.png" )
     
     dbVSinhisto.Write()
     
@@ -149,5 +151,3 @@ def create_parser():
 if __name__ == "__main__":
   options = create_parser()
   compare(options.nick,options.dirname)
-  
-      

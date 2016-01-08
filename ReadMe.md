@@ -1,3 +1,4 @@
+![VDT Logo](https://svnweb.cern.ch/trac/vdt/raw-attachment/ticket/3/VDTlogo.png)
 # The '''vdt''' mathematical library
 '''v'''ectorise'''d''' ma'''t'''h
 * A collection of '''fast''' and '''inline''' implementations of mathematical functions.
@@ -117,4 +118,4 @@ Alternatively, feel free to contact Danilo Piparo (danilo_dot_piparo_at_cern_dot
 ## Licence
 The VDT mathematical library is licenced under the LGPL3 licence
 
-[[Image(ticket:2:LGPL-3-Logo-mini.png)]]
+![LGPL3](https://svnweb.cern.ch/trac/vdt/raw-attachment/ticket/2/LGPL-3-Logo-mini.png)

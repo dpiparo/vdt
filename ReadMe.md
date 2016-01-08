@@ -6,6 +6,9 @@
 * No overhead present, no intrinsics used.
 * A scalar (`T(T)`) and array signature (`void(const unsigned int,T*,T*)`) are provided.
 
+Born and developed at [CERN](www.cern.ch), it is used, among the others, by LHC experiments and the [Geant4](http://geant4.cern.ch/) simulation toolkit.
+
+
 Much of the VDT code is inspired by the well known [Cephes](http://www.netlib.org/cephes) mathematical library.
 
 ## How to get, compile and install it
@@ -35,7 +38,9 @@ Where:
 You may wonder, why prepending `fast_`? This is done to allow the user to decide where a fast and approximate implementation of the function is to be used. It is not always obvious where the accuracy can be reduced: all the flexibility is needed.
 
 These are the available functions:
-| Function | Scalar double precision | Scalar single precision | Array double precision | Array single precision | 
+
+| Function | Scalar double precision | Scalar single precision | Array double precision | Array single precision |
+| -------- | ----------------------- | ----------------------- | ---------------------- | ---------------------- |
 | exponential | fast_exp | fast_expf | fast_expv | fast_expfv |
 | sine | fast_sin | fast_sinf | fast_sinv | fast_sinfv |
 | cosine | fast_cos | fast_cosf | fast_cosv | fast_cosfv |
@@ -70,7 +75,8 @@ In order to produce the plots of the different bits as a function of input, the 
 
 Double precision, Intel® Core™ i7-3930K CPU @ 3.20GHz running Scientific Linux 6. Operative interval of the input: [-5000,5000] ((0,5000] for isqrt and [-1,1] for Asin and Acos). Time in ns per call.
 
-|Function| libm | VDT | VDT SSE |VDT AVX|
+|Function| libm | VDT | VDT SSE | VDT AVX |
+|--------| ---- | --- | ------- | ------- |
 |Exp|16.7|6.1|3.8|2.9|
 |Log|34.9|12.5|5.7|4.2|
 |Sin|33.7|16.2|6|5.7|
@@ -85,6 +91,7 @@ Double precision, Intel® Core™ i7-3930K CPU @ 3.20GHz running Scientific Linu
 Accuracy measured in terms of least significant bit. Average difference with respect to libm.
 
 |Function|AVG vdt|
+|--------| ------|
 |Acos|0.39|
 |Asin|0.32|
 |Atan|0.33|
@@ -96,7 +103,7 @@ Accuracy measured in terms of least significant bit. Average difference with res
 |Tan|0.35|
 
 ## Related Documents:
-   * A full characterisation of the accuracies please refer to this [http://indico.cern.ch/contributionDisplay.py?contribId=4&sessionId=9&confId=202688 presentation].
+   * A full characterisation of the accuracies please refer to this [presentation](http://indico.cern.ch/contributionDisplay.py?contribId=4&sessionId=9&confId=202688).
 
 ## Reference
 If you want to cite vdt, please use your reference:

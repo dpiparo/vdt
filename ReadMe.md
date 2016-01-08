@@ -112,7 +112,7 @@ If you want to cite vdt, please use your reference:
 
 ## Mailing List
 The VDT projects has a mailing list: VDTlibrary-talk at cern ch, linked to an e-group with the same name.
-The Infrastructure used is the one providsed by CERN IT. If you don't have a CERN account, you can obtain an external one [https://simba3.web.cern.ch/simba3/SelfSubscription.aspx?groupName=your-e-group-name here].
+The Infrastructure used is the one provided by CERN IT. If you don't have a CERN account, you can obtain an external one [https://simba3.web.cern.ch/simba3/SelfSubscription.aspx?groupName=your-e-group-name here].
 Alternatively, feel free to contact Danilo Piparo (danilo_dot_piparo_at_cern_dot_ch).
 
 ## Licence

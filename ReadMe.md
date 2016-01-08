@@ -1,9 +1,9 @@
 ![VDT Logo](https://svnweb.cern.ch/trac/vdt/raw-attachment/ticket/3/VDTlogo.png)
-# The '''vdt''' mathematical library
-'''v'''ectorise'''d''' ma'''t'''h
-* A collection of '''fast''' and '''inline''' implementations of mathematical functions.
+# The **vdt** mathematical library
+**v**ectorise**d** ma**t**h
+* A collection of **fast** and **inline** implementations of mathematical functions.
 * The functions can be used in autovectorised loops.
-* '''Double and single precision''' implementations are available.
+* **Double and single precision** implementations are available.
 * No overhead present, no intrinsics used.
 * A scalar (`T(T)`) and array signature (`void(const unsigned int,T*,T*)`) are provided.
 
@@ -13,8 +13,8 @@ Born and developed at [CERN](www.cern.ch), it is used, among the others, by LHC 
 Much of the VDT code is inspired by the well known [Cephes](http://www.netlib.org/cephes) mathematical library.
 
 ## How to get, compile and install it
-The '''vdt''' functions are '''inline''' and contained in header files: they are ready to be used without compilation of an external library. In any case, there is the possibility to compile a shared library containing the array signatures `void(const unsigned int,T*,T*)`.
-The makesystem chosen for '''vdt''' is  [CMake](http://www.cmake.org).
+The **vdt** functions are **inline** and contained in header files: they are ready to be used without compilation of an external library. In any case, there is the possibility to compile a shared library containing the array signatures `void(const unsigned int,T*,T*)`.
+The makesystem chosen for **vdt** is  [CMake](http://www.cmake.org).
 ```bash
 export INSTALLDIR=/path/to/mydir
 git clone https://github.com/dpiparo/vdt.git
@@ -25,10 +25,10 @@ make install
 ```
 
 ## How to use it
-Good examples of vdt functions usage are located in the '''progs''' and '''progs/units''' directories.
+Good examples of vdt functions usage are located in the **progs** and **progs/units** directories.
 
-### The ''' vdt''' functions
-All '''vdt''' functions live in the `vdt` namespace. Their names are structured as follows:
+### The vdt functions
+All **vdt** functions live in the `vdt` namespace. Their names are structured as follows:
 ```cpp
 vdt::fast_<function_name>[f][v]
 ```
@@ -62,13 +62,13 @@ Other options for Cmake are available to steer the creation of the makefile:
 * Prepare the library to be pre-loaded in order to replace the calls to the default math lib at runtime {{{-D PRELOAD=1}}}
 
 ## Supported Compilers
-The '''vdt''' functions can be used with every compiler (icc and gcc were tested).
-To compile the benchmarking tools '''gcc4.7''' (icc12) is at least needed because of the support of c++11.
-To vectorise the functions '''gcc4.7''' (icc12) is at least needed.
+The **vdt** functions can be used with every compiler (icc and gcc were tested).
+To compile the benchmarking tools **gcc4.7** (icc12) is at least needed because of the support of c++11.
+To vectorise the functions **gcc4.7** (icc12) is at least needed.
 
 ## Benchmarks
 This section is for experts who want to study the details of the functions provided and/or to compare them to other implementations.
-'''vdt''' comes with a complete benchmark suite both for accuracy and speed measurements.
+**vdt** comes with a complete benchmark suite both for accuracy and speed measurements.
 To measure the speed of the functions, you should use the ''vdtPerfBenchmark''. To dump on disk the ascii files summarising the accuracy of the functions, you should use ''vdtArithmBenchmark'', while the tool to compare them is ''vdtArithmComparison''.
 In order to produce the plots of the different bits as a function of input, the script to be used is ''diffhisto.py'' (which depends on [ROOT](http://root.cern.ch) to produce plots).
 

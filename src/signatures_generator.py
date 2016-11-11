@@ -6,6 +6,9 @@ of the vector functions and if requested
 the ones for the preload
 """
 
+from optparse import OptionParser
+import os
+
 RESTRICT="__restrict__"
 
 LIBM_FUNCTIONS_LIST=["asin",
@@ -115,16 +118,14 @@ def get_impl_file():
 
 #------------------------------------------------------------------
 
-def create_impl(preloadSignatures):
-  ofile=open(VDT_VECTOR_IMPL,'w')
+def create_impl(preloadSignatures,outdir):
+  ofile=open(os.path.join(outdir,VDT_VECTOR_IMPL),'w')
   ofile.write(get_impl_file())
   if preloadSignatures:
     ofile.write(create_preload_signatures())
   ofile.close()
 
 #------------------------------------------------------------------
-
-from optparse import OptionParser
 
 if __name__ == "__main__":
   parser = OptionParser(usage="usage: %prog [options]")
@@ -133,6 +134,11 @@ if __name__ == "__main__":
                     dest="preload_flag",
                     default=False,
                     help="Create symbols for the preload")
+  parser.add_option("-o",
+                    dest="outdir",
+                    default="./",
+                    help="specify output directory")
   (options, args) = parser.parse_args()
-  create_impl(preloadSignatures=options.preload_flag)
+  create_impl(preloadSignatures=options.preload_flag,
+              outdir=options.outdir)
 

@@ -6,7 +6,7 @@ set (SIGGENOPTS  " -p")
 else()
 set (SIGGENOPTS  " ")
 endif()
-EXEC_PROGRAM ("cd src;python signatures_generator.py ${SIGGENOPTS};cd -")
+EXEC_PROGRAM ("cd src;python ${CMAKE_SOURCE_DIR}/src/signatures_generator.py ${SIGGENOPTS} -o ${CMAKE_SOURCE_DIR}/src;cd -")
 
 #generare Vc wrapper and config file
 if(USE_VC)

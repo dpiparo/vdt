@@ -28,11 +28,13 @@ namespace vdt{
 
 // Identity double precision ---------------------------------------------------
 inline double identity(double x){return x;}
+inline double fast_identity(double x){return x;}
 inline double identity2D (double x, double /*y*/){return x;}
 
 
 // Identity float precision ---------------------------------------------------
 inline float identityf(float x){return x;}
+inline float fast_identityf(float x){return x;}
 inline float identity2Df (float x, float /*y*/){return x;}
 //------------------------------------------------------------------------------
 

@@ -70,17 +70,18 @@ def get_function_code(fcn_name,is_vector):
            "for (long i=0;i<size;++i) {oarray[i]=vdt::fast_"+fcn_name+"(iarray[i]);};"\
            +"}"
   else:
-    code = "{return vdt::fast_"+fcn_name+"(x);}\n"
+    code = "{return vdt::fast_"+fcn_name+"(x);}"
 
   
   return code
 
-def get_return_code(fcn_name,is_vector):
+def get_return_code(fcn_name,is_double,is_vector):
+  (type,data_type,suffix)=get_type_dependent_parts(is_double,is_vector)
   code = ''
   if(is_vector):
-    code = 'return fat_'+fcn_name+'(iarray,oarray,size);'
+    code = 'fat_vdt_'+fcn_name+suffix+'(iarray,oarray,size);'
   else:
-    code = 'return fat_'+fcn_name+'(x);'
+    code = 'return fat_vdt_'+fcn_name+suffix+'(x);'
   return code
 
 #---------------------------------------------------------------------
@@ -88,9 +89,14 @@ def get_return_code(fcn_name,is_vector):
 def create_Wrapper_signature(fcn_name,is_double=False,is_vector=False,is_impl=False):
   (ret,sign) = get_function_prototype(fcn_name,is_double,is_vector)
   code = ''
+  ss=''
+  if(not is_double): ss='f'
+  if (is_vector) : ss+='v'
+  fatM = 'FAT'+fcn_name+ss
   if is_impl:
-    code += 'namespace {FATLIB('+ret+', fat_'+ sign + get_function_code(fcn_name,is_vector)+')}\n'+\
-            'extern "C"{'+ret + ' ' + sign+'{'+get_return_code(fcn_name,is_vector)+'}}\n'
+    code += '#define '+fatM + ' fat_'+ sign + get_function_code(fcn_name,is_vector)
+    code += '\nnamespace {FATLIB('+ret+','+fatM+')}\n'+\
+            'extern "C"{'+ret + ' ' + sign+'{'+get_return_code(fcn_name,is_double,is_vector)+'}}\n\n'
   else:
     code = ret + ' ' + sign +";\n"
   return code
@@ -125,7 +131,7 @@ def get_impl_file():
   code= "// Automatically generated\n"+\
         '#include "%s"\n' %VDT_WRAPPER_HEADER+\
         '#include "vdtMath.h"\n'+\
-        '#include "fatlib.h"\n'+\
+        '#include "fatlib.h"\n\n'+\
         create_Wrapper_signatures(is_impl=True)
   return code
 		  

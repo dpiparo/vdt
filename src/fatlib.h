@@ -25,7 +25,7 @@ FATHALLO("avx512f")
 }
 
 extern "C" {
-  char const * fathello() { return fathelloCPP();}
+  char const * vdt_arch() { return fathelloCPP();}
 }
 
 #define FATLIB(RET,FUN) \

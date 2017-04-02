@@ -108,7 +108,7 @@ Accuracy measured in terms of least significant bit. Average difference with res
 
 ## Reference
 If you want to cite vdt, please use your reference:
-[D. Piparo et al. 2014 J. Phys.: Conf. Ser. 513 052027 "Speeding up HEP experiment software with a library of fast and auto-vectorisable mathematical functions"](http://iopscience.iop.org/1742-6596/513/5/052027)
+[D. Piparo, V.Innocente and T.Hauth 2014 J. Phys.: Conf. Ser. 513 052027 "Speeding up HEP experiment software with a library of fast and auto-vectorisable mathematical functions"](http://iopscience.iop.org/1742-6596/513/5/052027)
 
 ## Mailing List
 The VDT projects has a mailing list: VDTlibrary-talk at cern ch, linked to an e-group with the same name.

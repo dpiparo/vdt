@@ -2,12 +2,6 @@ import numpy
 import os
 from ctypes import c_char_p
 
-def vdt_arch() :
-   _path = os.path.dirname('__file__')
-   lib = numpy.ctypeslib.load_library('vdtdiag_numpyWrapper', _path)
-   f = lib['vdt_arch']
-   f.restype = c_char_p
-   return f()
 
 def invoke(vi,f,type) :
   requires = ['CONTIGUOUS', 'ALIGNED']
@@ -17,16 +11,14 @@ def invoke(vi,f,type) :
   f(vi,vo,vi.size)
   return vo
 
-def loadInvoke(vi,fn,is_single) :
+def load(fn,is_single,libname='vdtdiag_numpyWrapper') :
    if (is_single) :
-     fn+='fv'
      type = numpy.single
    else :
-     fn+='v'
      type = numpy.float      
 
    _path = os.path.dirname('__file__')
-   lib = numpy.ctypeslib.load_library('vdtdiag_numpyWrapper', _path)
+   lib = numpy.ctypeslib.load_library(libname, _path)
    f = lib[fn]
    f.restype = None
    f.argtypes = [numpy.ctypeslib.ndpointer(type,
@@ -34,5 +26,9 @@ def loadInvoke(vi,fn,is_single) :
                  numpy.ctypeslib.ndpointer(type,
                       flags='aligned, contiguous,writeable'),
                  numpy.ctypeslib.c_intp]
+   return (f,type)
+
+def loadInvoke(vi,fn,is_single,libname='vdtdiag_numpyWrapper') :
+   (f,type) = load(fn,is_single,libname)
    return invoke(vi,f,type)
 

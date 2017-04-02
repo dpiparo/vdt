@@ -11,6 +11,7 @@ VDT_PREF="vdt_"
 FUNCTIONS_LIST=["asin",
                 "atan",
                 "cos",
+                "exp",
                 "inv",
                 "log",
                 "sin",
@@ -19,6 +20,7 @@ FUNCTIONS_LIST=["asin",
 
 VDT_WRAPPER_HEADER='vdtdiag_numpyWrapper.h'
 VDT_WRAPPER_IMPL='vdtdiag_numpyWrapper.cc'
+VDT_PYTHON_MODULE='vdt.py'
                 
 #------------------------------------------------------------------
 
@@ -113,7 +115,32 @@ def create_Wrapper_signatures(is_impl=False):
 
 
 #------------------------------------------------------------------   
-   
+
+def get_python_function(fcn_name,is_double,is_vector):
+  # only vector
+  if not is_double : fcn_name+='f'
+  code = ''
+  if(is_vector):
+    fn ='%s%s' %(VDT_PREF,fcn_name)
+    code='def %s(vi): return vdt_invoke("%s",vi)' %(fn,fn) + '\n'
+  return code
+
+#------------------------------------------------------------------
+  
+
+def create_python():
+  code="from vdtBase import *\n"
+  for is_vector in (False,True):
+    for is_double in (True,False):
+      for fcn_name in sorted(FUNCTIONS_LIST):
+        code+=get_python_function(fcn_name,is_double,is_vector)
+
+  ofile=file(VDT_PYTHON_MODULE,'w')
+  ofile.write(code)
+  ofile.close()
+
+#------------------------------------------------------------------   
+
 def get_header_file():
   code= "// Automatically generated\n"\
         '#ifndef __VDT_NUMPY_WRAPPER__\n'\
@@ -154,3 +181,4 @@ def create_impl():
 if __name__ == "__main__":
   create_header()
   create_impl()
+  create_python()

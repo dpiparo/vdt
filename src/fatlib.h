@@ -1,17 +1,17 @@
-#ifndef  __VDT_FATLIB__
+#ifndef __VDT_FATLIB__
 #define __VDT_FATLIB__
 #include<iostream>
 #include<string>
 
-typedef float __attribute__( ( vector_size( 16 ) ) ) float32x4_t;
-typedef float __attribute__( ( vector_size( 32 ) ) ) float32x8_t;
-typedef float __attribute__( ( vector_size( 64 ) ) ) float32x16_t;
-
 namespace {
 static std::string fathi;
 }
+
+
+#ifdef __linux__
+
 #define FATHALLO(...) char const * __attribute__ ((__target__ (__VA_ARGS__))) \
-  fathelloCPP() { fathi = std::string("targer is ")+#__VA_ARGS__; return fathi.c_str();}
+  fathelloCPP() { fathi = std::string("target is ")+#__VA_ARGS__; return fathi.c_str();}
 
 namespace {
 FATHALLO("default")
@@ -27,6 +27,14 @@ FATHALLO("avx512f")
 extern "C" {
   char const * vdt_arch() { return fathelloCPP();}
 }
+#else
+extern "C" {
+  char const * vdt_arch() { fathi = std::string("unknown target"); return fathi.c_str();;}
+}
+
+#endif
+
+#ifdef __linux__
 
 #define FATLIB(RET,FUN) \
 RET __attribute__ ((__target__ ("default"))) FUN \
@@ -36,7 +44,9 @@ RET __attribute__ ((__target__ ("arch=bdver1"))) FUN \
 RET __attribute__ ((__target__ ("avx2","fma"))) FUN \
 RET __attribute__ ((__target__ ("avx"))) FUN \
 RET __attribute__ ((__target__ ("avx512f"))) FUN
-
+#else
+#define FATLIB(RET,FUN) RET FUN
+#endif
 
 inline
 float theFMA (float x, float y, float z) { return x+y*z;}

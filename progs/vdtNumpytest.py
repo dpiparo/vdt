@@ -85,17 +85,17 @@ def vexff() :
 
 
 print "timing exp"
-print(timeit.timeit("nex()", setup="from __main__ import nex",number=100000))
-print(timeit.timeit("nexf()", setup="from __main__ import nexf",number=100000))
-print(timeit.timeit("vex()", setup="from __main__ import vex",number=100000))
-print(timeit.timeit("vexf()", setup="from __main__ import vexf",number=100000))
-print(timeit.timeit("vexff()", setup="from __main__ import vexff",number=100000))
+print timeit.timeit("nex()", setup="from __main__ import nex",number=100000), "np exp"
+print timeit.timeit("nexf()", setup="from __main__ import nexf",number=100000), 'np expf'
+print timeit.timeit("vex()", setup="from __main__ import vex",number=100000), 'vdt exp'
+print timeit.timeit("vexf()", setup="from __main__ import vexf",number=100000), 'vdt expf'
+print timeit.timeit("vexff()", setup="from __main__ import vexff",number=100000), 'vdt expf direct'
 
 
 print "timing sincos"
-print(timeit.timeit("nsc()", setup="from __main__ import nsc",number=100000))
-print(timeit.timeit("nscf()", setup="from __main__ import nscf",number=100000))
-print(timeit.timeit("vsc()", setup="from __main__ import vsc",number=100000))
-print(timeit.timeit("vscf()", setup="from __main__ import vscf",number=100000))
-print(timeit.timeit("vscff()", setup="from __main__ import vscff",number=100000))
+print timeit.timeit("nsc()", setup="from __main__ import nsc",number=100000), 'np sin&cos'
+print timeit.timeit("nscf()", setup="from __main__ import nscf",number=100000), 'np sinf&cosf'
+print timeit.timeit("vsc()", setup="from __main__ import vsc",number=100000), 'vdt sincos'
+print timeit.timeit("vscf()", setup="from __main__ import vscf",number=100000), 'vdt sincosf'
+print timeit.timeit("vscff()", setup="from __main__ import vscff",number=100000), 'vdt sincosf direct'
 

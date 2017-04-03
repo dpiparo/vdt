@@ -43,7 +43,7 @@ def nex() :
 
 def nexf() :
     global xf
-    return np.sin(xf)
+    return np.expf(xf)
 
 
 def vex() :

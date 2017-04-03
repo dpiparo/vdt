@@ -10,11 +10,13 @@ VDT_PREF="vdt_"
 
 FUNCTIONS_LIST=["asin",
                 "atan",
+                "atan2",
                 "cos",
                 "exp",
                 "inv",
                 "log",
                 "sin",
+                "sincos",
                 "isqrt",
                 "identity"]
 
@@ -52,6 +54,27 @@ def get_function_prototype(fcn_name,is_double,is_vector):
     ret = 'void'
   return (ret,prototype)  
 
+
+def get_function_prototype2to1(fcn_name,is_double,is_vector):
+  (type,data_type,suffix)=get_type_dependent_parts(is_double,is_vector)
+  prototype="%s%s%s(%s x, %s y)" %(VDT_PREF,fcn_name,suffix,data_type,data_type)
+  ret = type
+  if(is_vector):
+    prototype="%s%s%s(const %s iarray1, const %s iarray2, %s oarray, long size)" %(VDT_PREF,fcn_name,suffix,data_type,data_type,data_type)
+    ret = 'void'
+  return (ret,prototype)  
+
+
+def get_function_prototype1to2(fcn_name,is_double,is_vector):
+  (type,data_type,suffix)=get_type_dependent_parts(is_double,is_vector)
+  prototype="%s%s%s(%s x, %s & o1,  %s & o2)" %(VDT_PREF,fcn_name,suffix,data_type,data_type,data_type)
+  ret =  'void'
+  if(is_vector):
+    prototype="%s%s%s(const %s iarray, %s oarray1,  %s oarray2, long size)" %(VDT_PREF,fcn_name,suffix,data_type,data_type,data_type)
+    ret = 'void'
+  return (ret,prototype)  
+
+
 #-------------------------------------------------------------------
 
 # translation of raw name withnout suffixes
@@ -66,33 +89,76 @@ def get_fcnname_translation(fcn_name):
   
 #-------------------------------------------------------------------
 
+def get_function_code2to1(fcn_name,is_vector):
+  if(is_vector):
+    code = "{" +\
+           "for (long i=0;i<size;++i) {oarray[i]=vdt::fast_"+fcn_name+"(iarray1[i],iarray2[i]);};"\
+           +"}"
+  else:
+    code = "{return vdt::fast_"+fcn_name+"(x,y);}"
+  return code
+
+def get_function_code1to2(fcn_name,is_vector):
+  if(is_vector):
+    code = "{" +\
+           "for (long i=0;i<size;++i) {vdt::fast_"+fcn_name+"(iarray[i],oarray1[i],oarray2[i]);};"\
+           +"}"
+  else:
+    code = "{vdt::fast_"+fcn_name+"(x,o1,o2);}"
+  return code
+
 def get_function_code(fcn_name,is_vector):
+  if (fcn_name[:5] == 'atan2') : return get_function_code2to1(fcn_name,is_vector)
+  if (fcn_name[:6] == 'sincos') : return get_function_code1to2(fcn_name,is_vector)
   if(is_vector):
     code = "{" +\
            "for (long i=0;i<size;++i) {oarray[i]=vdt::fast_"+fcn_name+"(iarray[i]);};"\
            +"}"
   else:
     code = "{return vdt::fast_"+fcn_name+"(x);}"
+  return code
 
-  
+#---------------------------------------------------------------------
+                
+
+
+def get_return_code2to1(fcn_name,is_double,is_vector):
+  code = ''
+  if(is_vector):
+    code = 'fat_vdt_'+fcn_name+'v(iarray1,iarray2,oarray,size);'
+  else:
+    code = 'return fat_vdt_'+fcn_name+'(x,y);'
+  return code
+
+def get_return_code1to2(fcn_name,is_double,is_vector):
+  code = ''
+  if(is_vector):
+    code = 'fat_vdt_'+fcn_name+'v(iarray,oarray1,oarray2,size);'
+  else:
+    code = 'fat_vdt_'+fcn_name+'(x,o1,o2);'
   return code
 
 def get_return_code(fcn_name,is_double,is_vector):
-  (type,data_type,suffix)=get_type_dependent_parts(is_double,is_vector)
+  if (fcn_name[:5] == 'atan2') : return get_return_code2to1(fcn_name,is_double,is_vector)
+  if (fcn_name[:6] == 'sincos') : return get_return_code1to2(fcn_name,is_double,is_vector)
   code = ''
   if(is_vector):
-    code = 'fat_vdt_'+fcn_name+suffix+'(iarray,oarray,size);'
+    code = 'fat_vdt_'+fcn_name+'v(iarray,oarray,size);'
   else:
-    code = 'return fat_vdt_'+fcn_name+suffix+'(x);'
+    code = 'return fat_vdt_'+fcn_name+'(x);'
   return code
+
+
 
 #---------------------------------------------------------------------
                 
 def create_Wrapper_signature(fcn_name,is_double=False,is_vector=False,is_impl=False):
   (ret,sign) = get_function_prototype(fcn_name,is_double,is_vector)
+  if (fcn_name[:5] == 'atan2') : (ret,sign) = get_function_prototype2to1(fcn_name,is_double,is_vector)
+  if (fcn_name[:6] == 'sincos') : (ret,sign) = get_function_prototype1to2(fcn_name,is_double,is_vector)
   code = ''
   ss=''
-  if(not is_double): ss='f'
+  if(not is_double): fcn_name+='f'
   if (is_vector) : ss+='v'
   fatM = 'FAT'+fcn_name+ss
   if is_impl:
@@ -122,7 +188,12 @@ def get_python_function(fcn_name,is_double,is_vector):
   code = ''
   if(is_vector):
     fn ='%s%s' %(VDT_PREF,fcn_name)
-    code='def %s(vi): return vdt_invoke("%s",vi)' %(fn,fn) + '\n'
+    if (fcn_name[:5] == 'atan2') :
+      code='def %s(vi1,vi2): return vdt_invoke2to1("%s",vi1,vi2)' %(fn,fn) + '\n'
+    elif (fcn_name[:6] == 'sincos'):
+      code='def %s(vi): return vdt_invoke1to2("%s",vi)' %(fn,fn) + '\n'
+    else :
+      code='def %s(vi): return vdt_invoke("%s",vi)' %(fn,fn) + '\n'
   return code
 
 #------------------------------------------------------------------

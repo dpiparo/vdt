@@ -11,12 +11,22 @@ def vdt_arch() :
 
 VDTFunMap = {}
 
-def loadit(fn) :
+def loadit(fn,nin=1,nout=1) :
     if not fn in VDTFunMap :
         is_single = fn.endswith('f')
-        VDTFunMap[fn] = invokeVDT.load(fn+'v',is_single,libname='vdtdiag_numpyWrapper')
+        VDTFunMap[fn] = invokeVDT.load(fn+'v',is_single,'vdtdiag_numpyWrapper',nin,nout)
 
 def vdt_invoke(fn,vi) :
     loadit(fn)
     (f,type) =  VDTFunMap[fn]
     return invokeVDT.invoke(vi,f,type)    
+
+def vdt_invoke2to1(fn,vi1,vi2) :
+    loadit(fn,2,1)
+    (f,type) =  VDTFunMap[fn]
+    return invokeVDT.invoke2to1(vi1,vi2,f,type)    
+
+def vdt_invoke1to2(fn,vi) :
+    loadit(fn,1,2)
+    (f,type) =  VDTFunMap[fn]
+    return invokeVDT.invoke1to2(vi,f,type)    

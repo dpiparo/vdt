@@ -88,11 +88,18 @@ def vexff() :
 
 def vexfm() :
  global x
- return npufunc.vdt_expfv(x)
+ return npufunc.vdt_expv(x)
+
+def vexm() :
+ global xx
+ return npufunc.vdt_expv(xx)
+
 
 print "timing exp"
+print timeit.timeit("nex()", setup="from __main__ import nex",number=100000), 'np exp'
 print timeit.timeit("nexf()", setup="from __main__ import nexf",number=100000), 'np expf'
 #print timeit.timeit("vexf()", setup="from __main__ import vexf",number=100000), 'vdt expf'
 print timeit.timeit("vexff()", setup="from __main__ import vexff",number=100000), 'vdt expf direct'
 print timeit.timeit("vexfm()", setup="from __main__ import vexfm",number=100000), 'vdt expf module'
+print timeit.timeit("vexm()", setup="from __main__ import vexm",number=100000), 'vdt exp module'
 

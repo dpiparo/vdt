@@ -26,10 +26,9 @@ static PyMethodDef vdt_expfvMethods[] = {
 void vdt_expfv(const float* __restrict__ iarray, float* __restrict__ oarray, long size);
 void vdt_expv(const double* __restrict__ iarray, double* __restrict__ oarray, long size);
 
-void * bha = &vdt_expfv;
 
-static void vdt_expfvf(char **args, npy_intp *dimensions,
-                            npy_intp* steps, void* data)
+static void vdt_vf(char **args, npy_intp *dimensions,
+		   npy_intp* steps, void* data)
 {
   void (*functionPtr)(const float* __restrict__, float* __restrict__, long);
 
@@ -43,13 +42,29 @@ static void vdt_expfvf(char **args, npy_intp *dimensions,
     (*functionPtr)((const float *)in, (float *)out,n); 
 }
 
+static void vdt_vd(char **args, npy_intp *dimensions,
+		  npy_intp* steps, void* data)
+{
+  void (*functionPtr)(const double* __restrict__, double* __restrict__, long);
+
+  functionPtr = data;
+  
+  npy_intp n = dimensions[0];
+    char *in = args[0], *out = args[1];
+    /* npy_intp in_step = steps[0], out_step = steps[1]; */
+
+    // vdt_expfv((const float *)in, (float *)out,n); 
+    (*functionPtr)((const double *)in, (double *)out,n); 
+}
+
+
 /*This a pointer to the above function*/
-PyUFuncGenericFunction funcs[1] = {&vdt_expfvf};
+PyUFuncGenericFunction funcs[2] = {&vdt_vf,&vdt_vd};
 
 /* These are the input and return dtypes of vdt_expfv.*/
-static char types[2] = {NPY_FLOAT, NPY_FLOAT};
+static char types[4] = {NPY_FLOAT, NPY_FLOAT, NPY_DOUBLE, NPY_DOUBLE};
 
-static void *data[1] = {&vdt_expfv};
+static void *data[2] = {&vdt_expfv,&vdt_expv};
 
 #if PY_VERSION_HEX >= 0x03000000
 static struct PyModuleDef moduledef = {
@@ -75,8 +90,8 @@ PyMODINIT_FUNC PyInit_npufunc(void)
     import_array();
     import_umath();
 
-    vdt_expfv = PyUFunc_FromFuncAndData(funcs, data, types, 1, 1, 1,
-                                    PyUFunc_None, "vdt_expfv",
+    vdt_expfv = PyUFunc_FromFuncAndData(funcs, data, types, 2, 1, 1,
+                                    PyUFunc_None, "vdt_expv",
                                     "tiwce_docstring", 0);
 
     d = PyModule_GetDict(m);
@@ -100,13 +115,13 @@ PyMODINIT_FUNC initnpufunc(void)
     import_array();
     import_umath();
 
-    vdt_expfv = PyUFunc_FromFuncAndData(funcs, data, types, 1, 1, 1,
-                                    PyUFunc_None, "vdt_expfv",
-                                    "vdt_expfv_docstring", 0);
+    vdt_expfv = PyUFunc_FromFuncAndData(funcs, data, types, 2, 1, 1,
+                                    PyUFunc_None, "vdt_expv",
+                                    "vdt_expv_docstring", 0);
 
     d = PyModule_GetDict(m);
 
-    PyDict_SetItemString(d, "vdt_expfv", vdt_expfv);
+    PyDict_SetItemString(d, "vdt_expv", vdt_expfv);
     Py_DECREF(vdt_expfv);
 }
 #endif

@@ -26,14 +26,21 @@ static PyMethodDef vdt_expfvMethods[] = {
 void vdt_expfv(const float* __restrict__ iarray, float* __restrict__ oarray, long size);
 void vdt_expv(const double* __restrict__ iarray, double* __restrict__ oarray, long size);
 
+void * bha = &vdt_expfv;
+
 static void vdt_expfvf(char **args, npy_intp *dimensions,
                             npy_intp* steps, void* data)
 {
-    npy_intp n = dimensions[0];
+  void (*functionPtr)(const float* __restrict__, float* __restrict__, long);
+
+  functionPtr = data;
+  
+  npy_intp n = dimensions[0];
     char *in = args[0], *out = args[1];
     /* npy_intp in_step = steps[0], out_step = steps[1]; */
 
-    vdt_expfv((const float *)in, (float *)out,n); 
+    // vdt_expfv((const float *)in, (float *)out,n); 
+    (*functionPtr)((const float *)in, (float *)out,n); 
 }
 
 /*This a pointer to the above function*/
@@ -42,7 +49,7 @@ PyUFuncGenericFunction funcs[1] = {&vdt_expfvf};
 /* These are the input and return dtypes of vdt_expfv.*/
 static char types[2] = {NPY_FLOAT, NPY_FLOAT};
 
-static void *data[1] = {NULL};
+static void *data[1] = {&vdt_expfv};
 
 #if PY_VERSION_HEX >= 0x03000000
 static struct PyModuleDef moduledef = {

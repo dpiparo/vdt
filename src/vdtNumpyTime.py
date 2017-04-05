@@ -1,5 +1,4 @@
 import imp
-import numpy
 vdtnpfun= imp.load_dynamic('vdtnpfun','vdtnpfun_directory/vdtnpfun.so')
 import vdtnpfun
 print dir(vdtnpfun)

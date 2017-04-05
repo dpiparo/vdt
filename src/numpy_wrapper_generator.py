@@ -222,7 +222,9 @@ def create_numpy_header():
   code= "/* Automatically generated */\n"\
        
   nfunc=0
-  data = 'static void *data[2*NVDTFUN] =\n\t{\n'
+  data = 'static void *dataSinCos[2] = {&vdt_sincosfv,&vdt_sincosv};\n' 
+  data += 'static void *dataAtan2[2] = {&vdt_atan2fv,&vdt_atan2v};\n' 
+  data += 'static void *data[2*NVDTFUN] =\n\t{\n'
   fname= 'static char * fname[NVDTFUN] =\n\t{\n'
   fdoc= 'static char * fdoc[NVDTFUN] =\n\t{\n'
 

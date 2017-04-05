@@ -1,18 +1,35 @@
-from vdt import *
-import numpy as np
+import imp
 import timeit
+import numpy as np
 
-print vdt_arch()
-print vdt_sin([1,2,3,4])
-print vdt_sinf([1,2,3,4])
-print vdt_atan2([1,2,-3,-4],[1,-2,3,-4])
-print vdt_sincosf([1,2,3,4])
-print vdt_expf([1,2,3,4])
+vdtnpfun= imp.load_dynamic('vdtnpfun','vdtnpfun_directory/vdtnpfun.so')
+from vdtnpfun import *
+print dir(vdtnpfun)
+
+def norf(vi):
+    requires = ['CONTIGUOUS', 'ALIGNED']
+    vi = np.asanyarray(vi)
+    vi = np.require(vi, np.single, requires)
+    return vi
+
+def nord(vi):
+    requires = ['CONTIGUOUS', 'ALIGNED']
+    vi = np.asanyarray(vi)
+    vi = np.require(vi, np.double, requires)
+    return vi
+
+
+# print vdt_arch()
+print vdt_sin(nord([1,2,3,4]))
+print vdt_sin(norf([1,2,3,4]))
+print vdt_atan2(norf([1,2,-3,-4]),norf([1,-2,3,-4]))
+print vdt_sincos(norf([1,2,3,4]))
+print vdt_exp(norf([1,2,3,4]))
 
 
 xx = np.linspace(-np.pi, np.pi, 2001)
-xf = np.linspace(-np.pi, np.pi, 2001)
-x = np.linspace(-np.pi, np.pi, 2001)
+xf = norf(np.linspace(-np.pi, np.pi, 2001))
+
 
 
 def nsc() :
@@ -29,12 +46,12 @@ def nscf() :
 
 
 def vsc() :
-    global x
-    return vdt_sincos(x)
+    global xx
+    return vdt_sincos(xx)
 
 def vscf() :
-    global x
-    return vdt_sincosf(x)
+    global xf
+    return vdt_sincos(xf)
 
 
 def nex() :
@@ -43,59 +60,32 @@ def nex() :
 
 def nexf() :
     global xf
-    return np.exp(xf)
+    return np.sin(xf)
 
 
 def vex() :
-    global x
-    return vdt_exp(x)
+    global xx
+    return vdt_exp(xx)
 
 def vexf() :
-    global x
-    return vdt_expf(x)
+    global xf
+    return vdt_exp(xf)
 
 
-
-(fscf, ftype) = VDTFunMap['vdt_sincosf']
-(fexf, ftype) = VDTFunMap['vdt_expf']
-
-
-requires = ['CONTIGUOUS', 'ALIGNED']
-x = numpy.asanyarray(x)
-x = numpy.require(x, ftype, requires)
-vo1 = numpy.empty_like(x)
-vo2 = numpy.empty_like(x)
-
-xf = numpy.asanyarray(xf)
-xf = numpy.require(xf, ftype, requires)
-
-
-def vscff() :
-    global x
-    global fscf
-    global vo1
-    global vo2
-    fscf(x,vo1,vo2,x.size)
-
-def vexff() :
-    global x
-    global fscf
-    global vo1
-    fexf(x,vo1,x.size)
 
 
 print "timing exp"
-print timeit.timeit("nex()", setup="from __main__ import nex",number=100000), "np exp"
-print timeit.timeit("nexf()", setup="from __main__ import nexf",number=100000), 'np expf'
-print timeit.timeit("vex()", setup="from __main__ import vex",number=100000), 'vdt exp'
-print timeit.timeit("vexf()", setup="from __main__ import vexf",number=100000), 'vdt expf'
-print timeit.timeit("vexff()", setup="from __main__ import vexff",number=100000), 'vdt expf direct'
+print(timeit.timeit("nex()", setup="from __main__ import nex",number=100000))
+print(timeit.timeit("nexf()", setup="from __main__ import nexf",number=100000))
+print(timeit.timeit("vex()", setup="from __main__ import vex",number=100000))
+print(timeit.timeit("vexf()", setup="from __main__ import vexf",number=100000))
+
 
 
 print "timing sincos"
-print timeit.timeit("nsc()", setup="from __main__ import nsc",number=100000), 'np sin&cos'
-print timeit.timeit("nscf()", setup="from __main__ import nscf",number=100000), 'np sinf&cosf'
-print timeit.timeit("vsc()", setup="from __main__ import vsc",number=100000), 'vdt sincos'
-print timeit.timeit("vscf()", setup="from __main__ import vscf",number=100000), 'vdt sincosf'
-print timeit.timeit("vscff()", setup="from __main__ import vscff",number=100000), 'vdt sincosf direct'
+print(timeit.timeit("nsc()", setup="from __main__ import nsc",number=100000))
+print(timeit.timeit("nscf()", setup="from __main__ import nscf",number=100000))
+print(timeit.timeit("vsc()", setup="from __main__ import vsc",number=100000))
+print(timeit.timeit("vscf()", setup="from __main__ import vscf",number=100000))
+
 

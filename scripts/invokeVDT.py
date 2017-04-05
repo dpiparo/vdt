@@ -32,7 +32,7 @@ def invoke1to2(vi,f,type) :
 
 
 
-def load(fn,is_single,libname='vdtdiag_numpyWrapper',nin=1,nout=1) :
+def load(fn,is_single,libname='libvdtFatLibWrapper',nin=1,nout=1) :
    if (is_single) :
      type = numpy.single
    else :
@@ -48,7 +48,7 @@ def load(fn,is_single,libname='vdtdiag_numpyWrapper',nin=1,nout=1) :
    f.argtypes = [tin]*nin + [tout]*nout + [numpy.ctypeslib.c_intp]
    return (f,type)
 
-def loadInvoke(vi,fn,is_single,libname='vdtdiag_numpyWrapper') :
+def loadInvoke(vi,fn,is_single,libname='libvdtFatLibWrapper') :
    (f,type) = load(fn,is_single,libname)
    return invoke(vi,f,type)
 

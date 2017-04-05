@@ -4,7 +4,7 @@ from ctypes import c_char_p
 import invokeVDT
 def vdt_arch() :
    _path = os.path.dirname('__file__')
-   lib = numpy.ctypeslib.load_library('vdtdiag_numpyWrapper', _path)
+   lib = numpy.ctypeslib.load_library('libvdtFatLibWrapper', _path)
    f = lib['vdt_arch']
    f.restype = c_char_p
    return f()
@@ -14,7 +14,7 @@ VDTFunMap = {}
 def loadit(fn,nin=1,nout=1) :
     if not fn in VDTFunMap :
         is_single = fn.endswith('f')
-        VDTFunMap[fn] = invokeVDT.load(fn+'v',is_single,'vdtdiag_numpyWrapper',nin,nout)
+        VDTFunMap[fn] = invokeVDT.load(fn+'v',is_single,'libvdtFatLibWrapper',nin,nout)
 
 def vdt_invoke(fn,vi) :
     loadit(fn)

@@ -6,8 +6,8 @@
 #include "vdtFatLibWrapper.h"
 /*
  * 
- * This is the C code for creating your own
- * NumPy ufunc for a vdt_expfv function.
+ * This is the C code for creating VDT
+ * NumPy ufunc for a vdt_v functions.
  *
  * In this code we only define the ufunc for
  * a single dtype. 
@@ -16,6 +16,26 @@
  * 'Extending and Embedding' and 'Python/C API' at
  * docs.python.org .
  */
+
+
+#define NVDTFUN 2
+static void *data[2*NVDTFUN] =
+  {
+   &vdt_logfv,&vdt_logv
+   ,&vdt_expfv,&vdt_expv
+  };
+
+static char * fname[NVDTFUN] =
+{
+  "vdt_log"
+  ,"vdt_exp"
+};
+
+static char * fdoc[NVDTFUN] =
+{
+  "vdt_log"
+  ,"vdt_exp"
+};
 
 
 static PyMethodDef vdt_Methods[] = {
@@ -60,12 +80,10 @@ PyUFuncGenericFunction funcs[2] = {&vdt_vf,&vdt_vd};
 /* These are the input and return dtypes of vdt_expfv.*/
 static char types[4] = {NPY_FLOAT, NPY_FLOAT, NPY_DOUBLE, NPY_DOUBLE};
 
-static void *data[2] = {&vdt_expfv,&vdt_expv};
-
 #if PY_VERSION_HEX >= 0x03000000
 static struct PyModuleDef moduledef = {
     PyModuleDef_HEAD_INIT,
-    "npufunc",
+    "vdtnpfun",
     NULL,
     -1,
     vdt_Methods,
@@ -75,9 +93,10 @@ static struct PyModuleDef moduledef = {
     NULL
 };
 
-PyMODINIT_FUNC PyInit_npufunc(void)
+PyMODINIT_FUNC PyInit_vdtnpfun(void)
 {
     PyObject *m, *vdt_v, *d;
+    
     m = PyModule_Create(&moduledef);
     if (!m) {
         return NULL;
@@ -89,39 +108,37 @@ PyMODINIT_FUNC PyInit_npufunc(void)
     import_array();
     import_umath();
 
-    
-    vdt_v = PyUFunc_FromFuncAndData(funcs, data, types, 2, 1, 1,
-                                    PyUFunc_None, "vdt_expv",
-                                    "vdt_expv", 0);
-
-
-    PyDict_SetItemString(d, "vdt_expv", vdt_v);
-    Py_DECREF(vdt_v);
-
+    for (int i=0;i< NVDTFUN;++i) {   
+      vdt_v = PyUFunc_FromFuncAndData(funcs, data+2*i, types, 2, 1, 1,
+                                    PyUFunc_None, fname[i],
+                                    fdoc[i], 0);
+      PyDict_SetItemString(d, fname+i, vdt_v);
+      Py_DECREF(vdt_v);
+    }
     return m;
 }
 #else
-PyMODINIT_FUNC initnpufunc(void)
+PyMODINIT_FUNC initvdtnpfun(void)
 {
     PyObject *m, *vdt_v, *d;
-
-
-    m = Py_InitModule("npufunc", vdt_Methods);
+    
+    m = Py_InitModule("vdtnpfun", vdt_Methods);
     if (m == NULL) {
         return;
     }
 
+    d = PyModule_GetDict(m);
+
     import_array();
     import_umath();
 
-    vdt_v = PyUFunc_FromFuncAndData(funcs, data, types, 2, 1, 1,
-                                    PyUFunc_None, "vdt_expv",
-                                    "vdt_expv", 0);
-
-    d = PyModule_GetDict(m);
-
-    PyDict_SetItemString(d, "vdt_expv", vdt_v);
-    Py_DECREF(vdt_v);
+    for (int i=0;i< NVDTFUN; ++i) {   
+      vdt_v = PyUFunc_FromFuncAndData(funcs, data+2*i, types, 2, 1, 1,
+				      PyUFunc_None, fname[i],
+				      fdoc[i], 0);
+      PyDict_SetItemString(d, fname[i], vdt_v);
+      Py_DECREF(vdt_v);
+    } 
 }
 #endif
 

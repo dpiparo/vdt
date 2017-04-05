@@ -2,6 +2,8 @@
 
 """
 Generates numpy wrapper - both header and .cc file
+compile with
+c++ -Ofast -shared -fPIC -Wall -o libvdtFatLibWrapper.so vdtFatLibWrapper.cc -I../include/
 """
 
 RESTRICT="__restrict__"
@@ -20,9 +22,9 @@ FUNCTIONS_LIST=["asin",
                 "isqrt",
                 "identity"]
 
-VDT_WRAPPER_HEADER='vdtdiag_numpyWrapper.h'
-VDT_WRAPPER_IMPL='vdtdiag_numpyWrapper.cc'
-VDT_PYTHON_MODULE='vdt.py'
+VDT_WRAPPER_HEADER='vdtFatLibWrapper.h'
+VDT_WRAPPER_IMPL='vdtFatLibWrapper.cc'
+VDT_PYTHON_MODULE='vdt_ctypes.py'
                 
 #------------------------------------------------------------------
 
@@ -67,7 +69,7 @@ def get_function_prototype2to1(fcn_name,is_double,is_vector):
 
 def get_function_prototype1to2(fcn_name,is_double,is_vector):
   (type,data_type,suffix)=get_type_dependent_parts(is_double,is_vector)
-  prototype="%s%s%s(%s x, %s & o1,  %s & o2)" %(VDT_PREF,fcn_name,suffix,data_type,data_type,data_type)
+  prototype="%s%s%s(%s x, %s * o1,  %s * o2)" %(VDT_PREF,fcn_name,suffix,data_type,data_type,data_type)
   ret =  'void'
   if(is_vector):
     prototype="%s%s%s(const %s iarray, %s oarray1,  %s oarray2, long size)" %(VDT_PREF,fcn_name,suffix,data_type,data_type,data_type)
@@ -104,7 +106,7 @@ def get_function_code1to2(fcn_name,is_vector):
            "for (long i=0;i<size;++i) {vdt::fast_"+fcn_name+"(iarray[i],oarray1[i],oarray2[i]);};"\
            +"}"
   else:
-    code = "{vdt::fast_"+fcn_name+"(x,o1,o2);}"
+    code = "{vdt::fast_"+fcn_name+"(x,*o1,*o2);}"
   return code
 
 def get_function_code(fcn_name,is_vector):
@@ -214,11 +216,15 @@ def create_python():
 
 def get_header_file():
   code= "// Automatically generated\n"\
-        '#ifndef __VDT_NUMPY_WRAPPER__\n'\
-        '#define __VDT_NUMPY_WRAPPER__\n'\
+        '#ifndef VDT_FATLIB_WRAPPER\n'\
+        '#define VDT_FATLIB_WRAPPER\n'\
+        '#ifdef __cplusplus\n'\
         'extern "C"{\n'+\
+        '#endif\n'+\
         create_Wrapper_signatures(is_impl=False)+\
+        '#ifdef __cplusplus\n'\
         '}\n'+\
+        '#endif\n'+\
         '\n'+\
         '#endif\n'
   return code

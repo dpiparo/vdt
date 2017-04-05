@@ -1,7 +1,9 @@
 import imp
 import numpy
-npufunc= imp.load_dynamic('npufunc','npufunc_directory/npufunc.so')
-import npufunc
+vdtnpfun= imp.load_dynamic('vdtnpfun','vdtnpfun_directory/vdtnpfun.so')
+import vdtnpfun
+print dir(vdtnpfun)
+
 
 from vdt_ctypes import *
 import numpy as np
@@ -88,11 +90,11 @@ def vexff() :
 
 def vexfm() :
  global x
- return npufunc.vdt_expv(x)
+ return vdtnpfun.vdt_exp(x)
 
 def vexm() :
  global xx
- return npufunc.vdt_expv(xx)
+ return vdtnpfun.vdt_exp(xx)
 
 
 print "timing exp"

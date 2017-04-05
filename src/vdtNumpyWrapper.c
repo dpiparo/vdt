@@ -17,25 +17,7 @@
  * docs.python.org .
  */
 
-
-#define NVDTFUN 2
-static void *data[2*NVDTFUN] =
-  {
-   &vdt_logfv,&vdt_logv
-   ,&vdt_expfv,&vdt_expv
-  };
-
-static char * fname[NVDTFUN] =
-{
-  "vdt_log"
-  ,"vdt_exp"
-};
-
-static char * fdoc[NVDTFUN] =
-{
-  "vdt_log"
-  ,"vdt_exp"
-};
+#include "vdtNumpyWrapper.h"
 
 
 static PyMethodDef vdt_Methods[] = {

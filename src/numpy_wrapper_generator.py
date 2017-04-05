@@ -25,6 +25,7 @@ FUNCTIONS_LIST=["asin",
 VDT_WRAPPER_HEADER='vdtFatLibWrapper.h'
 VDT_WRAPPER_IMPL='vdtFatLibWrapper.cc'
 VDT_PYTHON_MODULE='vdt_ctypes.py'
+VDT_NUMPY_WRAPPER_HEADER='vdtNumpyWrapper.h'
                 
 #------------------------------------------------------------------
 
@@ -212,6 +213,40 @@ def create_python():
   ofile.write(code)
   ofile.close()
 
+#------------------------------------------------------------------
+
+def closeArray(arr) :
+  return arr[:-2]+'\n\t};\n\n'
+
+def create_numpy_header():
+  code= "/* Automatically generated */\n"\
+       
+  nfunc=0
+  data = 'static void *data[2*NVDTFUN] =\n\t{\n'
+  fname= 'static char * fname[NVDTFUN] =\n\t{\n'
+  fdoc= 'static char * fdoc[NVDTFUN] =\n\t{\n'
+
+  for fc_name in sorted(FUNCTIONS_LIST):
+    if (fc_name[:5] == 'atan2') : continue
+    if (fc_name[:6] == 'sincos') : continue
+    data+= '\t&vdt_'+fc_name+'fv,'+' &vdt_'+fc_name+'v,\n'
+    fname+='\t"vdt_'+fc_name+'",\n'
+    fdoc +='\t"vdt_'+fc_name+'",\n'
+    nfunc+=1
+
+  data = closeArray(data)
+  fname = closeArray(fname)
+  fdoc = closeArray(fdoc)
+  
+  code = '#define NVDTFUN ' + str(nfunc)+'\n\n'
+  code+=data+fname+fdoc;
+
+
+  ofile=file(VDT_NUMPY_WRAPPER_HEADER,'w')
+  ofile.write(code)
+  ofile.close()
+
+
 #------------------------------------------------------------------   
 
 def get_header_file():
@@ -259,3 +294,4 @@ if __name__ == "__main__":
   create_header()
   create_impl()
   create_python()
+  create_numpy_header()

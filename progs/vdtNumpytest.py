@@ -2,9 +2,13 @@ import imp
 import timeit
 import numpy as np
 
-vdtnpfun= imp.load_dynamic('vdtnpfun','vdtnpfun_directory/vdtnpfun.so')
-from vdtnpfun import *
-print dir(vdtnpfun)
+#vdtnpfun= imp.load_dynamic('vdtnpfun','vdtnpfun_directory/vdtnpfun.so')
+#from vdtnpfun import *
+#print dir(vdtnpfun)
+
+import vdt
+from vdt import *
+print dir(vdt)
 
 def norf(vi):
     requires = ['CONTIGUOUS', 'ALIGNED']
@@ -19,7 +23,7 @@ def nord(vi):
     return vi
 
 
-# print vdt_arch()
+print vdt_arch()
 print vdt_sin(nord([1,2,3,4]))
 print vdt_sin(norf([1,2,3,4]))
 print vdt_atan2(norf([1,2,-3,-4]),norf([1,-2,3,-4]))

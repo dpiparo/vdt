@@ -2,6 +2,7 @@
 #define __VDT_FATLIB__
 #include<iostream>
 #include<string>
+#include<cmath>
 
 namespace {
 static std::string fathi;
@@ -48,19 +49,22 @@ RET __attribute__ ((__target__ ("avx512f"))) FUN
 #define FATLIB(RET,FUN) RET FUN
 #endif
 
-inline
-float theFMA (float x, float y, float z) { return x+y*z;}
 
 
-#define FATFMA myfmaCPP(float x, float y, float z) { return theFMA(x,y,z);} 
-#define FATFMARETURN float
+template<typename T>
+inline T theFMA (T x, T y, T z) { return x*y+z;}
+
+
+#define FATFMA(T) myfmaCPP(T x, T y, T z) { return theFMA(x,y,z);} 
 
 namespace {
-FATLIB(FATFMARETURN,FATFMA)
+  FATLIB(float,FATFMA(float))
+  FATLIB(double,FATFMA(double))
 }
 
 extern "C" {
-  float myfma(float x, float y, float z) { return myfmaCPP(x,y,z);} 
+  float myfmaF(float x, float y, float z) { return myfmaCPP(x,y,z);} 
+  float myfmaD(double x, double y, double z) { return myfmaCPP(x,y,z);} 
 }
 
 #endif

@@ -80,6 +80,20 @@ static void vdt_vf12(char **args, npy_intp *dimensions,
   (*functionPtr)((const float *)in, (float *)out1, (float *)out2,n); 
 }
 
+static void vdt_vf31(char **args, npy_intp *dimensions,
+		  npy_intp* steps, void* data)
+{
+  void (*functionPtr)(const float* __restrict__, const float* __restrict__, const float* __restrict__, float* __restrict__, long);
+  functionPtr = data;
+  
+  npy_intp n = dimensions[0];
+  char *in1 = args[0], *in2 = args[1], *in3 = args[2], *out = args[3];
+  /* npy_intp in_step = steps[0], out_step = steps[1]; */
+  
+  (*functionPtr)((const float *)in1, (const float *)in2,(const float *)in3, (float *)out,n); 
+}
+
+
 static void vdt_vd21(char **args, npy_intp *dimensions,
 		  npy_intp* steps, void* data)
 {
@@ -106,16 +120,32 @@ static void vdt_vd12(char **args, npy_intp *dimensions,
   (*functionPtr)((const double *)in, (double *)out1, (double *)out2,n); 
 }
 
+static void vdt_vd31(char **args, npy_intp *dimensions,
+		  npy_intp* steps, void* data)
+{
+  void (*functionPtr)(const double* __restrict__, const double* __restrict__, const double* __restrict__, double* __restrict__, long);
+  functionPtr = data;
+  
+  npy_intp n = dimensions[0];
+  char *in1 = args[0], *in2 = args[1], *in3 = args[2], *out = args[3];
+  /* npy_intp in_step = steps[0], out_step = steps[1]; */
+  
+  (*functionPtr)((const double *)in1, (const double *)in2,(const double *)in3, (double *)out,n); 
+}
+
 
 /*This a pointer to the above function*/
 PyUFuncGenericFunction funcs[2] = {&vdt_vf,&vdt_vd};
 PyUFuncGenericFunction funcs21[2] = {&vdt_vf21,&vdt_vd21};
 PyUFuncGenericFunction funcs12[2] = {&vdt_vf12,&vdt_vd12};
+PyUFuncGenericFunction funcs31[2] = {&vdt_vf31,&vdt_vd31};
 
 /* These are the input and return dtypes of vdt_v.*/
 static char types[4] = {NPY_FLOAT, NPY_FLOAT, NPY_DOUBLE, NPY_DOUBLE};
 /* These are the input and return dtypes of vdt_v 2to1 and 1to2*/
 static char types12[6] = {NPY_FLOAT, NPY_FLOAT, NPY_FLOAT, NPY_DOUBLE, NPY_DOUBLE, NPY_DOUBLE};
+/* These are the input and return dtypes of vdt_v 3to1*/
+static char types31[8] = {NPY_FLOAT, NPY_FLOAT, NPY_FLOAT, NPY_FLOAT, NPY_DOUBLE, NPY_DOUBLE, NPY_DOUBLE, NPY_DOUBLE};
 
 
 
@@ -154,6 +184,19 @@ PyMODINIT_FUNC PyInit_vdtnpfun(void)
       PyDict_SetItemString(d, fname+i, vdt_v);
       Py_DECREF(vdt_v);
     }
+    // add sincos and atan2 by hand
+    vdt_v = PyUFunc_FromFuncAndData(funcs12, dataSinCos, types12, 2, 1, 2,
+				    PyUFunc_None, "vdt_sincos",
+				    "vdt_sincos", 0);
+    PyDict_SetItemString(d,  "vdt_sincos", vdt_v);
+    Py_DECREF(vdt_v);
+    vdt_v = PyUFunc_FromFuncAndData(funcs21, dataAtan2, types12, 2, 2, 1,
+				    PyUFunc_None, "vdt_atan2",
+				    "vdt_atan2", 0);
+    PyDict_SetItemString(d,  "vdt_atan2", vdt_v);
+    Py_DECREF(vdt_v);
+
+
     return m;
 }
 #else

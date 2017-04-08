@@ -237,12 +237,12 @@ PyMODINIT_FUNC initvdtnpfun(void)
 				    "vdt_div", 0);
     PyDict_SetItemString(d,  "vdt_div", vdt_v);
     Py_DECREF(vdt_v);
-    vdt_v = PyUFunc_FromFuncAndData(funcs21, dataFMA, types31, 2, 3, 1,
+    vdt_v = PyUFunc_FromFuncAndData(funcs31, dataFMA, types31, 2, 3, 1,
 				    PyUFunc_None, "vdt_fma",
 				    "vdt_fma", 0);
     PyDict_SetItemString(d,  "vdt_fma", vdt_v);
     Py_DECREF(vdt_v);
-    vdt_v = PyUFunc_FromFuncAndData(funcs21, dataFMAC, types31, 2, 3, 1,
+    vdt_v = PyUFunc_FromFuncAndData(funcs31, dataFMAC, types31, 2, 3, 1,
 				    PyUFunc_None, "vdt_fmac",
 				    "correctly rounded fma", 0);
     PyDict_SetItemString(d,  "vdt_fmac", vdt_v);

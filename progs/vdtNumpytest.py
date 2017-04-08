@@ -33,8 +33,13 @@ print vdt_exp(norf([1,2,3,4]))
 
 xx = np.linspace(-np.pi, np.pi, 2001)
 xf = norf(np.linspace(-np.pi, np.pi, 2001))
+yf = norf(np.linspace(-np.pi, np.pi, 2001))
+zf = norf(np.linspace(-np.pi, np.pi, 2001))
 
 
+def nfma():
+    global xf,yf,zf
+    return  xf*yf+zf
 
 def nsc() :
     global xx
@@ -47,6 +52,10 @@ def nscf() :
     s = np.sin(xf)
     c = np.cos(xf)
     return (s,c)
+
+def vfma():
+    global xf,yf,zf
+    return  vdt_fma(xf,yf,zf)
 
 
 def vsc() :
@@ -76,6 +85,9 @@ def vexf() :
     return vdt_exp(xf)
 
 
+print "timing fma"
+print(timeit.timeit("nfma()", setup="from __main__ import nfma",number=100000))
+print(timeit.timeit("vfma()", setup="from __main__ import vfma",number=100000))
 
 
 print "timing exp"

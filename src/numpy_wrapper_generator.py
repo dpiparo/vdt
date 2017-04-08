@@ -22,12 +22,23 @@ FUNCTIONS_LIST=["asin",
                 "isqrt",
                 "identity"]
 
+TEMPLATE_LIST = ['sqrt','div','fma','fmac']
+
+FUNCTIONS_LIST+=TEMPLATE_LIST
+
 VDT_WRAPPER_HEADER='vdtFatLibWrapper.h'
 VDT_WRAPPER_IMPL='vdtFatLibWrapper.cc'
 VDT_PYTHON_MODULE='vdt_ctypes.py'
 VDT_NUMPY_WRAPPER_HEADER='vdtNumpyWrapper.h'
                 
 #------------------------------------------------------------------
+
+def isTemplate(fcn_name) :
+  return fcn_name in TEMPLATE_LIST
+
+#------------------------------------------------------------------
+
+
 
 def get_type_dependent_parts(is_double, is_vector):
   suffix=""
@@ -57,6 +68,15 @@ def get_function_prototype(fcn_name,is_double,is_vector):
     ret = 'void'
   return (ret,prototype)  
 
+
+def get_function_prototype3to1(fcn_name,is_double,is_vector):
+  (type,data_type,suffix)=get_type_dependent_parts(is_double,is_vector)
+  prototype="%s%s%s(%s x, %s y, %s z)" %(VDT_PREF,fcn_name,suffix,data_type,data_type,data_type)
+  ret = type
+  if(is_vector):
+    prototype="%s%s%s(const %s iarray1, const %s iarray2, const %s iarray3, %s oarray, long size)" %(VDT_PREF,fcn_name,suffix,data_type,data_type,data_type,data_type)
+    ret = 'void'
+  return (ret,prototype)  
 
 def get_function_prototype2to1(fcn_name,is_double,is_vector):
   (type,data_type,suffix)=get_type_dependent_parts(is_double,is_vector)
@@ -92,6 +112,16 @@ def get_fcnname_translation(fcn_name):
   
 #-------------------------------------------------------------------
 
+def get_function_code3to1(fcn_name,is_vector):
+  if(is_vector):
+    code = "{" +\
+           "for (long i=0;i<size;++i) {oarray[i]=vdt::fast_"+fcn_name+"(iarray1[i],iarray2[i],iarray3[i]);};"\
+           +"}"
+  else:
+    code = "{return vdt::fast_"+fcn_name+"(x,y,z);}"
+  return code
+
+
 def get_function_code2to1(fcn_name,is_vector):
   if(is_vector):
     code = "{" +\
@@ -112,7 +142,9 @@ def get_function_code1to2(fcn_name,is_vector):
 
 def get_function_code(fcn_name,is_vector):
   if (fcn_name[:5] == 'atan2') : return get_function_code2to1(fcn_name,is_vector)
+  if (fcn_name[:3] == 'div') : return get_function_code2to1(fcn_name,is_vector)
   if (fcn_name[:6] == 'sincos') : return get_function_code1to2(fcn_name,is_vector)
+  if (fcn_name[:3] == 'fma') : return get_function_code3to1(fcn_name,is_vector)
   if(is_vector):
     code = "{" +\
            "for (long i=0;i<size;++i) {oarray[i]=vdt::fast_"+fcn_name+"(iarray[i]);};"\
@@ -123,6 +155,13 @@ def get_function_code(fcn_name,is_vector):
 
 #---------------------------------------------------------------------
                 
+def get_return_code3to1(fcn_name,is_double,is_vector):
+  code = ''
+  if(is_vector):
+    code = 'fat_vdt_'+fcn_name+'v(iarray1,iarray2,iarray3,oarray,size);'
+  else:
+    code = 'return fat_vdt_'+fcn_name+'(x,y,z);'
+  return code
 
 
 def get_return_code2to1(fcn_name,is_double,is_vector):
@@ -143,7 +182,9 @@ def get_return_code1to2(fcn_name,is_double,is_vector):
 
 def get_return_code(fcn_name,is_double,is_vector):
   if (fcn_name[:5] == 'atan2') : return get_return_code2to1(fcn_name,is_double,is_vector)
+  if (fcn_name[:3] == 'div') : return get_return_code2to1(fcn_name,is_double,is_vector)
   if (fcn_name[:6] == 'sincos') : return get_return_code1to2(fcn_name,is_double,is_vector)
+  if (fcn_name[:3] == 'fma') : return get_return_code3to1(fcn_name,is_double,is_vector)
   code = ''
   if(is_vector):
     code = 'fat_vdt_'+fcn_name+'v(iarray,oarray,size);'
@@ -158,14 +199,20 @@ def get_return_code(fcn_name,is_double,is_vector):
 def create_Wrapper_signature(fcn_name,is_double=False,is_vector=False,is_impl=False):
   (ret,sign) = get_function_prototype(fcn_name,is_double,is_vector)
   if (fcn_name[:5] == 'atan2') : (ret,sign) = get_function_prototype2to1(fcn_name,is_double,is_vector)
+  if (fcn_name[:3] == 'div') : (ret,sign) = get_function_prototype2to1(fcn_name,is_double,is_vector)
   if (fcn_name[:6] == 'sincos') : (ret,sign) = get_function_prototype1to2(fcn_name,is_double,is_vector)
+  if (fcn_name[:3] == 'fma') : (ret,sign) = get_function_prototype3to1(fcn_name,is_double,is_vector)
   code = ''
   ss=''
-  if(not is_double): fcn_name+='f'
+  vdt_name = '' + fcn_name
+  if(not is_double):
+    fcn_name+='f'
+    if (not isTemplate(vdt_name)) :  vdt_name+='f'
+    
   if (is_vector) : ss+='v'
   fatM = 'FAT'+fcn_name+ss
   if is_impl:
-    code += '#define '+fatM + ' fat_'+ sign + get_function_code(fcn_name,is_vector)
+    code += '#define '+fatM + ' fat_'+ sign + get_function_code(vdt_name,is_vector)
     code += '\nnamespace {FATLIB('+ret+','+fatM+')}\n'+\
             'extern "C"{'+ret + ' ' + sign+'{'+get_return_code(fcn_name,is_double,is_vector)+'}}\n\n'
   else:
@@ -224,6 +271,9 @@ def create_numpy_header():
   nfunc=0
   data = 'static void *dataSinCos[2] = {&vdt_sincosfv,&vdt_sincosv};\n' 
   data += 'static void *dataAtan2[2] = {&vdt_atan2fv,&vdt_atan2v};\n' 
+  data += 'static void *dataDiv[2] = {&vdt_divfv,&vdt_divv};\n' 
+  data += 'static void *dataFMA[2] = {&vdt_fmafv,&vdt_fmav};\n' 
+  data += 'static void *dataFMAC[2] = {&vdt_fmacfv,&vdt_fmacv};\n' 
   data += 'static void *data[2*NVDTFUN] =\n\t{\n'
   fname= 'static char * fname[NVDTFUN] =\n\t{\n'
   fdoc= 'static char * fdoc[NVDTFUN] =\n\t{\n'
@@ -231,6 +281,8 @@ def create_numpy_header():
   for fc_name in sorted(FUNCTIONS_LIST):
     if (fc_name[:5] == 'atan2') : continue
     if (fc_name[:6] == 'sincos') : continue
+    if (fc_name[:3] == 'div') : continue
+    if (fc_name[:3] == 'fma') : continue
     data+= '\t&vdt_'+fc_name+'fv,'+' &vdt_'+fc_name+'v,\n'
     fname+='\t"vdt_'+fc_name+'",\n'
     fdoc +='\t"vdt_'+fc_name+'",\n'
@@ -272,6 +324,7 @@ def get_impl_file():
   code= "// Automatically generated\n"+\
         '#include "%s"\n' %VDT_WRAPPER_HEADER+\
         '#include "vdtMath.h"\n'+\
+        '#include "stdwrap.h"\n'+\
         '#include "fatlib.h"\n\n'+\
         create_Wrapper_signatures(is_impl=True)
   return code

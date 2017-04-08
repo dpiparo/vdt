@@ -221,7 +221,7 @@ PyMODINIT_FUNC initvdtnpfun(void)
       PyDict_SetItemString(d, fname[i], vdt_v);
       Py_DECREF(vdt_v);
     }
-    // add sincos and atan2 by hand
+    // add sincos, atan2 div,fma and fmac by hand
     vdt_v = PyUFunc_FromFuncAndData(funcs12, dataSinCos, types12, 2, 1, 2,
 				    PyUFunc_None, "vdt_sincos",
 				    "vdt_sincos", 0);
@@ -231,6 +231,21 @@ PyMODINIT_FUNC initvdtnpfun(void)
 				    PyUFunc_None, "vdt_atan2",
 				    "vdt_atan2", 0);
     PyDict_SetItemString(d,  "vdt_atan2", vdt_v);
+    Py_DECREF(vdt_v);
+    vdt_v = PyUFunc_FromFuncAndData(funcs21, dataDiv, types12, 2, 2, 1,
+				    PyUFunc_None, "vdt_div",
+				    "vdt_div", 0);
+    PyDict_SetItemString(d,  "vdt_div", vdt_v);
+    Py_DECREF(vdt_v);
+    vdt_v = PyUFunc_FromFuncAndData(funcs21, dataFMA, types31, 2, 3, 1,
+				    PyUFunc_None, "vdt_fma",
+				    "vdt_fma", 0);
+    PyDict_SetItemString(d,  "vdt_fma", vdt_v);
+    Py_DECREF(vdt_v);
+    vdt_v = PyUFunc_FromFuncAndData(funcs21, dataFMAC, types31, 2, 3, 1,
+				    PyUFunc_None, "vdt_fmac",
+				    "correctly rounded fma", 0);
+    PyDict_SetItemString(d,  "vdt_fmac", vdt_v);
     Py_DECREF(vdt_v);
    
 

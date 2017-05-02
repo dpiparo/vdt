@@ -1,7 +1,8 @@
 set CD=$PWD
 echo $CD
 pushd $TMPDIR
-source /cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-centos7-gcc62-opt/setup.csh
+source /cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/setup.csh
+# source /cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-centos7-gcc62-opt/setup.csh
 git clone https://github.com/dpiparo/vdt.git
 cd vdt/src/
 python numpy_wrapper_generator.py

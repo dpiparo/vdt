@@ -31,7 +31,7 @@ print vdt_sincos(norf([1,2,3,4]))
 print vdt_exp(norf([1,2,3,4]))
 
 
-xx = np.linspace(-np.pi, np.pi, 2001)
+xx = nord(np.linspace(-np.pi, np.pi, 2001))
 xf = norf(np.linspace(-np.pi, np.pi, 2001))
 yf = norf(np.linspace(-np.pi, np.pi, 2001))
 zf = norf(np.linspace(-np.pi, np.pi, 2001))
@@ -73,7 +73,7 @@ def nex() :
 
 def nexf() :
     global xf
-    return np.sin(xf)
+    return np.exp(xf)
 
 
 def vex() :

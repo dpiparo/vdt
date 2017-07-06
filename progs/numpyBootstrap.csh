@@ -1,7 +1,7 @@
 set CD=$PWD
 echo $CD
 pushd $TMPDIR
-source /cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/setup.csh
+# source /cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-slc6-gcc62-opt/setup.csh
 # source /cvmfs/sft.cern.ch/lcg/views/LCG_88/x86_64-centos7-gcc62-opt/setup.csh
 git clone https://github.com/dpiparo/vdt.git
 cd vdt/src/
@@ -13,7 +13,7 @@ cp -r vdtnpfun_directory $CD/.
 cp  libvdtFatLibWrapper.so $CD/.
 cp vdt.py  $CD/.
 cp ../progs/testExp.py $CD/.
-cp ../*.ipynb $CD/.
+cp ../progs/*.ipynb $CD/.
 popd
 python testExp.py
 

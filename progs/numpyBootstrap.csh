@@ -13,6 +13,7 @@ cp -r vdtnpfun_directory $CD/.
 cp  libvdtFatLibWrapper.so $CD/.
 cp vdt.py  $CD/.
 cp ../progs/testExp.py $CD/.
+cp ../*.ipynb $CD/.
 popd
 python testExp.py
 

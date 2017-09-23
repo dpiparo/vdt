@@ -46,6 +46,7 @@ These are the available functions:
 | sine | fast_sin | fast_sinf | fast_sinv | fast_sinfv |
 | cosine | fast_cos | fast_cosf | fast_cosv | fast_cosfv |
 | tangent | fast_tan | fast_tanf | fast_tanv | fast_tanfv |
+| hyperbolic tangent | fast_tanh | fast_tanhf | fast_tanhv | fast_tanhfv |
 | logarithm | fast_log | fast_logf | fast_logv | fast_logfv |
 | arcsine | fast_asin | fast_asinf | fast_asinv | fast_asinfv |
 | arccosine | fast_acos | fast_acosf | fast_acosv | fast_acosfv |

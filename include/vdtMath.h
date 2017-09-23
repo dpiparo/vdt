@@ -9,6 +9,7 @@
 #include "cos.h"
 
 #include "tan.h"
+#include "tanh.h"
 #include "atan.h"
 #include "atan2.h"
 

@@ -1,3 +1,5 @@
+o Adding tanh
+
 V0.3.6
 o Fixed suppport for Clang on Mac
 o Simpler compiler detection system

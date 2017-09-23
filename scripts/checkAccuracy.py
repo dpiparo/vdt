@@ -28,6 +28,8 @@ functions=[\
 "Sinv",
 "Tan",
 "Tanv",
+"Tanh",
+"Tanhv",
 "Acosf",
 "Acosfv",
 "Asinf",
@@ -47,7 +49,9 @@ functions=[\
 "Sinf",
 "Sinfv",
 "Tanf",
-"Tanfv"]
+"Tanfv",
+"Tanhf",
+"Tanhfv"]
 
 
 

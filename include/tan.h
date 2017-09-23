@@ -173,4 +173,4 @@ void fast_tanfv(const uint32_t size, float const * __restrict__ iarray, float* _
 } //vdt namespace
 
 
-#endif /* COS_H_ */
+#endif /* TAN_H_ */

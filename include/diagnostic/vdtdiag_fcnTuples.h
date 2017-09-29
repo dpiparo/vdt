@@ -114,6 +114,7 @@ void getFunctionTuples(	std::vector<genfpfcn_tuple<double>>* fcn_tuples,
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Sin", sin, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Cos", cos, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Tan", tan, symmetricrPool.getNumbers() ));
+    fcn_tuples->push_back(genfpfcn_tuple<double>( "Tanh", tanh, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Asin", asin, mone2onerPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Acos", acos, mone2onerPool.getNumbers() )); 
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Atan", atan, symmetricrPool.getNumbers() ));
@@ -125,6 +126,7 @@ void getFunctionTuples(	std::vector<genfpfcn_tuple<double>>* fcn_tuples,
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Fast_Sin", fast_sin, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Fast_Cos", fast_cos, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Fast_Tan", fast_tan, symmetricrPool.getNumbers() ));
+    fcn_tuples->push_back(genfpfcn_tuple<double>( "Fast_Tanh", fast_tanh, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Fast_Asin", fast_asin, mone2onerPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Fast_Acos", fast_acos, mone2onerPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<double>( "Fast_Atan", fast_atan, symmetricrPool.getNumbers() ));
@@ -158,6 +160,7 @@ void getFunctionTuples(	std::vector<genfpfcn_tuple<float>>* fcn_tuples,
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Sinf", sinf, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Cosf", cosf, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Tanf", tanf, symmetricrPool.getNumbers() ));
+    fcn_tuples->push_back(genfpfcn_tuple<float>( "Tanhf", tanhf, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Asinf", asinf, mone2onerPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Acosf", acosf, mone2onerPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Atanf", atanf, symmetricrPool.getNumbers() ));
@@ -169,6 +172,7 @@ void getFunctionTuples(	std::vector<genfpfcn_tuple<float>>* fcn_tuples,
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Fast_Sinf", fast_sinf, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Fast_Cosf", fast_cosf, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Fast_Tanf", fast_tanf, symmetricrPool.getNumbers() ));
+    fcn_tuples->push_back(genfpfcn_tuple<float>( "Fast_Tanhf", fast_tanhf, symmetricrPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Fast_Asinf", fast_asinf, mone2onerPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Fast_Acosf", fast_acosf, mone2onerPool.getNumbers() ));
     fcn_tuples->push_back(genfpfcn_tuple<float>( "Fast_Atanf", fast_atanf, symmetricrPool.getNumbers() ));
@@ -203,6 +207,7 @@ void getFunctionTuplesvect(std::vector<genfpfcnv_tuple<double>>* fcn_tuples,
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Sinv", vdt::sinv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Cosv", vdt::cosv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Tanv", vdt::tanv, symmetricrPool.getNumbers() ));
+	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Tanhv", vdt::tanhv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Asinv", vdt::asinv, mone2onerPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Acosv", vdt::acosv, mone2onerPool.getNumbers() )); 
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Atanv", vdt::atanv, symmetricrPool.getNumbers() ));
@@ -214,6 +219,7 @@ void getFunctionTuplesvect(std::vector<genfpfcnv_tuple<double>>* fcn_tuples,
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Fast_Sinv", fast_sinv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Fast_Cosv", fast_cosv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Fast_Tanv", fast_tanv, symmetricrPool.getNumbers() ));
+	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Fast_Tanhv", fast_tanhv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Fast_Asinv", fast_asinv, mone2onerPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Fast_Acosv", fast_acosv, mone2onerPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<double>( "Fast_Atanv", fast_atanv, symmetricrPool.getNumbers() ));
@@ -247,6 +253,7 @@ void getFunctionTuplesvect(std::vector<genfpfcnv_tuple<float>>* fcn_tuples,
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Sinfv", vdt::sinfv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Cosfv", vdt::cosfv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Tanfv", vdt::tanfv, symmetricrPool.getNumbers() ));
+	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Tanhfv", vdt::tanhfv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Asinfv", vdt::asinfv, mone2onerPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Acosfv", vdt::acosfv, mone2onerPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Atanfv", vdt::atanfv, symmetricrPool.getNumbers() ));
@@ -258,6 +265,7 @@ void getFunctionTuplesvect(std::vector<genfpfcnv_tuple<float>>* fcn_tuples,
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Fast_Sinfv", fast_sinfv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Fast_Cosfv", fast_cosfv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Fast_Tanfv", fast_tanfv, symmetricrPool.getNumbers() ));
+	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Fast_Tanhfv", fast_tanhfv, symmetricrPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Fast_Asinfv", fast_asinfv, mone2onerPool.getNumbers() ));
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Fast_Acosfv", fast_acosfv, mone2onerPool.getNumbers() )); 
 	fcn_tuples->push_back(genfpfcnv_tuple<float>( "Fast_Atanfv", fast_atanfv, symmetricrPool.getNumbers() ));

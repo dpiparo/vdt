@@ -19,7 +19,8 @@ LIBM_FUNCTIONS_LIST=["asin",
                 "exp",
                 "log",
                 "sin",
-                "tan"]
+                "tan",
+                "tanh"]
 
 FUNCTIONS_LIST=LIBM_FUNCTIONS_LIST+\
                ["isqrt",
@@ -38,7 +39,8 @@ FUNCTIONS_LIST=LIBM_FUNCTIONS_LIST+\
                 "fast_sin",
                 "fast_isqrt",
                 "fast_approx_isqrt",
-                "fast_tan"]
+                "fast_tan",
+                "fast_tanh"]
 
 VDT_VECTOR_HEADER='vdtMath.h'
 VDT_VECTOR_IMPL='vdtMath_signatures.cc'

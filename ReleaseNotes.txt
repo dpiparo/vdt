@@ -1,3 +1,4 @@
+V0.4.1
 o Simplify the CMake infrastructure
 o Introduce minimal compiler versions: GCC 4.8, AppleClang 5.0, Clang 3.3, ICC 15.0
 

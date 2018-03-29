@@ -1,38 +1,5 @@
 # Useful Macros to be used later
 
-function(getCompilerVersion)
-   # like gcc: gcc version X.Y.Z (......)
-   # or X.Y when using -dumpversion
-   exec_program(${CMAKE_C_COMPILER} ARGS -dumpversion OUTPUT_VARIABLE LOCAL_COMPILER_VERSION)
-   string(REGEX REPLACE "^([0-9].[0-9]+).*" "\\1" LOCAL_COMPILER_VERSION "${LOCAL_COMPILER_VERSION}")
-   if (LOCAL_COMPILER_VERSION AND CMAKE_COMPILER_IS_GNUCXX)
-      message (STATUS "Found GCC compiler version ${LOCAL_COMPILER_VERSION}")
-      set (COMPILER_VERSION ${LOCAL_COMPILER_VERSION} PARENT_SCOPE)
-      RETURN()
-   endif()
-
-   exec_program(${CMAKE_C_COMPILER} ARGS -v OUTPUT_VARIABLE LOCAL_COMPILER_VERSION)
-   # like clang on mac: Apple clang version X.Y (...) (based on LLVM Z.Wsvn)
-   # like clang on linux: Ubuntu clang version A.X.Y~... (...) (based on LLVM Z.W)
-   string(REGEX REPLACE ".*based on LLVM ([0-9].[0-9]+).*" "\\1" LOCAL_COMPILER_VERSION "${LOCAL_COMPILER_VERSION}")
-   if (LOCAL_COMPILER_VERSION AND CMAKE_COMPILER_IS_CLANG)
-      message (STATUS "Found CLANG compiler version ${LOCAL_COMPILER_VERSION}")
-      set (COMPILER_VERSION ${LOCAL_COMPILER_VERSION} PARENT_SCOPE)
-      RETURN()
-   endif()
-
-   # like icc: icc version 13.1.1 (gcc version 4.4.7 compatibility)
-   string(REGEX REPLACE ".*([0-9][0-9].[0-9].[0-9]).*version.*" "\\1" LOCAL_COMPILER_VERSION "${LOCAL_COMPILER_VERSION}")
-   if (LOCAL_COMPILER_VERSION)
-      message (STATUS "Found ICC compiler version ${LOCAL_COMPILER_VERSION}")
-      set (COMPILER_VERSION ${LOCAL_COMPILER_VERSION} PARENT_SCOPE)
-      RETURN()
-   endif()      
-
-endfunction(getCompilerVersion)
-
-#-------------------------------------------------------------------------------
-
 macro(change_option NAME NEWVAL)
   unset(${NAME} CACHE)
   set(${NAME} ${NEWVAL} CACHE BOOL "Value changed by cmake - probably due to compiler incompatibilities")

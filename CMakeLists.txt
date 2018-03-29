@@ -1,5 +1,5 @@
 # VDT Math Library
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project (Vdt)
 
 #-------------------------------------------------------------------------------
@@ -22,81 +22,28 @@ option( PRELOAD "Create in the library the symbols to preload the library (defau
 option( USE_VC "Use Vc library - requires symlink to Vc from ${CMAKE_SOURCE_DIR} (default cache entry: OFF)" OFF)
 option( DEBUG "Compile library with debug symbols (default is OFF)" OFF)
 
-
-# determine compiler type and version ==========================================
-set(GCC_THRESHOLD_VERSION "4.7.0")
-set(CLANG_THRESHOLD_VERSION "3.3")
-set(ICC_THRESHOLD_VERSION "13.0")
-
-set(CMAKE_COMPILER_IS_NEW_GCC "FALSE")
-set(CMAKE_COMPILER_IS_OLD_GCC "FALSE")
-set(CMAKE_COMPILER_IS_ICC "FALSE")
-set(CMAKE_COMPILER_IS_OLD_ICC "FALSE")
-set(CMAKE_COMPILER_IS_NEW_ICC "FALSE")
-set(CMAKE_COMPILER_IS_CLANG "FALSE")
-set(CMAKE_COMPILER_IS_NEW_CLANG "FALSE")
-set(CMAKE_COMPILER_IS_OLD_CLANG "FALSE")
-set(CMAKE_COMPILER_IS_UNSUPPORTED "FALSE")
-
-set(COMPILER_VERSION "0.0")
-
-
-getCompilerVersion()
-  
-if(CMAKE_CXX_COMPILER MATCHES "clang" OR CMAKE_CXX_COMPILER STREQUAL "Clang")
-  set(CMAKE_COMPILER_IS_CLANG "TRUE")
-  if("${COMPILER_VERSION}" VERSION_LESS ${CLANG_THRESHOLD_VERSION})
-    set(CMAKE_COMPILER_IS_OLD_CLANG "TRUE")
-    message(STATUS "Found CLANG older than ${CLANG_THRESHOLD_VERSION}")
-  else()
-    set(CMAKE_COMPILER_IS_NEW_CLANG "TRUE")
-    message(STATUS "Found CLANG greater than ${CLANG_THRESHOLD_VERSION}")
-  endif()  
-
-elseif(CMAKE_CXX_COMPILER MATCHES "/(icpc|icc)$")
-  set(CMAKE_COMPILER_IS_ICC "TRUE")
-  if("${COMPILER_VERSION}" VERSION_LESS ${ICC_THRESHOLD_VERSION})
-    set(CMAKE_COMPILER_IS_OLD_ICC "TRUE")
-    message(STATUS "Found ICC older than ${ICC_THRESHOLD_VERSION}")
-  else()
-    set(CMAKE_COMPILER_IS_NEW_ICC "TRUE")
-    message(STATUS "Found ICC greater than ${ICC_THRESHOLD_VERSION}")
-  endif()  
-  
-elseif(CMAKE_COMPILER_IS_GNUCXX)
-    if("${COMPILER_VERSION}" VERSION_LESS ${GCC_THRESHOLD_VERSION})
-    set(CMAKE_COMPILER_IS_OLD_GCC "TRUE")
-    message(STATUS "Found GCC older than ${GCC_THRESHOLD_VERSION}")
-  else()
-    set(CMAKE_COMPILER_IS_NEW_GCC "TRUE")
-    message(STATUS "Found GCC greater than ${GCC_THRESHOLD_VERSION}")
-  endif()
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
+      message(FATAL_ERROR "VDT requires GCC version >= 4.8")
+      set(COMP_IS_GCC TRUE)
+    endif()
+  elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    if ( APPLE AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
+      message(FATAL_ERROR "VDT requires Clang version >= 5.0")
+    elseif (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 3.3)
+      message(FATAL_ERROR "VDT requires Clang version >= 3.3")
+    endif()
+    set(COMP_IS_CLANG TRUE)
+  elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 15.0)
+      message(FATAL_ERROR "VDT requires ICC >= 15.0")
+      set(COMP_IS_ICC TRUE)
+    endif()
+   else()
+    message(WARNING "You are using an unsupported compiler! Compilation has only been tested with Clang, ICC and GCC.")
 endif()
-
-if (NOT(CMAKE_COMPILER_IS_GNUCXX OR
-        CMAKE_COMPILER_IS_CLANG OR
-        CMAKE_COMPILER_IS_ICC))
-  set( CMAKE_COMPILER_IS_UNSUPPORTED "TRUE")
-  message(STATUS "Unsupported compiler !!!")
-endif()
-
-if (CMAKE_COMPILER_IS_OLD_GCC OR
-    CMAKE_COMPILER_IS_OLD_CLANG OR
-    CMAKE_COMPILER_IS_OLD_ICC OR
-    CMAKE_COMPILER_IS_UNSUPPORTED )
-  message(STATUS "You are running an old or unsupported compiler: turning off Vc, AVX*, FMA and DIAG options")
-  change_option(USE_VC 0)
-  change_option(AVX 0)
-  change_option(AVX2 0)
-  change_option(DIAG 0)
-  change_option(FMA 0)
-endif()
-
-
-# process options that can be processed here ===================================
 
 # SIMD and FMA instructions set-------------------------------------------------
-set (FMA_INSTR "")
 if (NEON)
   message(STATUS "Using NEON instructions!")
   set(PACKED_INSTR "-mfpu=neon ")
@@ -128,8 +75,6 @@ else()
   endif ()
 
 endif()
-
-
 
 # To use svml at CERN ----------------------------------------------------------
 set (INTEL_SVML_FLAGS "")
@@ -166,9 +111,6 @@ if(USE_VC)
 endif(USE_VC)
 
 # set compiler options =========================================================
-
-set (LIBTIMING "")
-set (LIBTIMINGAPPLE "")
 if(DIAG)
   # Library for time measurement: OSx and Linux
   set (LIBTIMING "rt")
@@ -181,58 +123,45 @@ endif(DIAG)
 #-------------------------------------------------------------------------------
 # Compiler optimisations
 
-set (VECT_OPT "-O3 -ffast-math ")
+set (VECT_OPT "-Ofast")
 if (CMAKE_COMPILER_IS_ICC)
   set (VECT_OPT "")
 endif()
 
-if (CMAKE_COMPILER_IS_GNUCXX AND NOT CMAKE_COMPILER_IS_CLANG) # for old cmake versions
+if (${COMP_IS_GCC})
    set (VECTORIZER_VERBOSITY "-ftree-vectorizer-verbose=0")
    set (INLINE_OPT " --param vect-max-version-for-alias-checks=50 --param inline-unit-growth=150")   
 endif()   
-if (CMAKE_COMPILER_IS_OLD_GCC OR CMAKE_COMPILER_IS_OLD_CLANG)
- set (CPP11_OPT "-std=gnu++0x")
-elseif(CMAKE_COMPILER_IS_ICC)
- set (CPP11_OPT "-std=c++0x")
-else()
- set (CPP11_OPT "-std=c++11")
-endif()
-set (VERBOSITY_OPT "-Winline ")
+
+set (CPP11_OPT "-std=c++11")
+set (VERBOSITY_OPT "-Winline")
 
 # set it for clang until it understands __always_inline
-if (CMAKE_COMPILER_IS_CLANG)
+set (CLANG_INLINE_DEFINE "")
+if (${COMP_IS_CLANG})
  set (CLANG_INLINE_DEFINE "-D__extern_always_inline=inline")
-else()
- set (CLANG_INLINE_DEFINE "")
 endif()
 
 # compiler dependent changes ---------------------------------------------------
-if(CMAKE_COMPILER_IS_ICC)
+if(${COMP_IS_ICC})
   set (VECTORIZER_VERBOSITY "")
   set (INLINE_OPT "")
-elseif(CMAKE_COMPILER_IS_OLD_GCC)
-  set (VECT_OPT "-O2")
-  set (VECTORIZER_VERBOSITY "")
-  set (INLINE_OPT "")
-  set (VERBOSITY_OPT "")
-  set (CPP11_OPT "")
 endif()
 
 set (WARNING_FLAGS "-W -Wall -Werror -Wno-error=unused-parameter")
 
-set (DEBUG_FLAGS " ")
 if (DEBUG)
   set (DEBUG_FLAGS " -g")
   message(STATUS "Adding debugging symbols")
 endif ()
 
 
-set (COMMON_FLAGS "${INTEL_SVML_FLAGS} ${PACKED_INSTR} ${FMA_INSTR} ${INLINE_OPT} ${WARNING_FLAGS} ${DEBUG_FLAGS} ${CLANG_INLINE_DEFINE}")
+set (COMMON_FLAGS "${CPP11_OPT} ${INTEL_SVML_FLAGS} ${PACKED_INSTR} ${FMA_INSTR} ${INLINE_OPT} ${WARNING_FLAGS} ${DEBUG_FLAGS} ${CLANG_INLINE_DEFINE}")
 if (USERFLAGS)
   set (COMMON_FLAGS "${COMMON_FLAGS} ${USERFLAGS}")
 endif()
 set (LIB_FLAGS "${VERBOSITY_OPT} ${VECT_OPT} ${VECTORIZER_VERBOSITY} ${COMMON_FLAGS}")
-set (DIAG_FLAGS "${CPP11_OPT} ${LIBTIMINGAPPLE} ${VECT_OPT} ${COMMON_FLAGS}")
+set (DIAG_FLAGS "${LIBTIMINGAPPLE} ${VECT_OPT} ${COMMON_FLAGS}")
 
 # Locations ====================================================================
 # Location of executables

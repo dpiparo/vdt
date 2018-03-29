@@ -1,3 +1,6 @@
+o Simplify the CMake infrastructure
+o Introduce minimal compiler versions: GCC 4.8, AppleClang 5.0, Clang 3.3, ICC 15.0
+
 V0.4.0
 o Introduce experiment NumPy building and gcc x86_64 multi-target fat library (not built by default)
 o Adding explicit inline to struct constructor

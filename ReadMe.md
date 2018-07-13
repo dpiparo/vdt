@@ -56,11 +56,11 @@ These are the available functions:
 
 ## Other Cmake options
 Other options for Cmake are available to steer the creation of the makefile:
-* Enable AVX extensions {{{-D AVX=1}}} 
-* Enable NEON extensions on ARM {{{-D NEON=1}}} 
-* Benchmarking tools and unit tests (requires C++11 support by the compiler) {{{-D DIAG=1}}}
-* Build static library {{{-D BUILD_SHARED_LIBS=0}}}
-* Prepare the library to be pre-loaded in order to replace the calls to the default math lib at runtime {{{-D PRELOAD=1}}}
+* Enable AVX extensions `-D AVX=1` 
+* Enable NEON extensions on ARM `-D NEON=1`
+* Benchmarking tools and unit tests (requires C++11 support by the compiler) `-D DIAG=1`
+* Build static library `-D BUILD_SHARED_LIBS=0`
+* Prepare the library to be pre-loaded in order to replace the calls to the default math lib at runtime `-D PRELOAD=1`
 
 ## Supported Compilers
 The **vdt** functions can be used with every compiler (icc and gcc were tested).

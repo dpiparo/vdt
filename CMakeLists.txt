@@ -117,9 +117,9 @@ endif(USE_VC)
 
 # set compiler options =========================================================
 if(DIAG)
-  # Library for time measurement: OSx and Linux
+  # Library for time measurement: macOS and Linux
   set (LIBTIMING "rt")
-  # do not set it if on OSx
+  # do not set it if on macOS
   if (APPLE AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
     set (LIBTIMINGAPPLE "-framework Carbon")
   endif ()

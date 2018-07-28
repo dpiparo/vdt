@@ -62,7 +62,7 @@ o Fixed the installation of atan2.h
 
 V0.2.2
 o Removed typos in the documentation (thanks to A. Neumann for spotting this!)
-o Fixed CMake to make the install working also on OSx
+o Fixed CMake to make the install working also on macOS
 
 V0.2.1
 o Shared library built by default instead of static one.

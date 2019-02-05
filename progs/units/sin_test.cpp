@@ -21,13 +21,13 @@ int main(){
 	
 	// dp
 	double dpvals[size]={PI,PI/2.9,PI/4.1,PI/6.2,PI/7,PI/7,PI/85,PI/19,PI/10,PI/20.2};
-	printFuncDiff("sin", (dpdpfunction)sin,(dpdpfunction)fast_sin,dpvals,size);
+	printFuncDiff("sin", (dpdpfunction)refMath::sin,(dpdpfunction)fast_sin,dpvals,size);
 	printFuncDiff ("sinv", (dpdpfunctionv) sinv, (dpdpfunctionv) fast_sinv, dpvals, size );
 	
 	
 	//sp 
 	float spvals[size]={PI,PI/2.9,PI/4.1,PI/6.2,PI/7,PI/7,PI/85,PI/19,PI/10,PI/20.2};
-	printFuncDiff("sinf", (spspfunction)sinf,(spspfunction)fast_sinf,spvals,size);
+	printFuncDiff("sinf", (spspfunction)refMath::sinf,(spspfunction)fast_sinf,spvals,size);
 	printFuncDiff ("sinfv", (spspfunctionv) sinfv, (spspfunctionv) fast_sinfv, spvals, size );	
 	
 

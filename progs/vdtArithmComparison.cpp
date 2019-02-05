@@ -17,11 +17,10 @@
 #include "vdtdiag_fcnComparison.h"
 #include "vdtdiag_simpleCmd.h"
 
-
 //converts (comma) separated list (in string) to vector of strings
 void list2vector(std::string csList, std::vector<std::string>* vect, char separator = ','){
 	int lastCommaPos = -1, commaPos;
-
+	
 	vect->clear();
 	while(true){
 		//no other comma, break

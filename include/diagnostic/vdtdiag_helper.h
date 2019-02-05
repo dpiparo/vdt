@@ -41,6 +41,30 @@
 #include <unistd.h>
 #endif
 
+// Wrappers to support macos 10.14 https://github.com/dpiparo/vdt/issues/9
+namespace refMath {
+double atan2(double x, double y) { return ::atan2(x, y); }
+float atan2f(float x, float y) { return ::atan2f(x, y); }
+double tan(double x) { return ::tan(x); }
+float tanf(float x) { return ::tanf(x); }
+double atan(double x) { return ::atan(x); }
+float atanf(float x) { return ::atanf(x); }
+double tanh(double x) { return ::tanh(x); }
+float tanhf(float x) { return ::tanhf(x); }
+double exp(double x) { return ::exp(x); }
+float expf(float x) { return ::expf(x); }
+double log(double x) { return ::log(x); }
+float logf(float x) { return ::logf(x); }
+double sin(double x) { return ::sin(x); }
+float sinf(float x) { return ::sinf(x); }
+double asin(double x) { return ::asin(x); }
+float asinf(float x) { return ::asinf(x); }
+double cos(double x) { return ::cos(x); }
+float cosf(float x) { return ::cosf(x); }
+double acos(double x) { return ::acos(x); }
+float acosf(float x) { return ::acosf(x); }
+}
+
 
 namespace{
 

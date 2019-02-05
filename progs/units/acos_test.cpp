@@ -19,12 +19,12 @@ int main(){
 	
         //dp
         double dpvals[size]={1,.9,.8,.6,1e-200,0,-0.00004,-.2,-.8,-0.9999999999};
-        printFuncDiff("acos", (dpdpfunction)acos,(dpdpfunction)fast_acos, dpvals, size);
+        printFuncDiff("acos", (dpdpfunction)refMath::acos,(dpdpfunction)fast_acos, dpvals, size);
         printFuncDiff ("acosv", (dpdpfunctionv) acosv, (dpdpfunctionv) fast_acosv, dpvals, size );        
         
         //sp 
         float spvals[size]={1.f,.9f,.8f,.12f,1e-20f,0.f,-0.004f,-.2f,-.8f,-0.9999999999f};
-        printFuncDiff("acosf", (spspfunction)acosf,(spspfunction)fast_acosf,spvals,size);
+        printFuncDiff("acosf", (spspfunction)refMath::acosf,(spspfunction)fast_acosf,spvals,size);
         printFuncDiff ("acosfv", (spspfunctionv) acosfv, (spspfunctionv) fast_acosfv, spvals, size );           
         
 }

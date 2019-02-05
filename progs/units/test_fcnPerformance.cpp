@@ -24,7 +24,7 @@ int main(){
     // Test the FcnResponse in double precision
     fcnPerformance<double> dpExpPerf("Exp",
                                      dpRandomPool.getNumbers(), 
-                                    (vdth::dpdpfunction) exp,repetitions);
+                                    (vdth::dpdpfunction) refMath::exp,repetitions);
     dpExpPerf.print();
 
     fcnPerformance<double> dpFastExpPerf("Fast Exp",

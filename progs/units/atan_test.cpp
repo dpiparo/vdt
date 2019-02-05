@@ -19,12 +19,12 @@ int main(){
 	
 	// dp
 	double dpvals[size]={-1e200,-1e50,-300.,-20.,0.,13.,230.,1e20,1e303};
-	printFuncDiff("atan", (dpdpfunction)atan,(dpdpfunction)fast_atan,dpvals,size);
+	printFuncDiff("atan", (dpdpfunction)refMath::atan,(dpdpfunction)fast_atan,dpvals,size);
 	printFuncDiff ("atanv", (dpdpfunctionv) atanv, (dpdpfunctionv) fast_atanv, dpvals, size );
 
 	//sp 
         float spvals[size]={-1e30f,-1e19f,-300.f,-20.f,0.f,13.f,230.f,1e20f,1e30f};
-        printFuncDiff("atanf", (spspfunction)atanf,(spspfunction)fast_atanf,spvals,size);
+        printFuncDiff("atanf", (spspfunction)refMath::atanf,(spspfunction)fast_atanf,spvals,size);
         printFuncDiff ("atanfv", (spspfunctionv) atanfv, (spspfunctionv) fast_atanfv, spvals, size );
 	
 }

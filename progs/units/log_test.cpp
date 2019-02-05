@@ -19,12 +19,12 @@ int main(){
 
 	// dp
 	double dpvals[size]={1e200,1.34e101,2,1e-16,0,1e-50,4,10,500,.1};
-	printFuncDiff("log", (dpdpfunction)log,(dpdpfunction)fast_log,dpvals,size);
+	printFuncDiff("log", (dpdpfunction)refMath::log,(dpdpfunction)fast_log,dpvals,size);
 	printFuncDiff ("logv", (dpdpfunctionv) logv, (dpdpfunctionv) fast_logv, dpvals, size );
 	
 	//sp 
 	float spvals[size]={-87.f,-50.f,-2.f,-1e-1f,0.f,1e-5f,4.f,10.f,50.f,95.f};
-	printFuncDiff("logf", (spspfunction)logf,(spspfunction)fast_logf,spvals,size);
+	printFuncDiff("logf", (spspfunction)refMath::logf,(spspfunction)fast_logf,spvals,size);
 	printFuncDiff ("logvf", (spspfunctionv) logfv, (spspfunctionv) fast_logfv, spvals, size );		
 	
 }

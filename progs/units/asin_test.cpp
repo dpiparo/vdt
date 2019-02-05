@@ -19,13 +19,13 @@ int main(){
 	
 	// dp
 	double dpvals[size]={1,.9,.8,.6,1e-200,0,-0.00004,-.2,-.8,-0.9999999999};
-	printFuncDiff("asin", (dpdpfunction)asin,(dpdpfunction)fast_asin,dpvals,size);
+	printFuncDiff("asin", (dpdpfunction)refMath::asin,(dpdpfunction)fast_asin,dpvals,size);
 	printFuncDiff ("asinv", (dpdpfunctionv) asinv, (dpdpfunctionv) fast_asinv, dpvals, size );
 	
 	
 	//sp 
 	float spvals[size]={1,.9,.8,.12,1e-200,0,-0.004,-.2,-.8,-0.9999999999};
-	printFuncDiff("asinf", (spspfunction)asinf,(spspfunction)fast_asinf,spvals,size);
+	printFuncDiff("asinf", (spspfunction)refMath::asinf,(spspfunction)fast_asinf,spvals,size);
 	printFuncDiff ("asinfv", (spspfunctionv) asinfv, (spspfunctionv) fast_asinfv, spvals, size );	
         
 }

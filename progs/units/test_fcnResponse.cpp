@@ -20,7 +20,7 @@ int main(){
 	// Test the FcnResponse in double precision
 	const std::string dpfilename("testDpFcnPerf.txt");
 	randomPool<double> dpRandomPool(-500,500,size);
-	fcnResponse<double> dpExpResp("Exp",dpRandomPool.getNumbers(), (vdth::dpdpfunction) exp);
+	fcnResponse<double> dpExpResp("Exp",dpRandomPool.getNumbers(), (vdth::dpdpfunction) refMath::exp);
 	dpExpResp.writeFile(dpfilename);
 	fcnResponse<double> dpExpRespFromFile(dpfilename);
 	dpExpRespFromFile.print();
@@ -29,7 +29,7 @@ int main(){
 	// Test the FcnResponse in single precision
 	const std::string spfilename("testSpFcnPerf.txt");
 	randomPool<float> spRandomPool(-50,50,size);
-	fcnResponse<float> spExpResp("Exp",spRandomPool.getNumbers(), (vdth::spspfunction) expf);
+	fcnResponse<float> spExpResp("Exp",spRandomPool.getNumbers(), (vdth::spspfunction) refMath::expf);
 	spExpResp.writeFile(spfilename);
 	fcnResponse<float> spExpRespFromFile(spfilename);
 	spExpRespFromFile.print();
@@ -43,7 +43,7 @@ int main(){
 	fcnResponse2D<double> dpAtan2Resp("Atan2",
 									   dp2RandomPool.getNumbersX(),
 									   dp2RandomPool.getNumbersY(),
-									   (vdth::dpdp2function) atan2);
+									   (vdth::dpdp2function) refMath::atan2);
 	dpAtan2Resp.print();
 	dpAtan2Resp.writeFile(dp2filename);
 
@@ -57,7 +57,7 @@ int main(){
 	fcnResponse2D<float> spAtan2Resp("Atan2",
 							    	  sp2RandomPool.getNumbersX(),
 								      sp2RandomPool.getNumbersY(),
-								     (vdth::spsp2function) atan2);
+								     (vdth::spsp2function) refMath::atan2);
 	spAtan2Resp.print();
 	spAtan2Resp.writeFile(sp2filename);
 

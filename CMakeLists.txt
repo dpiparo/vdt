@@ -1,6 +1,6 @@
 # VDT Math Library
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
-project (Vdt)
+project (Vdt VERSION 0.4.4)
 
 #-------------------------------------------------------------------------------
 # Include the defaults

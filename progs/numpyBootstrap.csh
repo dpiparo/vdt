@@ -1,3 +1,4 @@
+#!/bin/csh
 set CD=$PWD
 echo $CD
 pushd $TMPDIR

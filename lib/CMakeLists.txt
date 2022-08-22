@@ -18,6 +18,12 @@ endif()
 # The library
 ADD_LIBRARY(vdt ${SRC_DIR}/vdtMath_signatures.cc ${INC_DIR}/vdtMath.h )
 
+# Add SOVERSION to lib
+set_target_properties(vdt
+  PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
+
 # Installation of the lib
 INSTALL(TARGETS vdt  
         DESTINATION lib)

@@ -120,7 +120,7 @@ inline void fast_sincos_m45_45( const double z, double & s, double &c ) {
 
     double zz = z * z;    
     s = z  +  z * zz * get_sin_px(zz);                
-    c = 1.0 - zz * .5 + zz * zz * get_cos_px(zz);
+    c = 1.0 + zz * (-.5 + zz * get_cos_px(zz));
   }
 
 

@@ -1,4 +1,3 @@
-![VDT Logo](https://svnweb.cern.ch/trac/vdt/raw-attachment/ticket/3/VDTlogo.png)
 # The **vdt** mathematical library
 **v**ectorise**d** ma**t**h
 * A collection of **fast** and **inline** implementations of mathematical functions.

@@ -5,6 +5,7 @@ project (Vdt)
 #-------------------------------------------------------------------------------
 # Include the defaults
 include ( CMakeDefaults.txt )
+include ( GNUInstallDirs )
 #-------------------------------------------------------------------------------
 
 # configuration options -- you may change them when running cmake ==============
@@ -214,5 +215,5 @@ INSTALL(FILES
         include/tan.h
         include/vdtcore_common.h
         include/vdtMath.h
-        DESTINATION include/vdt)
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vdt)
 

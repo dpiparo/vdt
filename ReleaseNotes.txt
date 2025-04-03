@@ -1,3 +1,12 @@
+V0.4.4
+o Remove the compiler options -Ofast in favour of -O3 -ffast-math
+
+V0.4.3
+o Wrap system mathematical functions in order to use them in the diagnostics' templated helpers.
+
+V0.4.2
+o Do not assume that the python interpreter is called python but rather let CMake find the proper python and use that one
+
 V0.4.1
 o Simplify the CMake infrastructure
 o Introduce minimal compiler versions: GCC 4.8, AppleClang 5.0, Clang 3.3, ICC 15.0

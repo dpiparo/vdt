@@ -1,5 +1,8 @@
-V0.4.4
+V0.4.5
 o Remove the compiler options -Ofast in favour of -O3 -ffast-math
+
+V0.4.4
+o Fixes cmake for newst macOS and remove deprecated directive
 
 V0.4.3
 o Wrap system mathematical functions in order to use them in the diagnostics' templated helpers.

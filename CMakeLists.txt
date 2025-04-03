@@ -128,7 +128,7 @@ endif(DIAG)
 #-------------------------------------------------------------------------------
 # Compiler optimisations
 
-set (VECT_OPT "-O3 -ffast-math")
+set (VECT_OPT "-O3")
 if (CMAKE_COMPILER_IS_ICC)
   set (VECT_OPT "")
 endif()

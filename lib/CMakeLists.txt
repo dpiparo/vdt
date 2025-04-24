@@ -20,7 +20,7 @@ ADD_LIBRARY(vdt ${SRC_DIR}/vdtMath_signatures.cc ${INC_DIR}/vdtMath.h )
 
 # Installation of the lib
 INSTALL(TARGETS vdt  
-        DESTINATION lib)
+        DESTINATION ${CMAKE_INSTALL_LIBDIR})
         
 
 # Build Vc wrapper (without c++11)
